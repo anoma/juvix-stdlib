@@ -1,0 +1,7 @@
+module StringSets;
+    open Data.Strings public;
+    open Data.List;
+
+    StringSet : Type;
+    StringSet ≔ List String;
+end;

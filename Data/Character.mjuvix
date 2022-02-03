@@ -1,0 +1,6 @@
+module Data.Character;
+    import Data.Nat;
+    open Data.Nat;
+    Char : Type;
+    Char ≔ ℕ;
+end;

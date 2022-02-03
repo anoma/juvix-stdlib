@@ -1,0 +1,18 @@
+module Data.Strings;
+  import Data.Nat;
+ 
+  import Data.List;
+  open Data.List hiding {compare};
+
+  import Data.Character;
+  open Data.Character;
+
+  import Data.Ord;
+  open Data.Ord;
+
+  String : Type;
+  String ≔ List Char;
+
+  compare : String → String → Ordering;
+  compare s1 s2 ≔ Data.List.compare String Data.Nat.compare;
+end;

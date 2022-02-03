@@ -1,0 +1,9 @@
+module Prelude;
+  import Data.Bools;
+  import Data.Nat;
+  import Data.Strings;
+
+  open Data.Strings hiding {compare} public;
+  open Data.Nat public;
+  open Data.Bools public;
+end;
