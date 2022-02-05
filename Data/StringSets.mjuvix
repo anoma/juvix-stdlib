@@ -1,5 +1,5 @@
-module StringSets;
-    open Data.Strings public;
+module StringSet;
+    open Data.String public;
     open Data.List;
 
     StringSet : Type;

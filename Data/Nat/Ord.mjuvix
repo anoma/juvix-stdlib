@@ -1,0 +1,15 @@
+module Data.Nat.Ord;
+
+import Data.Nat;
+open Data.Nat;
+
+import Data.Ord;
+open Data.Ord;
+
+compare : ℕ → ℕ → Ordering;
+compare zero zero ≔ EQ;
+compare zero _ ≔ LT;
+compare (suc _) zero ≔ GT;
+compare (suc a) (suc b) ≔ compare a b;
+
+end;

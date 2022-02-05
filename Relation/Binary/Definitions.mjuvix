@@ -1,0 +1,11 @@
+module Relation.Binary.Definitions;
+  Reflexive : (A : Type) → (R : A → A → Type) → Type;
+  Reflexive A R ≔ (x : A) → R A x x;
+
+  Symmetric : (A : Type) → (R : A → A → Type) → Type;
+  Symmetric A R ≔ (x : A) → (y : A) → R A x y → R A y x;
+
+  Transitive : (A : Type) → (R : A → A → Type) → Type;
+  Transitive A R ≔ (x : A) → (y : A) → (z : A) → R A x y → R A y z → R A x z;
+
+end;

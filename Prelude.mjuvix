@@ -1,9 +1,16 @@
 module Prelude;
   import Data.Bools;
-  import Data.Nat;
-  import Data.Strings;
-
-  open Data.Strings hiding {compare} public;
-  open Data.Nat public;
   open Data.Bools public;
+
+  import Data.Nat;
+  open Data.Nat public;
+
+  import Data.String;
+  open Data.String public;
+
+  import Data.List;
+  open Data.List public;
+
+  import Relation.Binary.PropositionalEquality;
+  open Relation.Binary.PropositionalEquality public;
 end;

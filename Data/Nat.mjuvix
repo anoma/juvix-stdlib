@@ -1,22 +1,21 @@
 module Data.Nat;
-    inductive ℕ  {
-      zero : ℕ;
-      suc : ℕ → ℕ;
-    };
+  inductive ℕ  {
+    zero : ℕ;
+    suc : ℕ → ℕ;
+  };
 
-   import Data.Bools;
-   open Data.Bools;
-   import Data.Ord;
-   open Data.Ord;
+  import Data.Bools;
+  open Data.Bools;
 
-   compare : ℕ → ℕ → Ordering;
-   compare zero zero ≔ EQ;
-   compare zero _ ≔ LT;
-   compare (suc _) zero ≔ GT;
-   compare (suc a) (suc b) ≔ compare a b;
+  infixl 6 +;
+  + : ℕ → ℕ → ℕ;
+  + zero b ≔ b;
+  + (suc a) b ≔ suc (a + b);
 
-   infixl 6 +;
-   + : ℕ → ℕ → ℕ;
-   + zero b ≔ b;
-   + (suc a) b ≔ suc (a + b);
+  infixl 7 *;
+  * : ℕ → ℕ → ℕ;
+  * zero b ≔ zero;
+  * (suc a) b ≔ b + (a * b);
+
+
 end;

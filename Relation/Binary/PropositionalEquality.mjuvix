@@ -1,0 +1,12 @@
+module Relation.Binary.PropositionalEquality;
+
+import Relation.Binary.Definitions;
+open Relation.Binary.Definitions;
+
+inductive ≡ (A : Type) (x : A) : A → Type {
+    refl : ≡ A x x;
+};
+
+
+
+end;

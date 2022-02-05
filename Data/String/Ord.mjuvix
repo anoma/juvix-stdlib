@@ -1,0 +1,15 @@
+module Data.String.Ord;
+
+import Data.Ord;
+open Data.Ord;
+
+import Data.String;
+open Data.String;
+
+import Data.Nat.Ord;
+import Data.List.Ord;
+
+compare : String → String → Ordering;
+compare s1 s2 ≔ Data.List.Ord.compare String Data.Nat.Ord.compare;
+
+end;
