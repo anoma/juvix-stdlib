@@ -1,6 +1,10 @@
 module StringSet;
+    import Data.String;
     open Data.String public;
+
+    import Data.List;
     open Data.List;
+
 
     StringSet : Type;
     StringSet ≔ List String;
