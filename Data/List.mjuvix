@@ -85,13 +85,15 @@ module Data.List;
   quickSort a cmp (x ∷ ys) ≔
     quickSort a (filter a ltx) ys
     ++ (x ∷ nil)
-    ++ quickSort a (filter a (not ∘ ltx)) ys
+    ++ quickSort a (filter a gex) ys
      where {
      ltx : a → Bool;
      ltx y ≔ match cmp y x {
        LT ↦ true;
        _ ↦ false;
-      }
+      };
+     gex : a → Bool;
+     gex y ≔ not (ltx y)
     };
 
 end;

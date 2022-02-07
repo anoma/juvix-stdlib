@@ -1,4 +1,6 @@
 module Function;
+
+-- infixity problem: we would like to write f ∘ g but we have to write a ∘ b c f g
 infixr 9 ∘;
  ∘ : (a : Type) → (b : Type) → (c : Type) → (b → c) → (a → b) → a → c;
  ∘ _ _ _ f g x ≔ f (g x);
