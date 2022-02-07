@@ -4,9 +4,6 @@ module Data.Nat;
     suc : ℕ → ℕ;
   };
 
-  import Data.Bools;
-  open Data.Bools;
-
   infixl 6 +;
   + : ℕ → ℕ → ℕ;
   + zero b ≔ b;
@@ -16,6 +13,5 @@ module Data.Nat;
   * : ℕ → ℕ → ℕ;
   * zero b ≔ zero;
   * (suc a) b ≔ b + (a * b);
-
 
 end;

@@ -1,6 +1,8 @@
 module Data.List;
-    import Data.Bools;
-    open Data.Bools;
+    import Data.Bool;
+    open Data.Bool;
+    import Function;
+    open Function;
 
     infixr 5 ∷;
     inductive List (a : Type) {
@@ -27,9 +29,69 @@ module Data.List;
          true ↦ filter a f hs;
     };
 
+  import Data.Nat;
+  open Data.Nat;
+
+  length : (a : Type) → List a → ℕ;
+  length _  nil  ≔ zero;
+  length _  (_ ∷ l)  ≔ suc (length l);
+
+  reverse : (a : Type) → List a → List a;
+  reverse a l ≔ rev l nil
+    where {
+    rev : List a → List a → List a;
+    rev nil     a ≔ a;
+    rev (x ∷ xs) a ≔ rev xs (x ∷ a)
+    };
+
+  replicate : (a : Type) → ℕ → a → List a;
+  replicate _ zero _ ≔ nil;
+  replicate a (suc n) x ≔ x ∷ (replicate a n x);
+
+  take : (a : Type) → ℕ → List a → List a;
+  take a (suc n) (x ∷ xs) ≔ x ∷ (take a n xs);
+  take _ _ _ ≔ nil;
+
+  import Data.Ord;
+  open Data.Ord;
+
+  import Data.Product;
+  open Data.Product;
+
+  splitAt : (a : Type) → ℕ → List a → List a;
+  splitAt _ _ nil ≔ nil , nil;
+  splitAt _ zero xs ≔ nil , xs;
+  splitAt _ (suc zero) (x ∷ xs) ≔ (x ∷ nil , xs);
+  splitAt a (suc (suc m)) (x ∷ xs) ≔ match splitAt a m xs {
+     (xs' , xs'') ↦ x ∷ xs' , xs'';
+   };
+
+  merge : (a : Type) → (a → a → Ordering) → List a → List a → List a;
+  merge a cmp (x ∷ xs) (y ∷ ys) ≔ match cmp x y {
+     LT ↦ x ∷ merge a cmp xs (y ∷ ys);
+     _ ↦ y ∷ merge a cmp (x ∷ xs) ys;
+    };
+  merge _ _ nil ys ≔ ys;
+  merge _ _ xs nil ≔ xs;
+
   infixr 5 ++;
   ++ : (a : Type) → List a → List a → List a;
   ++ a nil ys ≔ ys;
   ++ a (x ∷ xs) ys ≔ x ∷ (xs ++ ys);
+
+  quickSort : (a : Type) → (a → a → Ordering) → List a → List a;
+  quickSort a _ nil ≔ nil;
+  quickSort a _ (x ∷ nil) ≔ x ∷ nil;
+  quickSort a cmp (x ∷ ys) ≔
+    quickSort a (filter a ltx) ys
+    ++ (x ∷ nil)
+    ++ quickSort a (filter a (not ∘ ltx)) ys
+     where {
+     ltx : a → Bool;
+     ltx y ≔ match cmp y x {
+       LT ↦ true;
+       _ ↦ false;
+      }
+    };
 
 end;

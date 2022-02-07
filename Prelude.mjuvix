@@ -1,7 +1,7 @@
 module Prelude;
 
 import Algebra.Definitions;
-import Data.Bools;
+import Data.Bool;
 import Data.Character;
 import Data.List.Ord;
 import Data.List;
@@ -9,9 +9,11 @@ import Data.Nat.Ord;
 import Data.Nat.Properties;
 import Data.Nat;
 import Data.Ord;
+import Data.Product;
 import Data.String.Ord;
 import Data.String;
 import Data.StringSet;
+import Function;
 import Relation.Binary.Definitions;
 import Relation.Binary.PropositionalEquality.Properties;
 import Relation.Binary.PropositionalEquality;

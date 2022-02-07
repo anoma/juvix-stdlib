@@ -1,6 +1,0 @@
-module Data.Bools;
-    inductive Bool {
-      true : Bool;
-      false : Bool;
-  };
-end;

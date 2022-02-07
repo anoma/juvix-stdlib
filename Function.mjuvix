@@ -1,0 +1,5 @@
+module Function;
+infixr 9 ∘;
+ ∘ : (a : Type) → (b : Type) → (c : Type) → (b → c) → (a → b) → a → c;
+ ∘ _ _ _ f g x ≔ f (g x);
+end;
