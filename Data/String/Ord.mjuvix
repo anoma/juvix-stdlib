@@ -9,7 +9,10 @@ open Data.String;
 import Data.Nat.Ord;
 import Data.List.Ord;
 
+import Data.Character;
+open Data.Character;
+
 compare : String → String → Ordering;
-compare s1 s2 ≔ Data.List.Ord.compare String Data.Nat.Ord.compare;
+compare ≔ Data.List.Ord.compare Char Data.Nat.Ord.compare;
 
 end;

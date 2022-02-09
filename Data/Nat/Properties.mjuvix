@@ -16,14 +16,14 @@ import Data.Nat;
 open Data.Nat;
 
 +-assoc : Associative ℕ (+);
-+-assoc zero    _ _ ≔ refl;
-+-assoc (suc m) n o ≔ cong suc (+-assoc m n o);
++-assoc zero    _ _ ≔ refl ℕ zero zero;
++-assoc (suc x) y z ≔ cong ℕ ℕ ((x + y) + z) (x + (y + z)) suc (+-assoc x y z);
 
 +-identityˡ : LeftIdentity ℕ zero (+);
-+-identityˡ _ ≔ refl;
++-identityˡ _ ≔ refl ℕ zero zero;
 
 +-identityʳ : RightIdentity ℕ zero (+);
-+-identityʳ zero    ≔ refl;
-+-identityʳ (suc n) ≔ cong suc (+-identityʳ n);
++-identityʳ zero    ≔ refl ℕ zero zero;
++-identityʳ (suc n) ≔ cong ℕ ℕ n zero suc (+-identityʳ n);
 
 end;

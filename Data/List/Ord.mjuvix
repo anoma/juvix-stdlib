@@ -7,10 +7,10 @@ import Data.List;
 open Data.List;
 
 compare : (a : Type) → (a → a → Ordering) → List a → List a → Ordering;
-compare _ _ nil nil ≔ EQ;
-compare _ _ nil (_ ∷ _) ≔ LT;
-compare _ _ (_ ∷ _) nil ≔ GT;
-compare a cmp (x ∷ xs) (y ∷ ys) ≔ match cmp x y {
+compare _ _ (nil _) (nil _) ≔ EQ;
+compare _ _ (nil _) (∷ _ _ _) ≔ LT;
+compare _ _ (∷ _ _ _) (nil _) ≔ GT;
+compare a cmp (∷ _ x xs) (∷ _ y ys) ≔ match cmp x y {
   EQ ↦ compare a cmp xs ys;
   LT ↦ LT;
   GT ↦ GT;
