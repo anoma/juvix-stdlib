@@ -1,4 +1,4 @@
-module StringSet;
+module Data.StringSet;
     import Data.String;
     open Data.String public;
 

@@ -7,15 +7,15 @@ module Relation.Binary.PropositionalEquality.Properties;
   open Relation.Binary.PropositionalEquality;
 
   cong : (A : Type) → (B : Type) → (x : A) → (y : A) → (f : A → B) → ≡ A x y → ≡ B (f x) (f y);
-  cong A B x y f (refl _ _ _) ≔ refl B (f x) (f x);
+  cong A B x y f refl ≔ refl B (f x) (f x);
 
   reflexive : (A : Type) → Reflexive A (≡ A);
   reflexive A x ≔ refl A x x;
 
   symmetric : (A : Type) → Symmetric A (≡ A);
-  symmetric A x y (refl _ _ _) ≔ refl A x x;
+  symmetric A x y refl ≔ refl A x x;
 
   transitive : (A : Type) → Transitive A (≡ A);
-  transitive A x y z (refl _ _ _) (refl _ _ _) ≔ refl A x x;
+  transitive A x y z refl refl ≔ refl A x x;
 
 end;
