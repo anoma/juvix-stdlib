@@ -36,9 +36,8 @@ length : {A : Type} → List A → ℕ;
 length nil ≔ zero;
 length (_ ∷ l) ≔ suc (length l);
 
--- Note: investigate inference bug!
 reverse : {A : Type} → List A → List A;
-reverse {A} ≔ foldl {A} {List A} (flip (∷)) nil;
+reverse ≔ foldl (flip (∷)) nil;
 
 replicate : {A : Type} → ℕ → A → List A;
 replicate zero _ ≔ nil;
@@ -68,11 +67,9 @@ merge cmp (x ∷ xs) (y ∷ ys) ≔
 merge _ nil ys ≔ ys;
 merge _ xs nil ≔ xs;
 
--- TODO: investigate
 partition : {A : Type} → (A → Bool) → List A → List A × List A;
 partition _ nil ≔ nil , nil ;
-partition {A} f (x ∷ xs) ≔ (if {(List A → List A) → _ → _} (f x)
-   first second) ((∷) x) (partition {A} f xs);
+partition f (x ∷ xs) ≔ (if (f x) first second) ((∷) x) (partition f xs);
 
 infixr 5 ++;
 ++ : {A : Type} → List A → List A → List A;
