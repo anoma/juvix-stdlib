@@ -1,7 +1,25 @@
 module Data.Ord;
-    inductive Ordering {
-      LT : Ordering;
-      EQ : Ordering;
-      GT : Ordering;
-    };
+
+import Data.Bool;
+open Data.Bool;
+
+inductive Ordering {
+  LT : Ordering;
+  EQ : Ordering;
+  GT : Ordering;
+};
+
+isLT : Ordering → Bool;
+isLT LT ≔ true;
+isLT _ ≔ false;
+
+isEQ : Ordering → Bool;
+isEQ EQ ≔ true;
+isEQ _ ≔ false;
+
+ifOrd : {A : Type} → Ordering -> A → A → A → A;
+ifOrd LT lt eq gt ≔ lt;
+ifOrd EQ lt eq gt ≔ eq;
+ifOrd GT lt eq gt ≔ gt;
+
 end;

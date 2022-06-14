@@ -1,9 +1,30 @@
 module Data.Product;
 
 infixr 2 ×;
--- infixr 4 ,; waiting for implicit arguments
-inductive × (a : Type) (b : Type) {
-  , : a → b → a × b;
+infixr 4 ,;
+inductive × (A : Type) (B : Type) {
+  , : A → B → A × B;
 };
+
+uncurry : {A : Type} → {B : Type} → {C : Type} → (A → B → C) → A × B → C;
+uncurry f (a , b) ≔ f a b;
+
+fst : {A : Type} → {B : Type} → A × B → A;
+fst (a , _) ≔ a;
+
+snd : {A : Type} → {B : Type} → A × B → B;
+snd (_ , b) ≔ b;
+
+swap : {A : Type} → {B : Type} → A × B → B × A;
+swap (a , b) ≔ b , a;
+
+first : {A : Type} → {B : Type} → {A' : Type} → (A → A') → A × B → A' × B;
+first f (a , b) ≔ f a , b;
+
+second : {A : Type} → {B : Type} → {B' : Type} → (B → B') → A × B → A × B';
+second f (a , b) ≔ a , f b;
+
+both : {A : Type} → {B : Type} → (A → B) → A × A → B × B;
+both f (a , b) ≔ f a , f b;
 
 end;

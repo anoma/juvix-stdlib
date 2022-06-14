@@ -5,53 +5,48 @@ open Data.Bool;
 import Function;
 open Function;
 
--- infixr 5 ∷; waiting for implicit arguments
+infixr 5 ∷;
 inductive List (a : Type) {
   nil : List a;
   ∷ : a → List a → List a;
 };
 
-foldr : (a : Type) → (b : Type) → (a → b → b) → b → List a → b;
-foldr _ _ _ z (nil _) ≔ z;
-foldr a b f z (∷ _ h hs) ≔ f h (foldr a b f z hs);
+foldr : {A : Type} → {B : Type} → (A → B → B) → B → List A → B;
+foldr _ z nil ≔ z;
+foldr f z (h ∷ hs) ≔ f h (foldr f z hs);
 
-foldl : (a : Type) → (b : Type) → (b → a → b) → b → List a → b;
-foldl a b f z (nil _) ≔ z ;
-foldl a b f z (∷ _ h hs) ≔ foldl a b f (f z h) hs;
+foldl : {A : Type} → {B : Type} → (B → A → B) → B → List A → B;
+foldl f z nil ≔ z ;
+foldl f z (h ∷ hs) ≔ foldl f (f z h) hs;
 
-map : (a : Type) → (b : Type) → (a → b) → List a → List b;
-map _ b f (nil _) ≔ (nil b);
-map a b f (h ∷ hs) ≔ ∷ a (f h) (map a b f hs);
+map : {A : Type} → {B : Type} → (A → B) → List A → List B;
+map f nil ≔ nil;
+map f (h ∷ hs) ≔ f h ∷ map f hs;
 
-filter : (a : Type) → (a → Bool) → List a → List a;
-filter a f (nil _) ≔ nil a;
-filter a f (h ∷ hs) ≔ match f h {
-  true ↦ ∷ a h (filter a f hs);
-  false ↦ filter a f hs;
-};
+filter : {A : Type} → (A → Bool) → List A → List A;
+filter _ nil ≔ nil;
+filter f (h ∷ hs) ≔ if (f h)
+   (h ∷ filter f hs)
+   (filter f hs);
 
 import Data.Nat;
 open Data.Nat;
 
-length : (a : Type) → List a → ℕ;
-length _ (nil _) ≔ zero;
-length a (∷ _ _ l) ≔ suc (length a l);
+length : {A : Type} → List A → ℕ;
+length nil ≔ zero;
+length (_ ∷ l) ≔ suc (length l);
 
-reverse : (a : Type) → List a → List a;
-reverse a l ≔ rev l (nil a)
-  where {
-  rev : List a → List a → List a;
-  rev (nil _) a ≔ a;
-  rev (∷ _ x xs) a ≔ rev xs (∷ a x a)
-  };
+-- Note: investigate inference bug!
+reverse : {A : Type} → List A → List A;
+reverse {A} ≔ foldl {A} {List A} (flip (∷)) nil;
 
-replicate : (a : Type) → ℕ → a → List a;
-replicate a zero _ ≔ (nil a);
-replicate a (suc n) x ≔ ∷ a x (replicate a n x);
+replicate : {A : Type} → ℕ → A → List A;
+replicate zero _ ≔ nil;
+replicate (suc n) x ≔  x ∷ replicate n x;
 
-take : (a : Type) → ℕ → List a → List a;
-take a (suc n) (∷ _ x xs) ≔ ∷ a x (take a n xs);
-take a _ _ ≔ (nil a);
+take : {A : Type} → ℕ → List A → List A;
+take (suc n) (x ∷ xs) ≔ x ∷ take n xs;
+take _ _ ≔ nil;
 
 import Data.Ord;
 open Data.Ord;
@@ -59,41 +54,40 @@ open Data.Ord;
 import Data.Product;
 open Data.Product;
 
-splitAt : (a : Type) → ℕ → List a → List a;
-splitAt a _ (nil _) ≔ nil a , nil a;
-splitAt a zero xs ≔ , (List a) (List a) (nil a) xs;
-splitAt a (suc zero) (x ∷ xs) ≔ , (List a) (List a) (∷ a x (nil a)) xs;
-splitAt a (suc (suc m)) (x ∷ xs) ≔ match splitAt a m xs {
-    (, la _ xs' xs'') ↦ , la la (∷ a x xs') xs'';
-  };
+splitAt : {A : Type} → ℕ → List A → List A × List A;
+splitAt _ nil ≔ nil , nil ;
+splitAt zero xs ≔  nil , xs;
+splitAt (suc zero) (x ∷ xs) ≔ x ∷ nil , xs;
+splitAt (suc (suc m)) (x ∷ xs) ≔ first ((∷) x) (splitAt m xs);
 
-merge : (a : Type) → (a → a → Ordering) → List a → List a → List a;
-merge a cmp (x ∷ xs) (y ∷ ys) ≔ match cmp x y {
-    LT ↦ ∷ a x (merge a cmp xs (∷ a y ys));
-    _ ↦ ∷ a y (merge a cmp (∷ a x xs) ys);
-  };
-merge _ _ (nil _) ys ≔ ys;
-merge _ _ xs (nil _) ≔ xs;
+merge : {A : Type} → (A → A → Ordering) → List A → List A → List A;
+merge cmp (x ∷ xs) (y ∷ ys) ≔
+   if (isLT (cmp x y))
+    (x ∷ merge cmp xs (y ∷ ys))
+    (y ∷ merge cmp (x ∷ xs) ys);
+merge _ nil ys ≔ ys;
+merge _ xs nil ≔ xs;
 
--- infixr 5 ++; waiting for implicit arguments
-++ : (a : Type) → List a → List a → List a;
-++ a (nil _) ys ≔ ys;
-++ a (∷ _ x xs) ys ≔ ∷ a x (++ a xs ys);
+-- TODO: investigate
+partition : {A : Type} → (A → Bool) → List A → List A × List A;
+partition _ nil ≔ nil , nil ;
+partition {A} f (x ∷ xs) ≔ (if {(List A → List A) → _ → _} (f x)
+   first second) ((∷) x) (partition {A} f xs);
 
-quickSort : (a : Type) → (a → a → Ordering) → List a → List a;
-quickSort a _ (nil _) ≔ (nil a);
-quickSort a _ (∷ _ x (nil _)) ≔ ∷ a x (nil a);
-quickSort a cmp (∷ _ x ys) ≔
-  ++ a (quickSort a (filter a ltx) ys)
-  (++ a (∷ a x (nil a)) (quickSort a (filter a gex) ys))
-  where {
-    ltx : a → Bool;
-    ltx y ≔ match cmp y x {
-      LT ↦ true;
-      _ ↦ false;
-    };
-    gex : a → Bool;
-    gex y ≔ not (ltx y)
-  };
+infixr 5 ++;
+++ : {A : Type} → List A → List A → List A;
+++ nil ys ≔ ys;
+++ (x ∷ xs) ys ≔ x ∷ (xs ++ ys);
+
+qsHelper : {A : Type} → A → List A × List A → List A;
+qsHelper a (l , r) ≔ l ++ (a ∷ nil) ++ r;
+
+terminating
+quickSort : {A : Type} → (A → A → Ordering) → List A → List A;
+quickSort _ nil ≔ nil;
+quickSort _ (x ∷ nil) ≔ x ∷ nil;
+quickSort cmp (x ∷ xs) ≔
+   qsHelper x
+   (both (quickSort cmp) (partition (isLT ∘ cmp x) xs));
 
 end;

@@ -6,14 +6,13 @@ open Data.Ord;
 import Data.List;
 open Data.List;
 
-compare : (a : Type) → (a → a → Ordering) → List a → List a → Ordering;
-compare _ _ (nil _) (nil _) ≔ EQ;
-compare _ _ (nil _) (∷ _ _ _) ≔ LT;
-compare _ _ (∷ _ _ _) (nil _) ≔ GT;
-compare a cmp (∷ _ x xs) (∷ _ y ys) ≔ match cmp x y {
-  EQ ↦ compare a cmp xs ys;
-  LT ↦ LT;
-  GT ↦ GT;
-};
+compare : {A : Type} → (A → A → Ordering) → List A → List A → Ordering;
+compare _ nil nil ≔ EQ;
+compare _ nil (_ ∷ _) ≔ LT;
+compare _ (_ ∷ _) nil ≔ GT;
+compare cmp (x ∷ xs) (y ∷ ys) ≔ ifOrd (cmp x y)
+  LT
+  (compare cmp xs ys)
+  GT;
 
 end;

@@ -18,4 +18,7 @@ module Data.Bool;
   && false _ ≔ false;
   && true a ≔ a;
 
+  if : {A : Type} → Bool → A → A → A;
+  if true a _ ≔ a;
+  if false _ b ≔ b;
 end;

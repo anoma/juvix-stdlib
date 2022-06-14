@@ -1,13 +1,14 @@
 module Data.String;
-  import Data.Nat;
- 
-  import Data.List;
-  open Data.List hiding {compare};
 
-  import Data.Character;
-  open Data.Character;
+import Data.Nat;
 
-  String : Type;
-  String ≔ List Char;
+import Data.List;
+open Data.List hiding {compare};
+
+import Data.Character;
+open Data.Character;
+
+-- String : Type;
+-- String ≔ List Char;
 
 end;

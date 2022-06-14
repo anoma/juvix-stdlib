@@ -1,8 +1,12 @@
 module Data.Maybe;
 
-  inductive Maybe (a : Type) {
-     nothing : Maybe a;
-     just : a → Maybe a;
-  }
+inductive Maybe (A : Type) {
+  nothing : Maybe A;
+  just : A → Maybe A;
+};
+
+fromMaybe : {A : Type} → A → Maybe A → A;
+fromMaybe a nothing ≔ a;
+fromMaybe _ (just a) ≔ a;
 
 end;
