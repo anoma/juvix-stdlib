@@ -1,0 +1,73 @@
+name: MiniJuvix CI
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+      - review_requested
+      - closed
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        ghc: ["9.2.2"]
+    steps:
+      - uses: actions/cache@v3
+        name: Cache Stack
+        id: cache
+        env:
+          cache-name: cache-env
+        with:
+          path: |
+            ~/.stack
+            main/.stack-work
+            main/.hie
+          key: ${{ runner.os }}-v1-build-${{ matrix.ghc }}-${{ hashFiles('main/src/**/*.hs', 'main/app/**/*.hs',  'main/test/**/*.hs', 'main/package.yaml', 'main/stack.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-v1-build-${{ matrix.ghc }}-
+            ${{ runner.os }}-v1-build-
+            ${{ runner.os }}-v1-
+
+      - uses: haskell/actions/setup@v1
+        name: Setup Haskell
+        with:
+          ghc-version: ${{ matrix.ghc }}
+          enable-stack: true
+          stack-version: 'latest'
+
+      - name: Checkout MiniJuvix
+        uses: actions/checkout@v2
+        with:
+          repository: heliaxdev/minijuvix
+          path: main
+      
+      - name: Checkout Std Library
+        uses: actions/checkout@v2
+        with:
+          path: main
+
+      - name: HTML
+        run: |
+          cd main
+          echo "$GITHUB_WORKSPACE/.local/bin" >> $GITHUB_PATH
+          minijuvix html Prelude.mjuvix --theme ayu --recursive
+
+      - if: github.event.pull_request.merged == true
+        name: Deploy HTML to github pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: html
+          enable_jekyll: false
