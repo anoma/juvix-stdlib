@@ -62,6 +62,7 @@ jobs:
         run: |
           cd main
           echo "$GITHUB_WORKSPACE/.local/bin" >> $GITHUB_PATH
+          make install
           minijuvix html Prelude.mjuvix --theme ayu --recursive
 
       - if: github.event.pull_request.merged == true
