@@ -1,9 +1,10 @@
 module Data.List;
 
-import Data.Bool;
-open Data.Bool;
-import Function;
-open Function;
+import Data.Bool; open Data.Bool;
+import Function; open Function;
+import Data.Nat; open Data.Nat;
+import Data.Ord; open Data.Ord;
+import Data.Product; open Data.Product;
 
 infixr 5 ∷;
 inductive List (a : Type) {
@@ -29,9 +30,6 @@ filter f (h ∷ hs) ≔ if (f h)
    (h ∷ filter f hs)
    (filter f hs);
 
-import Data.Nat;
-open Data.Nat;
-
 length : {A : Type} → List A → ℕ;
 length nil ≔ zero;
 length (_ ∷ l) ≔ suc (length l);
@@ -46,12 +44,6 @@ replicate (suc n) x ≔  x ∷ replicate n x;
 take : {A : Type} → ℕ → List A → List A;
 take (suc n) (x ∷ xs) ≔ x ∷ take n xs;
 take _ _ ≔ nil;
-
-import Data.Ord;
-open Data.Ord;
-
-import Data.Product;
-open Data.Product;
 
 splitAt : {A : Type} → ℕ → List A → List A × List A;
 splitAt _ nil ≔ nil , nil ;
