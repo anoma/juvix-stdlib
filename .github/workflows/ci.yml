@@ -64,7 +64,7 @@ jobs:
  
       - name: HTML
         run: |
-          minijuvix html Prelude.mjuvix --theme ayu --recursive
+          minijuvix html index.mjuvix --theme ayu --recursive --output-dir=docs/
 
       - if: github.event.pull_request.merged == true
         name: Deploy HTML to github pages
