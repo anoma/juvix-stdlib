@@ -1,4 +1,5 @@
 module Data.Nat;
+
   inductive ℕ  {
     zero : ℕ;
     suc : ℕ → ℕ;

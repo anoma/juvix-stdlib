@@ -22,7 +22,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        ghc: ["9.2.2"]
+        ghc: ["9.2.3"]
     steps:
       - uses: actions/cache@v3
         name: Cache Stack
@@ -32,9 +32,9 @@ jobs:
         with:
           path: |
             ~/.stack
-            main/.stack-work
-            main/.hie
-          key: ${{ runner.os }}-v1-build-${{ matrix.ghc }}-${{ hashFiles('main/src/**/*.hs', 'main/app/**/*.hs',  'main/test/**/*.hs', 'main/package.yaml', 'main/stack.yaml') }}
+            minijuvix/.stack-work
+            minijuvix/.hie
+          key: ${{ runner.os }}-v1-build-${{ matrix.ghc }}-${{ hashFiles('minijuvix/src/**/*.hs', 'minijuvix/app/**/*.hs',  'minijuvix/test/**/*.hs', 'minijuvix/package.yaml', 'minijuvix/stack.yaml') }}
           restore-keys: |
             ${{ runner.os }}-v1-build-${{ matrix.ghc }}-
             ${{ runner.os }}-v1-build-
@@ -48,26 +48,28 @@ jobs:
           stack-version: 'latest'
 
       - name: Checkout MiniJuvix
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: heliaxdev/minijuvix
-          path: main
+          path: minijuvix
       
-      - name: Checkout Std Library
-        uses: actions/checkout@v2
-        with:
-          path: main
+      - name: Install MiniJuvix
+        run: |
+          cd minijuvix
+          echo "$GITHUB_WORKSPACE/.local/bin" >> $GITHUB_PATH
+          make install
 
+      - name: Checkout Std Library
+        uses: actions/checkout@v3
+ 
       - name: HTML
         run: |
-          cd main
-          echo "$GITHUB_WORKSPACE/.local/bin" >> $GITHUB_PATH
-          minijuvix html Prelude.mjuvix --theme ayu --recursive
+          minijuvix html index.mjuvix --theme ayu --recursive --output-dir=docs/
 
       - if: github.event.pull_request.merged == true
         name: Deploy HTML to github pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: html
+          publish_dir: docs
           enable_jekyll: false
