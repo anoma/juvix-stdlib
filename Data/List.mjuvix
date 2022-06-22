@@ -1,10 +1,10 @@
 module Data.List;
 
-import Data.Bool; open Data.Bool;
-import Function; open Function;
-import Data.Nat; open Data.Nat;
-import Data.Ord; open Data.Ord;
-import Data.Product; open Data.Product;
+open import Data.Bool;
+open import Function;
+open import Data.Nat;
+open import Data.Ord;
+open import Data.Product;
 
 infixr 5 ∷;
 inductive List (a : Type) {

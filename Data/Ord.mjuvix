@@ -1,7 +1,6 @@
 module Data.Ord;
 
-import Data.Bool;
-open Data.Bool;
+open import Data.Bool;
 
 inductive Ordering {
   LT : Ordering;

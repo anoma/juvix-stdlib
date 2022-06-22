@@ -1,4 +1,5 @@
 module Data.Bool;
+
   inductive Bool {
     true : Bool;
     false : Bool;

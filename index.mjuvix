@@ -1,3 +1,13 @@
+{- 
+
+The MiniJuvix standard library
+------------------------------
+   
+Sources: http://github.com/heliaxdev/minijuvix-stdlib
+Compiler: http://github.com/heliaxdev/minijuvix
+
+-}
+
 module index;
 
 import Prelude;

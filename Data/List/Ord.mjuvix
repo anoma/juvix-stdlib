@@ -1,10 +1,7 @@
 module Data.List.Ord;
 
-import Data.Ord;
-open Data.Ord;
-
-import Data.List;
-open Data.List;
+open import Data.Ord;
+open import Data.List;
 
 compare : {A : Type} → (A → A → Ordering) → List A → List A → Ordering;
 compare _ nil nil ≔ EQ;
