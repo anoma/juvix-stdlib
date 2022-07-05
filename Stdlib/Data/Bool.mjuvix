@@ -1,4 +1,4 @@
-module Data.Bool;
+module Stdlib.Data.Bool;
 
   inductive Bool {
     true : Bool;

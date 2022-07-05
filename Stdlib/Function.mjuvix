@@ -1,4 +1,4 @@
-module Function;
+module Stdlib.Function;
 
 infixr 9 ∘;
 ∘ : {A : Type} → {B : Type} → {C : Type} → (B → C) → (A → B) → A → C;
