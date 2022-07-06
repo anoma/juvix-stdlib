@@ -1,4 +1,4 @@
-module Data.Maybe;
+module Stdlib.Data.Maybe;
 
 inductive Maybe (A : Type) {
   nothing : Maybe A;

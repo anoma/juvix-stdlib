@@ -1,10 +1,10 @@
-module Data.List;
+module Stdlib.Data.List;
 
-open import Data.Bool;
-open import Function;
-open import Data.Nat;
-open import Data.Ord;
-open import Data.Product;
+open import Stdlib.Data.Bool;
+open import Stdlib.Function;
+open import Stdlib.Data.Nat;
+open import Stdlib.Data.Ord;
+open import Stdlib.Data.Product;
 
 infixr 5 ∷;
 inductive List (a : Type) {

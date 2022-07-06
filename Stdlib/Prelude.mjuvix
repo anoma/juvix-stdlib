@@ -1,0 +1,12 @@
+module Stdlib.Prelude;
+
+import Stdlib.Data.Bool;
+import Stdlib.Data.List.Ord;
+import Stdlib.Data.List;
+import Stdlib.Data.Nat.Ord;
+import Stdlib.Data.Nat;
+import Stdlib.Data.Ord;
+import Stdlib.Data.Product;
+import Stdlib.Function;
+
+end;

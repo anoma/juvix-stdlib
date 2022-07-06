@@ -1,6 +1,6 @@
-module Data.Ord;
+module Stdlib.Data.Ord;
 
-open import Data.Bool;
+open import Stdlib.Data.Bool;
 
 inductive Ordering {
   LT : Ordering;

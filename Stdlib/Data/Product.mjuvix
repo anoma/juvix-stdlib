@@ -1,4 +1,4 @@
-module Data.Product;
+module Stdlib.Data.Product;
 
 infixr 2 ×;
 infixr 4 ,;

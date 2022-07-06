@@ -1,7 +1,7 @@
-module Data.Nat.Ord;
+module Stdlib.Data.Nat.Ord;
 
-open import Data.Nat;
-open import Data.Ord;
+open import Stdlib.Data.Nat;
+open import Stdlib.Data.Ord;
 
 compare : ℕ → ℕ → Ordering;
 compare zero zero ≔ EQ;

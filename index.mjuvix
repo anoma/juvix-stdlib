@@ -10,7 +10,7 @@ Compiler: http://github.com/heliaxdev/minijuvix
 
 module index;
 
-import Prelude;
-import Function;
+import Stdlib.Prelude;
+import Stdlib.Function;
 
 end;

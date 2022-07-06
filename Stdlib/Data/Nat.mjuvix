@@ -1,4 +1,4 @@
-module Data.Nat;
+module Stdlib.Data.Nat;
 
 inductive ℕ  {
   zero : ℕ;
