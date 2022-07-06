@@ -12,6 +12,10 @@ inductive List (a : Type) {
   ∷ : a → List a → List a;
 };
 
+elem : {A : Type} → (A → A → Bool) → A → List A → Bool;
+elem _ _ nil ≔ false;
+elem eq s (x ∷ xs) ≔ eq s x || elem eq s xs;
+
 foldr : {A : Type} → {B : Type} → (A → B → B) → B → List A → B;
 foldr _ z nil ≔ z;
 foldr f z (h ∷ hs) ≔ f h (foldr f z hs);
@@ -67,6 +71,35 @@ infixr 5 ++;
 ++ : {A : Type} → List A → List A → List A;
 ++ nil ys ≔ ys;
 ++ (x ∷ xs) ys ≔ x ∷ (xs ++ ys);
+
+flatten : {A : Type} → List (List A) → List A;
+flatten ≔ foldl (++) nil;
+
+prependToAll : {A : Type} → A → List A → List A;
+prependToAll _ nil ≔ nil;
+prependToAll sep (x ∷ xs) ≔ sep ∷ x ∷ prependToAll sep xs;
+
+intersperse : {A : Type} → A → List A → List A;
+intersperse _ nil ≔ nil;
+intersperse sep (x ∷ xs) ≔ x ∷ prependToAll sep xs;
+
+head : {A : Type} → List A → A;
+head (x ∷ _) ≔ x;
+
+tail : {A : Type} → List A → List A;
+tail (_ ∷ xs) ≔ xs;
+
+terminating
+transpose : {A : Type} → List (List A) → List (List A);
+transpose (nil ∷ _) ≔ nil;
+transpose xss ≔ (map head xss) ∷ (transpose (map tail xss));
+
+any : {A : Type} → (A → Bool) → List A → Bool;
+any f xs ≔ foldl (||) false (map f xs);
+
+null : {A : Type} → List A → Bool;
+null nil ≔ true;
+null _ ≔ false;
 
 qsHelper : {A : Type} → A → List A × List A → List A;
 qsHelper a (l , r) ≔ l ++ (a ∷ nil) ++ r;

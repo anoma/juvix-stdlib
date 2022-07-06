@@ -1,25 +1,66 @@
 module Stdlib.Data.Bool;
 
-  inductive Bool {
-    true : Bool;
-    false : Bool;
-  };
+inductive Bool {
+  true : Bool;
+  false : Bool;
+};
 
-  not : Bool → Bool;
-  not true ≔ false;
-  not false ≔ true;
+not : Bool → Bool;
+not true ≔ false;
+not false ≔ true;
 
-  infixr 2 ||;
-  || : Bool → Bool → Bool;
-  || false a ≔ a;
-  || true _ ≔ true;
+infixr 2 ||;
+|| : Bool → Bool → Bool;
+|| false a ≔ a;
+|| true _ ≔ true;
 
-  infixr 2 &&;
-  && : Bool → Bool → Bool;
-  && false _ ≔ false;
-  && true a ≔ a;
+infixr 2 &&;
+&& : Bool → Bool → Bool;
+&& false _ ≔ false;
+&& true a ≔ a;
 
-  if : {A : Type} → Bool → A → A → A;
-  if true a _ ≔ a;
-  if false _ b ≔ b;
+if : {A : Type} → Bool → A → A → A;
+if true a _ ≔ a;
+if false _ b ≔ b;
+
+--------------------------------------------------------------------------------
+-- Backend Booleans
+--------------------------------------------------------------------------------
+
+axiom BackendBool : Type;
+compile BackendBool {
+  c ↦ "bool";
+  ghc ↦ "Bool";
+};
+
+axiom backend-true : BackendBool;
+compile backend-true {
+  c ↦ "true";
+};
+
+axiom backend-false : BackendBool;
+compile backend-false {
+  c ↦ "false";
+};
+
+foreign ghc {
+  bool :: Bool -> a -> a -> a
+  bool True x _ = x
+  bool False _ y = y
+};
+
+foreign c {
+  void* boolInd(bool b, void* a1, void* a2) {
+    return b ? a1 : a2;
+  \}
+};
+
+axiom bool : BackendBool → Bool → Bool → Bool;
+compile bool {
+  c ↦ "boolInd";
+};
+
+from-backend-bool : BackendBool → Bool;
+from-backend-bool bb ≔ bool bb true false;
+
 end;

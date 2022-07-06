@@ -9,4 +9,8 @@ fromMaybe : {A : Type} → A → Maybe A → A;
 fromMaybe a nothing ≔ a;
 fromMaybe _ (just a) ≔ a;
 
+maybe : {A : Type} → {B : Type} → B → (A → B) → Maybe A → B;
+maybe b _ nothing ≔ b;
+maybe _ f (just a) ≔ f a;
+
 end;

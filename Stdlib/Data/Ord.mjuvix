@@ -16,6 +16,10 @@ isEQ : Ordering → Bool;
 isEQ EQ ≔ true;
 isEQ _ ≔ false;
 
+isGT : Ordering → Bool;
+isGT GT ≔ true;
+isGT _ ≔ false;
+
 ifOrd : {A : Type} → Ordering -> A → A → A → A;
 ifOrd LT lt eq gt ≔ lt;
 ifOrd EQ lt eq gt ≔ eq;

@@ -1,11 +1,15 @@
 module Stdlib.Data.Nat;
 
+open import Stdlib.Data.String;
+
+builtin natural
 inductive ℕ  {
   zero : ℕ;
   suc : ℕ → ℕ;
 };
 
 infixl 6 +;
+builtin natural-plus
 + : ℕ → ℕ → ℕ;
 + zero b ≔ b;
 + (suc a) b ≔ suc (a + b);
@@ -14,5 +18,80 @@ infixl 7 *;
 * : ℕ → ℕ → ℕ;
 * zero b ≔ zero;
 * (suc a) b ≔ b + (a * b);
+
+one : ℕ;
+one ≔ suc zero;
+
+two : ℕ;
+two ≔ suc one;
+
+three : ℕ;
+three ≔ suc two;
+
+four : ℕ;
+four ≔ suc three;
+
+five : ℕ;
+five ≔ suc four;
+
+six : ℕ;
+six ≔ suc five;
+
+seven : ℕ;
+seven ≔ suc six;
+
+eight : ℕ;
+eight ≔ suc seven;
+
+nine : ℕ;
+nine ≔ suc eight;
+
+--------------------------------------------------------------------------------
+-- Int
+--------------------------------------------------------------------------------
+
+axiom Int : Type;
+compile Int {
+  c ↦ "int";
+};
+
+foreign c {
+   int plus(int l, int r) {
+     return l + r;
+   \}
+};
+
+infix 6 +int;
+axiom +int : Int -> Int -> Int;
+compile +int {
+  c ↦ "plus";
+};
+
+foreign c {
+  int natInd(int n, int a1, minijuvix_function_t* a2) {
+    if (n <= 0) return a1;
+    return ((int (*) (minijuvix_function_t*, int))a2->fun)(a2, natInd(n - 1, a1, a2));
+  \}
+};
+
+axiom natInd : Int → ℕ → (ℕ → ℕ) → ℕ;
+compile natInd {
+  c ↦ "natInd";
+};
+
+from-backendNat : Int → ℕ;
+from-backendNat bb ≔ natInd bb zero suc;
+
+axiom intToStr : Int → String;
+compile intToStr {
+  c ↦ "intToStr";
+};
+
+natToInt : ℕ → Int;
+natToInt zero ≔ 0;
+natToInt (suc n) ≔ 1 +int (natToInt n);
+
+natToStr : ℕ → String;
+natToStr n ≔ intToStr (natToInt n);
 
 end;
