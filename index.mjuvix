@@ -11,6 +11,8 @@ Compiler: http://github.com/heliaxdev/minijuvix
 module index;
 
 import Stdlib.Prelude;
-import Stdlib.Function;
+import Stdlib.Data.Nat.Ord;
+import Stdlib.Data.List.Ord;
+import Stdlib.Data.String.Ord;
 
 end;

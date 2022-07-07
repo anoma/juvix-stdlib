@@ -1,0 +1,22 @@
+module Stdlib.System.IO;
+
+open import Stdlib.Data.Nat;
+open import Stdlib.Data.String;
+
+builtin IO axiom IO : Type;
+
+infixl 1 >>;
+builtin IO-sequence axiom >> : IO → IO → IO;
+builtin natural-print axiom printNat : ℕ → IO;
+
+axiom putStr : String → IO;
+compile putStr {
+  c ↦ "putStr";
+};
+
+axiom putStrLn : String → IO;
+compile putStrLn {
+  c ↦ "putStrLn";
+};
+
+end;

@@ -1,0 +1,21 @@
+module Stdlib.Data.String.Ord;
+
+open import Stdlib.Data.String;
+open import Stdlib.Data.Bool;
+
+foreign c {
+  bool cStrEq(char* l, char* r) {
+    return strcmp(l, r) == 0;
+  \}
+};
+
+axiom eqString : String → String → BackendBool;
+compile eqString  {
+  c ↦ "eqString";
+};
+
+infix 4 ==;
+== : String → String → Bool;
+== s1 s2 ≔ from-backend-bool (eqString s1 s2);
+
+end;
