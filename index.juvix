@@ -1,10 +1,10 @@
 {- 
 
-The MiniJuvix standard library
+The Juvix standard library
 ------------------------------
    
-Sources: http://github.com/heliaxdev/minijuvix-stdlib
-Compiler: http://github.com/heliaxdev/minijuvix
+Sources: http://github.com/anoma/juvix-stdlib
+Compiler: http://github.com/anoma/juvix
 
 -}
 

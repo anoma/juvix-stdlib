@@ -1,4 +1,4 @@
-name: MiniJuvix CI
+name: Juvix CI
 
 on:
   pull_request:
@@ -32,9 +32,9 @@ jobs:
         with:
           path: |
             ~/.stack
-            minijuvix/.stack-work
-            minijuvix/.hie
-          key: ${{ runner.os }}-v1-build-${{ matrix.ghc }}-${{ hashFiles('minijuvix/src/**/*.hs', 'minijuvix/app/**/*.hs',  'minijuvix/test/**/*.hs', 'minijuvix/package.yaml', 'minijuvix/stack.yaml') }}
+            juvix/.stack-work
+            juvix/.hie
+          key: ${{ runner.os }}-v1-build-${{ matrix.ghc }}-${{ hashFiles('juvix/src/**/*.hs', 'juvix/app/**/*.hs',  'juvix/test/**/*.hs', 'juvix/package.yaml', 'juvix/stack.yaml') }}
           restore-keys: |
             ${{ runner.os }}-v1-build-${{ matrix.ghc }}-
             ${{ runner.os }}-v1-build-
@@ -47,15 +47,15 @@ jobs:
           enable-stack: true
           stack-version: 'latest'
 
-      - name: Checkout MiniJuvix
+      - name: Checkout Juvix
         uses: actions/checkout@v3
         with:
-          repository: heliaxdev/minijuvix
-          path: minijuvix
+          repository: anoma/juvix
+          path: juvix
       
-      - name: Install MiniJuvix
+      - name: Install Juvix
         run: |
-          cd minijuvix
+          cd juvix
           echo "$GITHUB_WORKSPACE/.local/bin" >> $GITHUB_PATH
           make install
 
@@ -64,11 +64,11 @@ jobs:
  
       - name : Typecheck library code
         run : |
-          minijuvix microjuvix typecheck --only-errors --no-stdlib index.mjuvix
+          juvix microjuvix typecheck --only-errors --no-stdlib index.mjuvix
 
       - name: HTML
         run: |
-          minijuvix html index.mjuvix --theme ayu --recursive --print-metadata --no-stdlib --output-dir=docs/
+          juvix html index.mjuvix --theme ayu --recursive --print-metadata --no-stdlib --output-dir=docs/
 
       - if: github.event.pull_request.merged == true
         name: Deploy HTML to github pages

@@ -68,9 +68,9 @@ compile +int {
 };
 
 foreign c {
-  int natInd(int n, int a1, minijuvix_function_t* a2) {
+  int natInd(int n, int a1, juvix_function_t* a2) {
     if (n <= 0) return a1;
-    return ((int (*) (minijuvix_function_t*, int))a2->fun)(a2, natInd(n - 1, a1, a2));
+    return ((int (*) (juvix_function_t*, int))a2->fun)(a2, natInd(n - 1, a1, a2));
   \}
 };
 
