@@ -64,11 +64,11 @@ jobs:
  
       - name : Typecheck library code
         run : |
-          juvix microjuvix typecheck --only-errors --no-stdlib index.mjuvix
+          juvix microjuvix typecheck --only-errors --no-stdlib index.juvix
 
       - name: HTML
         run: |
-          juvix html index.mjuvix --theme ayu --recursive --print-metadata --no-stdlib --output-dir=docs/
+          juvix html index.juvix --theme ayu --recursive --print-metadata --no-stdlib --output-dir=docs/
 
       - if: github.event.pull_request.merged == true
         name: Deploy HTML to github pages
