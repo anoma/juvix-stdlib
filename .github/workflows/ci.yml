@@ -1,4 +1,4 @@
-name: Juvix CI
+name: Juvix standard library CI
 
 on:
   pull_request:
