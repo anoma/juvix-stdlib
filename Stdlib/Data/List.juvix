@@ -101,15 +101,4 @@ null : {A : Type} → List A → Bool;
 null nil ≔ true;
 null _ ≔ false;
 
-qsHelper : {A : Type} → A → List A × List A → List A;
-qsHelper a (l , r) ≔ l ++ (a ∷ nil) ++ r;
-
-terminating
-quickSort : {A : Type} → (A → A → Ordering) → List A → List A;
-quickSort _ nil ≔ nil;
-quickSort _ (x ∷ nil) ≔ x ∷ nil;
-quickSort cmp (x ∷ xs) ≔
-   qsHelper x
-   (both (quickSort cmp) (partition (isLT ∘ cmp x) xs));
-
 end;
