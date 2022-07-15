@@ -5,7 +5,7 @@ all:
 
 PHONY: check
 check:
-	@juvix microjuvix typecheck index.juvix --only-errors --no-stdlib
+	@juvix typecheck index.juvix --only-errors --no-stdlib
 
 PHONY: html
 html:
