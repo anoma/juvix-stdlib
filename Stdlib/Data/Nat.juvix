@@ -46,52 +46,9 @@ eight ≔ suc seven;
 nine : ℕ;
 nine ≔ suc eight;
 
---------------------------------------------------------------------------------
--- Int
---------------------------------------------------------------------------------
-
-axiom Int : Type;
-compile Int {
-  c ↦ "int";
-};
-
-foreign c {
-   int plus(int l, int r) {
-     return l + r;
-   \}
-};
-
-infix 6 +int;
-axiom +int : Int -> Int -> Int;
-compile +int {
-  c ↦ "plus";
-};
-
-foreign c {
-  int natInd(int n, int a1, juvix_function_t* a2) {
-    if (n <= 0) return a1;
-    return ((int (*) (juvix_function_t*, int))a2->fun)(a2, natInd(n - 1, a1, a2));
-  \}
-};
-
-axiom natInd : Int → ℕ → (ℕ → ℕ) → ℕ;
-compile natInd {
-  c ↦ "natInd";
-};
-
-from-backendNat : Int → ℕ;
-from-backendNat bb ≔ natInd bb zero suc;
-
-axiom intToStr : Int → String;
-compile intToStr {
+axiom natToStr : ℕ → String;
+compile natToStr {
   c ↦ "intToStr";
 };
-
-natToInt : ℕ → Int;
-natToInt zero ≔ 0;
-natToInt (suc n) ≔ 1 +int (natToInt n);
-
-natToStr : ℕ → String;
-natToStr n ≔ intToStr (natToInt n);
 
 end;
