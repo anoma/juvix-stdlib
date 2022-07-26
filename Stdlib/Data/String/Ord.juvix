@@ -11,7 +11,7 @@ foreign c {
 
 axiom eqString : String → String → BackendBool;
 compile eqString  {
-  c ↦ "eqString";
+  c ↦ "cStrEq";
 };
 
 infix 4 ==;
