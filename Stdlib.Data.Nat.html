@@ -44,52 +44,10 @@
   <span id="79"><span class="annot"><a href="Stdlib.Data.Nat.html#79"><span class="annot"><a href="Stdlib.Data.Nat.html#79"><span class="ju-function">nine</span></a></span></a></span></span> <span class="ju-keyword">:</span> <span class="annot"><a href="Stdlib.Data.Nat.html#60"><span class="ju-inductive">ℕ</span></a></span><span class="ju-delimiter">;</span>
   <span class="annot"><a href="Stdlib.Data.Nat.html#79"><span class="ju-function">nine</span></a></span> <span class="ju-keyword">≔</span> <span class="annot"><a href="Stdlib.Data.Nat.html#62"><span class="ju-constructor">suc</span></a></span> <span class="annot"><a href="Stdlib.Data.Nat.html#78"><span class="ju-function">eight</span></a></span><span class="ju-delimiter">;</span>
 
-  <span class="ju-keyword">axiom</span> <span class="annot"><a href="Stdlib.Data.Nat.html#80"><span class="ju-axiom">Int</span></a></span> <span class="ju-keyword">:</span> <span class="ju-keyword">Type</span><span class="ju-delimiter">;</span>
+  <span class="ju-keyword">axiom</span> <span class="annot"><a href="Stdlib.Data.Nat.html#80"><span class="ju-axiom">natToStr</span></a></span> <span class="ju-keyword">:</span> <span class="annot"><a href="Stdlib.Data.Nat.html#60"><span class="ju-inductive">ℕ</span></a></span> <span class="ju-keyword">→</span> <span class="annot"><a href="Stdlib.Data.String.html#59"><span class="ju-axiom">String</span></a></span><span class="ju-delimiter">;</span>
 
-  <span class="ju-keyword">compile</span> <span class="annot"><a href="Stdlib.Data.Nat.html#80"><span class="ju-axiom">Int</span></a></span> <span class="ju-delimiter">{</span>
-    <span class="ju-keyword">c</span> <span class="ju-keyword">↦</span> <span class="ju-string">&quot;int&quot;</span><span class="ju-delimiter">;</span>
-  <span class="ju-delimiter">}</span><span class="ju-delimiter">;</span>
-
-  <span class="ju-keyword">foreign</span> <span class="ju-keyword">c</span> {
-  int plus(int l, int r) {
-    return l + r;
-  \}
-  }<span class="ju-delimiter">;</span>
-
-  <span class="ju-keyword">infix</span> 6 <span class="ju-var">+int</span><span class="ju-delimiter">;</span>
-  <span class="ju-keyword">axiom</span> <span class="annot"><a href="Stdlib.Data.Nat.html#81"><span class="ju-axiom">+int</span></a></span> <span class="ju-keyword">:</span> <span class="annot"><a href="Stdlib.Data.Nat.html#80"><span class="ju-axiom">Int</span></a></span> <span class="ju-keyword">→</span> <span class="annot"><a href="Stdlib.Data.Nat.html#80"><span class="ju-axiom">Int</span></a></span> <span class="ju-keyword">→</span> <span class="annot"><a href="Stdlib.Data.Nat.html#80"><span class="ju-axiom">Int</span></a></span><span class="ju-delimiter">;</span>
-
-  <span class="ju-keyword">compile</span> <span class="annot"><a href="Stdlib.Data.Nat.html#81"><span class="ju-axiom">+int</span></a></span> <span class="ju-delimiter">{</span>
-    <span class="ju-keyword">c</span> <span class="ju-keyword">↦</span> <span class="ju-string">&quot;plus&quot;</span><span class="ju-delimiter">;</span>
-  <span class="ju-delimiter">}</span><span class="ju-delimiter">;</span>
-
-  <span class="ju-keyword">foreign</span> <span class="ju-keyword">c</span> {
-  int natInd(int n, int a1, juvix_function_t* a2) {
-    if (n &lt;= 0) return a1;
-    return ((int (*) (juvix_function_t*, int))a2-&gt;fun)(a2, natInd(n - 1, a1, a2));
-  \}
-  }<span class="ju-delimiter">;</span>
-
-  <span class="ju-keyword">axiom</span> <span class="annot"><a href="Stdlib.Data.Nat.html#82"><span class="ju-axiom">natInd</span></a></span> <span class="ju-keyword">:</span> <span class="annot"><a href="Stdlib.Data.Nat.html#80"><span class="ju-axiom">Int</span></a></span> <span class="ju-keyword">→</span> <span class="annot"><a href="Stdlib.Data.Nat.html#60"><span class="ju-inductive">ℕ</span></a></span> <span class="ju-keyword">→</span> <span class="ju-delimiter">(</span><span class="annot"><a href="Stdlib.Data.Nat.html#60"><span class="ju-inductive">ℕ</span></a></span> <span class="ju-keyword">→</span> <span class="annot"><a href="Stdlib.Data.Nat.html#60"><span class="ju-inductive">ℕ</span></a></span><span class="ju-delimiter">)</span> <span class="ju-keyword">→</span> <span class="annot"><a href="Stdlib.Data.Nat.html#60"><span class="ju-inductive">ℕ</span></a></span><span class="ju-delimiter">;</span>
-
-  <span class="ju-keyword">compile</span> <span class="annot"><a href="Stdlib.Data.Nat.html#82"><span class="ju-axiom">natInd</span></a></span> <span class="ju-delimiter">{</span>
-    <span class="ju-keyword">c</span> <span class="ju-keyword">↦</span> <span class="ju-string">&quot;natInd&quot;</span><span class="ju-delimiter">;</span>
-  <span class="ju-delimiter">}</span><span class="ju-delimiter">;</span>
-
-  <span id="83"><span class="annot"><a href="Stdlib.Data.Nat.html#83"><span class="annot"><a href="Stdlib.Data.Nat.html#83"><span class="ju-function">from-backendNat</span></a></span></a></span></span> <span class="ju-keyword">:</span> <span class="annot"><a href="Stdlib.Data.Nat.html#80"><span class="ju-axiom">Int</span></a></span> <span class="ju-keyword">→</span> <span class="annot"><a href="Stdlib.Data.Nat.html#60"><span class="ju-inductive">ℕ</span></a></span><span class="ju-delimiter">;</span>
-  <span class="annot"><a href="Stdlib.Data.Nat.html#83"><span class="ju-function">from-backendNat</span></a></span> <span id="84"><span class="annot"><a href="Stdlib.Data.Nat.html#84"><span class="annot"><a href="Stdlib.Data.Nat.html#84"><span class="ju-var">bb</span></a></span></a></span></span> <span class="ju-keyword">≔</span> <span class="annot"><a href="Stdlib.Data.Nat.html#82"><span class="ju-axiom">natInd</span></a></span> <span class="annot"><a href="Stdlib.Data.Nat.html#84"><span class="ju-var">bb</span></a></span> <span class="annot"><a href="Stdlib.Data.Nat.html#61"><span class="ju-constructor">zero</span></a></span> <span class="annot"><a href="Stdlib.Data.Nat.html#62"><span class="ju-constructor">suc</span></a></span><span class="ju-delimiter">;</span>
-
-  <span class="ju-keyword">axiom</span> <span class="annot"><a href="Stdlib.Data.Nat.html#85"><span class="ju-axiom">intToStr</span></a></span> <span class="ju-keyword">:</span> <span class="annot"><a href="Stdlib.Data.Nat.html#80"><span class="ju-axiom">Int</span></a></span> <span class="ju-keyword">→</span> <span class="annot"><a href="Stdlib.Data.String.html#59"><span class="ju-axiom">String</span></a></span><span class="ju-delimiter">;</span>
-
-  <span class="ju-keyword">compile</span> <span class="annot"><a href="Stdlib.Data.Nat.html#85"><span class="ju-axiom">intToStr</span></a></span> <span class="ju-delimiter">{</span>
+  <span class="ju-keyword">compile</span> <span class="annot"><a href="Stdlib.Data.Nat.html#80"><span class="ju-axiom">natToStr</span></a></span> <span class="ju-delimiter">{</span>
     <span class="ju-keyword">c</span> <span class="ju-keyword">↦</span> <span class="ju-string">&quot;intToStr&quot;</span><span class="ju-delimiter">;</span>
   <span class="ju-delimiter">}</span><span class="ju-delimiter">;</span>
-
-  <span id="86"><span class="annot"><a href="Stdlib.Data.Nat.html#86"><span class="annot"><a href="Stdlib.Data.Nat.html#86"><span class="ju-function">natToInt</span></a></span></a></span></span> <span class="ju-keyword">:</span> <span class="annot"><a href="Stdlib.Data.Nat.html#60"><span class="ju-inductive">ℕ</span></a></span> <span class="ju-keyword">→</span> <span class="annot"><a href="Stdlib.Data.Nat.html#80"><span class="ju-axiom">Int</span></a></span><span class="ju-delimiter">;</span>
-  <span class="annot"><a href="Stdlib.Data.Nat.html#86"><span class="ju-function">natToInt</span></a></span> <span class="annot"><a href="Stdlib.Data.Nat.html#61"><span class="ju-constructor">zero</span></a></span> <span class="ju-keyword">≔</span> <span class="ju-number">0</span><span class="ju-delimiter">;</span>
-  <span class="annot"><a href="Stdlib.Data.Nat.html#86"><span class="ju-function">natToInt</span></a></span> <span class="ju-delimiter">(</span><span class="annot"><a href="Stdlib.Data.Nat.html#62"><span class="ju-constructor">suc</span></a></span> <span id="87"><span class="annot"><a href="Stdlib.Data.Nat.html#87"><span class="annot"><a href="Stdlib.Data.Nat.html#87"><span class="ju-var">n</span></a></span></a></span></span><span class="ju-delimiter">)</span> <span class="ju-keyword">≔</span> <span class="ju-number">1</span> <span class="annot"><a href="Stdlib.Data.Nat.html#81"><span class="ju-axiom">+int</span></a></span> <span class="annot"><a href="Stdlib.Data.Nat.html#86"><span class="ju-function">natToInt</span></a></span> <span class="annot"><a href="Stdlib.Data.Nat.html#87"><span class="ju-var">n</span></a></span><span class="ju-delimiter">;</span>
-
-  <span id="88"><span class="annot"><a href="Stdlib.Data.Nat.html#88"><span class="annot"><a href="Stdlib.Data.Nat.html#88"><span class="ju-function">natToStr</span></a></span></a></span></span> <span class="ju-keyword">:</span> <span class="annot"><a href="Stdlib.Data.Nat.html#60"><span class="ju-inductive">ℕ</span></a></span> <span class="ju-keyword">→</span> <span class="annot"><a href="Stdlib.Data.String.html#59"><span class="ju-axiom">String</span></a></span><span class="ju-delimiter">;</span>
-  <span class="annot"><a href="Stdlib.Data.Nat.html#88"><span class="ju-function">natToStr</span></a></span> <span id="89"><span class="annot"><a href="Stdlib.Data.Nat.html#89"><span class="annot"><a href="Stdlib.Data.Nat.html#89"><span class="ju-var">n</span></a></span></a></span></span> <span class="ju-keyword">≔</span> <span class="annot"><a href="Stdlib.Data.Nat.html#85"><span class="ju-axiom">intToStr</span></a></span> <span class="ju-delimiter">(</span><span class="annot"><a href="Stdlib.Data.Nat.html#86"><span class="ju-function">natToInt</span></a></span> <span class="annot"><a href="Stdlib.Data.Nat.html#89"><span class="ju-var">n</span></a></span><span class="ju-delimiter">)</span><span class="ju-delimiter">;</span>
 <span class="ju-keyword">end</span><span class="ju-delimiter">;</span>
-</pre><footer><pre>Powered by <a href="https://anoma.github.io/juvix">Juvix CLI </a><a href="https://github.com/anoma/juvix/commit/f30ddf7">0.2.1-f30ddf7</a><br><span>Last modified on 2022-07-15 14:20 UTC</span></pre></footer></html>
+</pre><footer><pre>Powered by <a href="https://anoma.github.io/juvix">Juvix CLI </a><a href="https://github.com/anoma/juvix/commit/6be62a0">0.2.2-6be62a0</a><br><span>Last modified on 2022-07-26 10:22 UTC</span></pre></footer></html>
