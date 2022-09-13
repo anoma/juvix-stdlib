@@ -3,50 +3,50 @@ module Stdlib.Data.Nat;
 open import Stdlib.Data.String;
 
 builtin natural
-inductive ℕ  {
-  zero : ℕ;
-  suc : ℕ → ℕ;
+inductive Nat  {
+  zero : Nat;
+  suc : Nat → Nat;
 };
 
 infixl 6 +;
 builtin natural-plus
-+ : ℕ → ℕ → ℕ;
++ : Nat → Nat → Nat;
 + zero b ≔ b;
 + (suc a) b ≔ suc (a + b);
 
 infixl 7 *;
-* : ℕ → ℕ → ℕ;
+* : Nat → Nat → Nat;
 * zero b ≔ zero;
 * (suc a) b ≔ b + (a * b);
 
-one : ℕ;
+one : Nat;
 one ≔ suc zero;
 
-two : ℕ;
+two : Nat;
 two ≔ suc one;
 
-three : ℕ;
+three : Nat;
 three ≔ suc two;
 
-four : ℕ;
+four : Nat;
 four ≔ suc three;
 
-five : ℕ;
+five : Nat;
 five ≔ suc four;
 
-six : ℕ;
+six : Nat;
 six ≔ suc five;
 
-seven : ℕ;
+seven : Nat;
 seven ≔ suc six;
 
-eight : ℕ;
+eight : Nat;
 eight ≔ suc seven;
 
-nine : ℕ;
+nine : Nat;
 nine ≔ suc eight;
 
-axiom natToStr : ℕ → String;
+axiom natToStr : Nat → String;
 compile natToStr {
   c ↦ "intToStr";
 };
