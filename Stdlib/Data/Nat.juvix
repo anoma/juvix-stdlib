@@ -11,13 +11,13 @@ inductive Nat  {
 infixl 6 +;
 builtin natural-plus
 + : Nat → Nat → Nat;
-+ zero b ≔ b;
-+ (suc a) b ≔ suc (a + b);
++ zero b := b;
++ (suc a) b := suc (a + b);
 
 infixl 7 *;
 * : Nat → Nat → Nat;
-* zero b ≔ zero;
-* (suc a) b ≔ b + (a * b);
+* zero b := zero;
+* (suc a) b := b + (a * b);
 
 one : Nat;
 one ≔ suc zero;

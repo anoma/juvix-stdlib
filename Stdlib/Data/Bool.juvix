@@ -21,7 +21,7 @@ infixr 2 &&;
 
 if : {A : Type} → Bool → A → A → A;
 if true a _ ≔ a;
-if false _ b ≔ b;
+if false _ b := b;
 
 --------------------------------------------------------------------------------
 -- Backend Booleans
@@ -61,6 +61,6 @@ compile bool {
 };
 
 from-backend-bool : BackendBool → Bool;
-from-backend-bool bb ≔ bool bb true false;
+from-backend-bool bb := bool bb true false;
 
 end;

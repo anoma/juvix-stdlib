@@ -16,6 +16,6 @@ compile eqString  {
 
 infix 4 ==;
 == : String → String → Bool;
-== s1 s2 ≔ from-backend-bool (eqString s1 s2);
+== s1 s2 := from-backend-bool (eqString s1 s2);
 
 end;

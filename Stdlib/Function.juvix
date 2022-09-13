@@ -11,7 +11,7 @@ id : {A : Type} → A → A;
 id a ≔ a;
 
 flip : {A : Type} → {B : Type} → {C : Type} → (A → B → C) → B → A → C;
-flip f b a ≔ f a b;
+flip f b a := f a b;
 
 infixr 0 $;
 $ : {A : Type} → {B : Type} → (A → B) → A → B;
@@ -19,6 +19,6 @@ $ f x ≔ f x;
 
 infixl 0 on;
 on : {A : Type} → {B : Type} → {C : Type} → (B -> B -> C) -> (A -> B) -> A -> A -> C;
-on f g a b ≔ f (g a) (g b);
+on f g a b := f (g a) (g b);
 
 end;

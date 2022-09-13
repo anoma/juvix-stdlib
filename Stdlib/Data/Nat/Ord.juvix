@@ -8,26 +8,26 @@ compare : Nat → Nat → Ordering;
 compare zero zero ≔ EQ;
 compare zero _ ≔ LT;
 compare (suc _) zero ≔ GT;
-compare (suc a) (suc b) ≔ compare a b;
+compare (suc a) (suc b) := compare a b;
 
 infix 4 ==;
 == : Nat → Nat → Bool;
-== a b ≔ isEQ (compare a b);
+== a b := isEQ (compare a b);
 
 infix 4 <;
 < : Nat → Nat → Bool;
-< a b ≔ isLT (compare a b);
+< a b := isLT (compare a b);
 
 infix 4 <=;
 <= : Nat → Nat → Bool;
-<= a b ≔ not (isGT (compare a b));
+<= a b := not (isGT (compare a b));
 
 infix 4 >;
 > : Nat → Nat → Bool;
-> a b ≔ isGT (compare a b);
+> a b := isGT (compare a b);
 
 infix 4 >=;
 >= : Nat → Nat → Bool;
->= a b ≔ not (isLT (compare a b));
+>= a b := not (isLT (compare a b));
 
 end;
