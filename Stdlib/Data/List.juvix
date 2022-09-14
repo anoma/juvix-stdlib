@@ -34,22 +34,22 @@ filter f (h ∷ hs) ≔ if (f h)
    (h ∷ filter f hs)
    (filter f hs);
 
-length : {A : Type} → List A → ℕ;
+length : {A : Type} → List A → Nat;
 length nil ≔ zero;
 length (_ ∷ l) ≔ suc (length l);
 
 reverse : {A : Type} → List A → List A;
 reverse ≔ foldl (flip (∷)) nil;
 
-replicate : {A : Type} → ℕ → A → List A;
+replicate : {A : Type} → Nat → A → List A;
 replicate zero _ ≔ nil;
 replicate (suc n) x ≔  x ∷ replicate n x;
 
-take : {A : Type} → ℕ → List A → List A;
+take : {A : Type} → Nat → List A → List A;
 take (suc n) (x ∷ xs) ≔ x ∷ take n xs;
 take _ _ ≔ nil;
 
-splitAt : {A : Type} → ℕ → List A → List A × List A;
+splitAt : {A : Type} → Nat → List A → List A × List A;
 splitAt _ nil ≔ nil , nil ;
 splitAt zero xs ≔  nil , xs;
 splitAt (suc zero) (x ∷ xs) ≔ x ∷ nil , xs;
