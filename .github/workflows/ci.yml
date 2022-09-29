@@ -64,7 +64,7 @@ jobs:
  
       - name : Typecheck library code
         run : |
-          juvix typecheck --only-errors --no-stdlib index.juvix
+          juvix --only-errors --no-stdlib typecheck index.juvix
 
       - name: HTML
         run: |
