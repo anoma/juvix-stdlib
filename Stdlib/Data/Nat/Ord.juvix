@@ -5,9 +5,9 @@ open import Stdlib.Data.Ord;
 open import Stdlib.Data.Bool;
 
 compare : Nat → Nat → Ordering;
-compare zero zero ≔ EQ;
-compare zero _ ≔ LT;
-compare (suc _) zero ≔ GT;
+compare zero zero := EQ;
+compare zero _ := LT;
+compare (suc _) zero := GT;
 compare (suc a) (suc b) := compare a b;
 
 infix 4 ==;

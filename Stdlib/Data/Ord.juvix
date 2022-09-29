@@ -9,20 +9,20 @@ inductive Ordering {
 };
 
 isLT : Ordering → Bool;
-isLT LT ≔ true;
-isLT _ ≔ false;
+isLT LT := true;
+isLT _ := false;
 
 isEQ : Ordering → Bool;
-isEQ EQ ≔ true;
-isEQ _ ≔ false;
+isEQ EQ := true;
+isEQ _ := false;
 
 isGT : Ordering → Bool;
-isGT GT ≔ true;
-isGT _ ≔ false;
+isGT GT := true;
+isGT _ := false;
 
 ifOrd : {A : Type} → Ordering -> A → A → A → A;
-ifOrd LT lt eq gt ≔ lt;
-ifOrd EQ lt eq gt ≔ eq;
-ifOrd GT lt eq gt ≔ gt;
+ifOrd LT lt eq gt := lt;
+ifOrd EQ lt eq gt := eq;
+ifOrd GT lt eq gt := gt;
 
 end;

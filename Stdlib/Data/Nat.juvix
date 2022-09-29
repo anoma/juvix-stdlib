@@ -20,31 +20,31 @@ infixl 7 *;
 * (suc a) b := b + (a * b);
 
 one : Nat;
-one ≔ suc zero;
+one := suc zero;
 
 two : Nat;
-two ≔ suc one;
+two := suc one;
 
 three : Nat;
-three ≔ suc two;
+three := suc two;
 
 four : Nat;
-four ≔ suc three;
+four := suc three;
 
 five : Nat;
-five ≔ suc four;
+five := suc four;
 
 six : Nat;
-six ≔ suc five;
+six := suc five;
 
 seven : Nat;
-seven ≔ suc six;
+seven := suc six;
 
 eight : Nat;
-eight ≔ suc seven;
+eight := suc seven;
 
 nine : Nat;
-nine ≔ suc eight;
+nine := suc eight;
 
 axiom natToStr : Nat → String;
 compile natToStr {
