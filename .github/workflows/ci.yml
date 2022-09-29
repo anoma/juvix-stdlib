@@ -68,7 +68,7 @@ jobs:
 
       - name: HTML
         run: |
-          juvix html index.juvix --theme ayu --recursive --print-metadata --no-stdlib --output-dir=docs/
+          juvix --no-stdlib html --theme ayu --recursive --print-metadata --output-dir=docs/ index.juvix
 
       - if: github.event.pull_request.merged == true
         name: Deploy HTML to github pages
