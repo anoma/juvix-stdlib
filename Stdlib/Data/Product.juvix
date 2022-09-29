@@ -10,7 +10,7 @@ uncurry : {A : Type} → {B : Type} → {C : Type} → (A → B → C) → A × 
 uncurry f (a , b) := f a b;
 
 fst : {A : Type} → {B : Type} → A × B → A;
-fst (a , _) ≔ a;
+fst (a , _) := a;
 
 snd : {A : Type} → {B : Type} → A × B → B;
 snd (_ , b) := b;
