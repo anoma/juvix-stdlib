@@ -2,14 +2,14 @@ module Stdlib.Data.Nat;
 
 open import Stdlib.Data.String;
 
-builtin natural
+builtin nat
 inductive Nat  {
   zero : Nat;
   suc : Nat → Nat;
 };
 
 infixl 6 +;
-builtin natural-plus
+builtin nat-plus
 + : Nat → Nat → Nat;
 + zero b := b;
 + (suc a) b := suc (a + b);

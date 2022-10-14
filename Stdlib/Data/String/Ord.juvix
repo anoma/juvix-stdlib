@@ -9,13 +9,13 @@ foreign c {
   \}
 };
 
-axiom eqString : String → String → BackendBool;
+axiom eqString : String → String → Bool;
 compile eqString  {
   c ↦ "cStrEq";
 };
 
 infix 4 ==;
 == : String → String → Bool;
-== s1 s2 := from-backend-bool (eqString s1 s2);
+== s1 s2 := eqString s1 s2;
 
 end;
