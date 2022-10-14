@@ -1,5 +1,6 @@
 module Stdlib.Data.Bool;
 
+builtin bool
 inductive Bool {
   true : Bool;
   false : Bool;
@@ -19,6 +20,7 @@ infixr 2 &&;
 && false _ := false;
 && true a := a;
 
+builtin bool-if
 if : {A : Type} → Bool → A → A → A;
 if true a _ := a;
 if false _ b := b;
