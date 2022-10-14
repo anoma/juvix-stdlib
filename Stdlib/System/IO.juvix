@@ -7,7 +7,7 @@ builtin IO axiom IO : Type;
 
 infixl 1 >>;
 builtin IO-sequence axiom >> : IO → IO → IO;
-builtin natural-print axiom printNat : Nat → IO;
+builtin nat-print axiom printNat : Nat → IO;
 
 axiom putStr : String → IO;
 compile putStr {
