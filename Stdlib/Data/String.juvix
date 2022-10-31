@@ -1,11 +1,5 @@
 module Stdlib.Data.String;
 
-open import Stdlib.Data.Bool;
-
-axiom String : Type;
-
-compile String {
-  c ↦ "char*";
-};
+builtin string axiom String : Type;
 
 end;

@@ -8,6 +8,7 @@ builtin IO axiom IO : Type;
 infixl 1 >>;
 builtin IO-sequence axiom >> : IO → IO → IO;
 builtin nat-print axiom printNat : Nat → IO;
+builtin string-print axiom printString : String → IO;
 
 axiom putStr : String → IO;
 compile putStr {
