@@ -2,6 +2,7 @@ module Stdlib.System.IO;
 
 open import Stdlib.Data.Nat;
 open import Stdlib.Data.String;
+open import Stdlib.Data.Bool;
 
 builtin IO axiom IO : Type;
 
@@ -9,6 +10,7 @@ infixl 1 >>;
 builtin IO-sequence axiom >> : IO → IO → IO;
 builtin nat-print axiom printNat : Nat → IO;
 builtin string-print axiom printString : String → IO;
+builtin bool-print axiom printBool : Bool → IO;
 
 axiom putStr : String → IO;
 compile putStr {
