@@ -12,6 +12,15 @@ builtin nat-print axiom printNat : Nat → IO;
 builtin string-print axiom printString : String → IO;
 builtin bool-print axiom printBool : Bool → IO;
 
+printNatLn : Nat → IO;
+printNatLn n := printNat n >> printString "\n";
+
+printStringLn : String → IO;
+printStringLn s := printString s >> printString "\n";
+
+printBoolLn : Bool → IO;
+printBoolLn b := printBool b >> printString "\n";
+
 axiom putStr : String → IO;
 compile putStr {
   c ↦ "putStr";
