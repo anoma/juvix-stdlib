@@ -21,8 +21,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest]
-        ghc: ["9.2.3"]
+        os: [ubuntu-20.04]
+        ghc: ["9.2.5"]
     steps:
       - uses: actions/cache@v3
         name: Cache Stack
