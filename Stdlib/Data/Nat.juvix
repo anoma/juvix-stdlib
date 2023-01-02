@@ -1,6 +1,7 @@
 module Stdlib.Data.Nat;
 
 open import Stdlib.Data.String;
+open import Stdlib.Data.Bool;
 
 builtin nat
 type Nat  :=
@@ -17,6 +18,43 @@ infixl 7 *;
 * : Nat → Nat → Nat;
 * zero b := zero;
 * (suc a) b := b + (a * b);
+
+sub : Nat → Nat → Nat;
+sub zero _ := zero;
+sub n zero := n;
+sub (suc n) (suc m) := sub n m;
+
+div : Nat → Nat → Nat;
+div zero _ := zero;
+div n m := suc (div (sub n m) m);
+
+infixl 5 <=;
+<= : Nat → Nat → Bool;
+<= zero _ := true;
+<= _ zero := false;
+<= (suc n) (suc m) := n <= m;
+
+infixl 5 <;
+< : Nat → Nat → Bool;
+< n m := suc n <= m;
+
+infixl 5 >=;
+>= : Nat → Nat → Bool;
+>= n m := m <= n;
+
+infixl 5 >;
+> : Nat → Nat → Bool;
+> n m := m < n;
+
+infixl 5 ==;
+== : Nat → Nat → Bool;
+== zero zero := true;
+== zero _ := false;
+== _ zero := false;
+== (suc n) (suc m) := n == m;
+
+mod : Nat → Nat → Nat;
+mod n m := sub n ((div n m) * m);
 
 one : Nat;
 one := suc zero;
