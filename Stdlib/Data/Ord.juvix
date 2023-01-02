@@ -2,11 +2,10 @@ module Stdlib.Data.Ord;
 
 open import Stdlib.Data.Bool;
 
-inductive Ordering {
-  LT : Ordering;
-  EQ : Ordering;
-  GT : Ordering;
-};
+type Ordering :=
+    LT : Ordering
+  | EQ : Ordering
+  | GT : Ordering;
 
 isLT : Ordering → Bool;
 isLT LT := true;

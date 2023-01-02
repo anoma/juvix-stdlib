@@ -16,3 +16,5 @@ import Stdlib.Data.List.Ord;
 import Stdlib.Data.String.Ord;
 
 end;
+
+{- DEBUG: InternalTypecheck -}

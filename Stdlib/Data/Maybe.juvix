@@ -1,9 +1,9 @@
 module Stdlib.Data.Maybe;
 
-inductive Maybe (A : Type) {
-  nothing : Maybe A;
-  just : A → Maybe A;
-};
+type Maybe (A : Type) :=
+    nothing : Maybe A
+  | just : A → Maybe A;
+
 
 fromMaybe : {A : Type} → A → Maybe A → A;
 fromMaybe a nothing := a;

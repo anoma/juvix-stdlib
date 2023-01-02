@@ -1,10 +1,9 @@
 module Stdlib.Data.Bool;
 
 builtin bool
-inductive Bool {
-  true : Bool;
+type Bool :=
+  true : Bool |
   false : Bool;
-};
 
 not : Bool → Bool;
 not true := false;

@@ -3,10 +3,9 @@ module Stdlib.Data.Nat;
 open import Stdlib.Data.String;
 
 builtin nat
-inductive Nat  {
-  zero : Nat;
-  suc : Nat → Nat;
-};
+type Nat  :=
+  zero : Nat
+  | suc : Nat → Nat;
 
 infixl 6 +;
 builtin nat-plus
