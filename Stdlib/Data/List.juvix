@@ -6,10 +6,10 @@ open import Stdlib.Data.Nat;
 open import Stdlib.Data.Ord;
 open import Stdlib.Data.Product;
 
-infixr 5 ∷;
+infixr 5 ::;
 type List (a : Type) :=
-    nil : List a 
-  | ∷   : a → List a → List a;
+    nil : List a
+  | :: : a → List a → List a;
 
 elem : {A : Type} → (A → A → Bool) → A → List A → Bool;
 elem _ _ nil := false;
