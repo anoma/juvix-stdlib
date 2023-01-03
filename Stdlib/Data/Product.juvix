@@ -2,9 +2,9 @@ module Stdlib.Data.Product;
 
 infixr 2 ×;
 infixr 4 ,;
-inductive × (A : Type) (B : Type) {
+type × (A : Type) (B : Type) :=
   , : A → B → A × B;
-};
+
 
 uncurry : {A : Type} → {B : Type} → {C : Type} → (A → B → C) → A × B → C;
 uncurry f (a , b) := f a b;
