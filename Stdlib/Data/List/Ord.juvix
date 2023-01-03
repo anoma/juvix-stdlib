@@ -5,9 +5,9 @@ open import Stdlib.Data.List;
 
 compare : {A : Type} → (A → A → Ordering) → List A → List A → Ordering;
 compare _ nil nil := EQ;
-compare _ nil (_ ∷ _) := LT;
-compare _ (_ ∷ _) nil := GT;
-compare cmp (x ∷ xs) (y ∷ ys) := ifOrd (cmp x y)
+compare _ nil (_ :: _) := LT;
+compare _ (_ :: _) nil := GT;
+compare cmp (x :: xs) (y :: ys) := ifOrd (cmp x y)
   LT
   (compare cmp xs ys)
   GT;
