@@ -21,4 +21,7 @@ infixl 0 on;
 on : {A : Type} → {B : Type} → {C : Type} → (B -> B -> C) -> (A -> B) -> A -> A -> C;
 on f g a b := f (g a) (g b);
 
+case : {A : Type} -> {B : Type} -> A -> (A -> B) -> B;
+case expr b := b expr;
+
 end;
