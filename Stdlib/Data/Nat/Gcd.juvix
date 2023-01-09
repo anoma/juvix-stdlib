@@ -1,0 +1,14 @@
+module Stdlib.Data.Nat.Gcd;
+
+  open import Stdlib.Prelude;
+  open import Stdlib.Data.Nat.Ord;
+
+  terminating
+  gcd : Nat → Nat → Nat;
+  gcd a b :=
+    if (a == b)
+      a
+      (if (a > b)
+        (gcd (sub a b)  b)
+        (gcd a (sub b a)));
+end;
