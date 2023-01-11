@@ -20,13 +20,11 @@
     "explorer.confirmDelete": false,
     "explorer.confirmDragAndDrop": false,
     "files.trimTrailingWhitespace": true,
-    "workbench.preferredDarkColorTheme": "Visual Studio Dark",
-    "workbench.colorTheme": "Visual Studio Dark",
     "breadcrumbs.enabled": false,
     "extensions.ignoreRecommendations": true,
     "terminal.integrated.confirmOnKill": "never",
     "juvix-mode.opts": {
-      "internalBuildDir": "/home/vscode/.local/juvix"
+      "internalBuildDir": "/workspaces/juvix-stdlib/.juvix-build"
     },
     "juvix-mode.bin.path": "/home/vscode/.local/bin/",
     "juvix-mode.input.languages": [
@@ -36,8 +34,8 @@
     "juvix-mode.reloadReplOnSave": true
   },
   "extensions": [
-    "Heliax.juvix-mode",
-    "doomsec.doom-theme"
+    "Heliax.juvix-mode"
   ],
   "remoteUser": "vscode"
 }
+
