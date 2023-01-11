@@ -28,7 +28,7 @@
     "juvix-mode.opts": {
       "internalBuildDir": "/home/vscode/.local/juvix"
     },
-    "juvix-mode.bin.path": "/home/vscode/.local/bin/juvix",
+    "juvix-mode.bin.path": "/home/vscode/.local/bin/",
     "juvix-mode.input.languages": [
       "Juvix",
       "JuvixCore"

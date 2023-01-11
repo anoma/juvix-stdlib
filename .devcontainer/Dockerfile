@@ -4,25 +4,19 @@ ARG VARIANT="ubuntu-22.04"
 FROM mcr.microsoft.com/vscode/devcontainers/base:0-${VARIANT}
 ENV DEBIAN_FRONTEND=noninteractive
 
-# OS packages for ghcup and juvix runtime
 RUN apt-get update && \
     apt-get -y install --no-install-recommends \
     curl \
     sudo \
     wget \
-    unzip \
     git \
-    jq \
-    bc \
     make \
     cmake \
     clang \
     lldb \
     lld \
     llvm \
-    automake \
     rsync \
-    htop \
     build-essential \
     lsb-release \
     pkg-config \
@@ -35,9 +29,6 @@ RUN apt-get update && \
     libtinfo-dev \
     libsystemd-dev \
     zlib1g-dev \
-    g++ \
-    libncurses-dev \
-    libncursesw5 \
     libtinfo5 \
     libtool \
     autoconf && apt-get clean
