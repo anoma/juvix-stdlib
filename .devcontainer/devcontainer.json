@@ -1,0 +1,48 @@
+{
+  "name": "Ubuntu",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": {
+      "USERNAME": "vscode",
+      "VARIANT": "ubuntu-22.04"
+    }
+  },
+  "runArgs": [
+    "--privileged"
+  ],
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "8gb",
+    "storage": "32gb"
+  },
+  "settings": {
+    "editor.tabSize": 2,
+    "editor.renderWhitespace": "trailing",
+    "editor.wordWrap": "wordWrapColumn",
+    "editor.fontSize": 16,
+    "editor.minimap.enabled": false,
+    "editor.hover.delay": 700,
+    "explorer.confirmDelete": false,
+    "explorer.confirmDragAndDrop": false,
+    "files.trimTrailingWhitespace": true,
+    "workbench.preferredDarkColorTheme": "Visual Studio Dark",
+    "workbench.colorTheme": "Visual Studio Dark",
+    "breadcrumbs.enabled": false,
+    "extensions.ignoreRecommendations": true,
+    "terminal.integrated.confirmOnKill": "never",
+    "juvix-mode.opts": {
+      "internalBuildDir": "/home/vscode/.local/juvix"
+    },
+    "juvix-mode.bin.path": "/home/vscode/.local/bin/juvix",
+    "juvix-mode.input.languages": [
+      "Juvix",
+      "JuvixCore"
+    ],
+    "juvix-mode.reloadReplOnSave": true
+  },
+  "extensions": [
+    "Heliax.juvix-mode",
+    "doomsec.doom-theme"
+  ],
+  "remoteUser": "vscode"
+}
