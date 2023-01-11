@@ -20,17 +20,7 @@ RUN apt-get update && \
     build-essential \
     lsb-release \
     pkg-config \
-    libffi-dev \
-    libgmp-dev \
-    libgmp10 \
     software-properties-common \
-    libssl-dev \
-    libicu-dev \
-    libtinfo-dev \
-    libsystemd-dev \
-    zlib1g-dev \
-    libtinfo5 \
-    libtool \
     autoconf && apt-get clean
 
 ENV PATH=${PATH}:/home/vscode/.local/bin
@@ -50,11 +40,11 @@ RUN sudo bash -c 'curl -s https://api.github.com/repos/anoma/juvix-nightly-build
       | wget --output-document juvix.tar.gz -qi - \
       && tar xfv juvix.tar.gz --directory=/home/vscode/.local/bin/'
 
-RUN sudo bash -c 'mkdir -p /home/vscode/.local/wasi-sdk'
+RUN sudo bash -c 'mkdir -p /home/vscode/.local/wasi-sysroot'
 RUN sudo bash -c 'curl -s https://api.github.com/repos/WebAssembly/wasi-sdk/releases/tags/wasi-sdk-16 \
-      | grep -a "browser_download_url.*tar.gz" \
+      | grep -a "browser_download_url.*wasi-sysroot-16.*tar.gz" \
       | cut -d : -f 2,3 \
       | tr -d \" \
-      | wget --output-document wasi-sdk.tar.gz -qi - \
-      && tar xvf wasi-sdk.tar.gz --directory /home/vscode/.local/wasi-sdk/'
-ENV WASI_SYSROOT_PATH=/home/vscode/.local/wasi-sdk/
+      | wget --output-document wasi-sysroot.tar.gz -qi - \
+      && tar xvf wasi-sysroot.tar.gz --directory /home/vscode/.local/wasi-sysroot/'
+ENV WASI_SYSROOT_PATH=/home/vscode/.local/wasi-sysroot/
