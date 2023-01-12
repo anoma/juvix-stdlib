@@ -48,3 +48,10 @@ RUN sudo bash -c 'curl -s https://api.github.com/repos/WebAssembly/wasi-sdk/rele
       | wget --output-document wasi-sysroot.tar.gz -qi - \
       && tar xvf wasi-sysroot.tar.gz --directory /home/vscode/.local/wasi-sysroot/'
 ENV WASI_SYSROOT_PATH=/home/vscode/.local/wasi-sysroot/
+
+# Add examples from the Juvix repo
+
+RUN bash -c 'curl https://codeload.github.com/anoma/juvix/tar.gz/master | \
+  tar -xz --strip=2 \
+      juvix-main/examples/ \
+      --directory=/workspaces/juvix-stdlib/examples-from-anoma-juvix-repo/'
