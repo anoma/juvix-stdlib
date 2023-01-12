@@ -10,6 +10,8 @@
   "runArgs": [
     "--privileged"
   ],
+  "postCreateCommand":
+    "bash -c 'curl https://codeload.github.com/anoma/juvix/tar.gz/main | tar -xz --strip=2 juvix-main/examples/ --directory=examples/' ",
   "settings": {
     "editor.tabSize": 2,
     "editor.renderWhitespace": "trailing",
