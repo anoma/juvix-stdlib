@@ -12,6 +12,10 @@ builtin nat-eq
 == _ zero := false;
 == (suc n) (suc m) := n == m;
 
+infix 4 /=;
+/= : Nat → Nat → Bool;
+/= x y := not (x == y);
+
 infix 4 <=;
 builtin nat-le
 <= : Nat → Nat → Bool;
@@ -34,5 +38,11 @@ infix 4 >=;
 
 compare : Nat → Nat → Ordering;
 compare n m := if (n == m) EQ (if (n < m) LT GT);
+
+min : Nat → Nat → Nat;
+min x y := if (x < y) x y;
+
+max : Nat → Nat → Nat;
+max x y := if (x > y) x y;
 
 end;
