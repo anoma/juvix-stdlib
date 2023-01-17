@@ -26,11 +26,15 @@ sub zero _ := zero;
 sub n zero := n;
 sub (suc n) (suc m) := sub n m;
 
---terminating
+builtin nat-udiv
+terminating
+udiv : Nat → Nat → Nat;
+udiv zero _ := zero;
+udiv n m := suc (udiv (sub n m) m);
+
 builtin nat-div
 div : Nat → Nat → Nat;
-div zero _ := zero;
-div n m := suc (div (sub n m) m);
+div n m := udiv (sub (suc n) m) m;
 
 builtin nat-mod
 mod : Nat → Nat → Nat;
