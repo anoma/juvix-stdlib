@@ -1,7 +1,5 @@
 
-all:
-	make html
-
+all: check html
 
 PHONY: check
 check:
@@ -9,8 +7,7 @@ check:
 
 PHONY: html
 html:
-	make check
-	juvix html --output-dir=docs --recursive --print-metadata --no-stdlib index.juvix
+	@juvix --no-stdlib html --theme ayu --output-dir=docs/ index.juvix
 
 PHONY: clean
 clean:
