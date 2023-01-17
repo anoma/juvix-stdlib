@@ -1,4 +1,0 @@
-* juvix standard library
- This is [[https://github.com/heliaxdev/Juvix][Juvix']] standard library.
-
- This is a work in progress.
