@@ -34,7 +34,7 @@
       "JuvixCore"
     ],
     "juvix-mode.reloadReplOnSave": true,
-    "juvix-mode.typecheckOnChange": true
+    "juvix-mode.typecheckOn": "save"
   },
   "extensions": [
     "Heliax.juvix-mode"
