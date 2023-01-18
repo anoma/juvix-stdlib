@@ -78,12 +78,10 @@ jobs:
         uses: actions/checkout@v3
  
       - name : Typecheck library code
-        run : |
-          juvix --only-errors --no-stdlib typecheck index.juvix
+        run : make check
 
       - name: HTML
-        run: |
-          juvix --no-stdlib html --theme ayu --recursive --print-metadata --output-dir=docs/ index.juvix
+        run: make html
 
       - if: github.event.pull_request.merged == true
         name: Deploy HTML to github pages
