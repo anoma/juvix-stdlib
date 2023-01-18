@@ -15,14 +15,7 @@
   "settings": {
     "editor.tabSize": 2,
     "editor.renderWhitespace": "trailing",
-    "editor.wordWrap": "wordWrapColumn",
-    "editor.fontSize": 16,
-    "editor.minimap.enabled": false,
-    "editor.hover.delay": 700,
-    "explorer.confirmDelete": false,
-    "explorer.confirmDragAndDrop": false,
     "files.trimTrailingWhitespace": true,
-    "breadcrumbs.enabled": false,
     "extensions.ignoreRecommendations": true,
     "terminal.integrated.confirmOnKill": "never",
     "juvix-mode.opts": {
@@ -34,7 +27,7 @@
       "JuvixCore"
     ],
     "juvix-mode.reloadReplOnSave": true,
-    "juvix-mode.typecheckOn": "save"
+    "juvix-mode.typecheckOn": "none"
   },
   "extensions": [
     "Heliax.juvix-mode"
