@@ -10,18 +10,26 @@ not true := false;
 not false := true;
 
 infixr 2 ||;
+builtin bool-or
 || : Bool → Bool → Bool;
-|| false a := a;
 || true _ := true;
+|| false a := a;
 
 infixr 2 &&;
+builtin bool-and
 && : Bool → Bool → Bool;
-&& false _ := false;
 && true a := a;
+&& false _ := false;
 
 builtin bool-if
 if : {A : Type} → Bool → A → A → A;
 if true a _ := a;
 if false _ b := b;
+
+or : Bool → Bool → Bool;
+or a b := a || b;
+
+and : Bool → Bool → Bool;
+and a b := a && b;
 
 end;
