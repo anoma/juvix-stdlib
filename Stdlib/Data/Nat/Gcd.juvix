@@ -9,6 +9,6 @@ module Stdlib.Data.Nat.Gcd;
     if (a == b)
       a
       (if (a > b)
-        (gcd (sub a b)  b)
+        (gcd (sub a b) b)
         (gcd a (sub b a)));
 end;
