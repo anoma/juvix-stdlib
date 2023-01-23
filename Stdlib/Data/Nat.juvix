@@ -40,33 +40,6 @@ builtin nat-mod
 mod : Nat → Nat → Nat;
 mod n m := sub n ((div n m) * m);
 
-one : Nat;
-one := suc zero;
-
-two : Nat;
-two := suc one;
-
-three : Nat;
-three := suc two;
-
-four : Nat;
-four := suc three;
-
-five : Nat;
-five := suc four;
-
-six : Nat;
-six := suc five;
-
-seven : Nat;
-seven := suc six;
-
-eight : Nat;
-eight := suc seven;
-
-nine : Nat;
-nine := suc eight;
-
 axiom natToStr : Nat → String;
 compile natToStr {
   c ↦ "intToStr";
