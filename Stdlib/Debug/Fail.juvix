@@ -1,0 +1,5 @@
+module Stdlib.Debug.Fail;
+  open import Stdlib.Data.String;
+
+  builtin fail axiom fail : {A : Type} → String → A;
+end;
