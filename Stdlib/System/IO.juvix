@@ -1,24 +1,22 @@
 module Stdlib.System.IO;
+  open import Stdlib.Data.Nat;
+  open import Stdlib.Data.String;
+  open import Stdlib.Data.Bool;
 
-open import Stdlib.Data.Nat;
-open import Stdlib.Data.String;
-open import Stdlib.Data.Bool;
+  builtin IO axiom IO : Type;
 
-builtin IO axiom IO : Type;
+  infixl 1 >>;
+  builtin IO-sequence axiom >> : IO → IO → IO;
+  builtin nat-print axiom printNat : Nat → IO;
+  builtin string-print axiom printString : String → IO;
+  builtin bool-print axiom printBool : Bool → IO;
 
-infixl 1 >>;
-builtin IO-sequence axiom >> : IO → IO → IO;
-builtin nat-print axiom printNat : Nat → IO;
-builtin string-print axiom printString : String → IO;
-builtin bool-print axiom printBool : Bool → IO;
+  printNatLn : Nat → IO;
+  printNatLn n := printNat n >> printString "\n";
 
-printNatLn : Nat → IO;
-printNatLn n := printNat n >> printString "\n";
+  printStringLn : String → IO;
+  printStringLn s := printString s >> printString "\n";
 
-printStringLn : String → IO;
-printStringLn s := printString s >> printString "\n";
-
-printBoolLn : Bool → IO;
-printBoolLn b := printBool b >> printString "\n";
-
+  printBoolLn : Bool → IO;
+  printBoolLn b := printBool b >> printString "\n";
 end;

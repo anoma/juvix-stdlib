@@ -1,5 +1,3 @@
 module Stdlib.Data.String;
-
-builtin string axiom String : Type;
-
+  builtin string axiom String : Type;
 end;
