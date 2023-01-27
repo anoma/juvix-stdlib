@@ -1,30 +1,30 @@
 module Stdlib.Data.Product;
+  infixr 2 ×;
+  infixr 4 ,;
+  type × (A : Type) (B : Type) :=
+    | , : A → B → A × B;
 
-infixr 2 ×;
-infixr 4 ,;
-type × (A : Type) (B : Type) :=
-  , : A → B → A × B;
+  uncurry : {A : Type} → {B : Type} → {C : Type} → (A → B → C) → A
+    × B → C;
+  uncurry f (a , b) := f a b;
 
+  fst : {A : Type} → {B : Type} → A × B → A;
+  fst (a , _) := a;
 
-uncurry : {A : Type} → {B : Type} → {C : Type} → (A → B → C) → A × B → C;
-uncurry f (a , b) := f a b;
+  snd : {A : Type} → {B : Type} → A × B → B;
+  snd (_ , b) := b;
 
-fst : {A : Type} → {B : Type} → A × B → A;
-fst (a , _) := a;
+  swap : {A : Type} → {B : Type} → A × B → B × A;
+  swap (a , b) := b , a;
 
-snd : {A : Type} → {B : Type} → A × B → B;
-snd (_ , b) := b;
+  first : {A : Type} → {B : Type} → {A' : Type} → (A → A') → A
+    × B → A' × B;
+  first f (a , b) := f a , b;
 
-swap : {A : Type} → {B : Type} → A × B → B × A;
-swap (a , b) := b , a;
+  second : {A : Type} → {B : Type} → {B' : Type} → (B → B') → A
+    × B → A × B';
+  second f (a , b) := a , f b;
 
-first : {A : Type} → {B : Type} → {A' : Type} → (A → A') → A × B → A' × B;
-first f (a , b) := f a , b;
-
-second : {A : Type} → {B : Type} → {B' : Type} → (B → B') → A × B → A × B';
-second f (a , b) := a , f b;
-
-both : {A : Type} → {B : Type} → (A → B) → A × A → B × B;
-both f (a , b) := f a , f b;
-
+  both : {A : Type} → {B : Type} → (A → B) → A × A → B × B;
+  both f (a , b) := f a , f b;
 end;
