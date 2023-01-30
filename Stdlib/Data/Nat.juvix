@@ -32,9 +32,6 @@ module Stdlib.Data.Nat;
   builtin nat-mod mod : Nat → Nat → Nat;
   mod n m := sub n (div n m * m);
 
-  axiom natToStr : Nat → String;
-
-  compile natToStr {
-    c ↦ "intToStr";
-  };
+  builtin nat-to-string axiom natToString : Nat -> String;
+  builtin string-to-nat axiom stringToNat : String -> Nat;
 end;

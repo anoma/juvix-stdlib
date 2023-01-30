@@ -10,6 +10,7 @@ module Stdlib.System.IO;
   builtin nat-print axiom printNat : Nat → IO;
   builtin string-print axiom printString : String → IO;
   builtin bool-print axiom printBool : Bool → IO;
+  builtin IO-readline axiom readLn : (String → IO) → IO;
 
   printNatLn : Nat → IO;
   printNatLn n := printNat n >> printString "\n";
