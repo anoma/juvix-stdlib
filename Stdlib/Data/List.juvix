@@ -107,7 +107,7 @@ module Stdlib.Data.List;
   transpose xss := map head xss :: transpose (map tail xss);
 
   any : {A : Type} → (A → Bool) → List A → Bool;
-  any f xs := foldl (||) false (map f xs);
+  any f xs := foldl or false (map f xs);
 
   null : {A : Type} → List A → Bool;
   null nil := true;
