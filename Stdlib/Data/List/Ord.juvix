@@ -7,9 +7,9 @@ module Stdlib.Data.List.Ord;
   compare _ nil nil := EQ;
   compare _ nil (_ :: _) := LT;
   compare _ (_ :: _) nil := GT;
-  compare cmp (x :: xs) (y :: ys) := ifOrd
-    (cmp x y)
-    LT
-    (compare cmp xs ys)
-    GT;
+  compare cmp (x :: xs) (y :: ys) :=
+    case cmp x y
+    | LT := LT
+    | EQ := compare cmp xs ys
+    | GT := GT;
 end;
