@@ -17,9 +17,4 @@ module Stdlib.Data.Ord;
   isGT : Ordering → Bool;
   isGT GT := true;
   isGT _ := false;
-
-  ifOrd : {A : Type} → Ordering → A → A → A → A;
-  ifOrd LT lt eq gt := lt;
-  ifOrd EQ lt eq gt := eq;
-  ifOrd GT lt eq gt := gt;
 end;
