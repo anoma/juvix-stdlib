@@ -95,9 +95,11 @@ module Stdlib.Data.List;
   intersperse _ nil := nil;
   intersperse sep (x :: xs) := x :: prependToAll sep xs;
 
+  total
   head : {A : Type} → List A → A;
   head (x :: _) := x;
 
+  total
   tail : {A : Type} → List A → List A;
   tail (_ :: xs) := xs;
 
