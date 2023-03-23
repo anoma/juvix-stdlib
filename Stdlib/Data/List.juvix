@@ -5,6 +5,8 @@ module Stdlib.Data.List;
   open import Stdlib.Data.Ord;
   open import Stdlib.Data.Product;
 
+  open import Stdlib.Debug.Fail;
+
   infixr 5 ::;
   type List (a : Type) :=
     | nil : List a
@@ -67,8 +69,7 @@ module Stdlib.Data.List;
   merge _ nil ys := ys;
   merge _ xs nil := xs;
 
-  partition : {A : Type} → (A → Bool) → List A → List A
-    × List A;
+  partition : {A : Type} → (A → Bool) → List A → List A × List A;
   partition _ nil := nil , nil;
   partition f (x :: xs) := if
     (f x)
@@ -97,9 +98,11 @@ module Stdlib.Data.List;
 
   head : {A : Type} → List A → A;
   head (x :: _) := x;
+  head nil := fail "head: empty list";
 
   tail : {A : Type} → List A → List A;
   tail (_ :: xs) := xs;
+  tail nil := nil;
 
   terminating
   transpose : {A : Type} → List (List A) → List (List A);
