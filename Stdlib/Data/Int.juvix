@@ -1,0 +1,13 @@
+module Stdlib.Data.Int;
+
+open import Stdlib.Data.Nat;
+
+builtin int type Int :=
+  | --- ofNat n represents the integer n
+    ofNat : Nat -> Int
+  | --- negSuc n represents the integer -(n + 1)
+    negSuc : Nat -> Int;
+
+toNat : Int -> Nat;
+toNat (ofNat n) := n;
+toNat (negSuc _) := zero;
