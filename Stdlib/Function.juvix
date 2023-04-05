@@ -19,4 +19,9 @@ module Stdlib.Function;
   infixl 0 on;
   on : {A : Type} → {B : Type} → {C : Type} → (B → B → C) → (A → B) → A → A → C;
   on f g a b := f (g a) (g b);
+
+  infixl 1 >>>;
+  builtin seq
+  >>> : {A B : Type} → A → B → B;
+  >>> x y := y;
 end;
