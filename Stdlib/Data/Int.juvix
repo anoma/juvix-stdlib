@@ -1,6 +1,7 @@
 module Stdlib.Data.Int;
 
 open import Stdlib.Data.Nat;
+open import Stdlib.Data.String;
 
 builtin int type Int :=
   | --- ofNat n represents the integer n
@@ -11,3 +12,5 @@ builtin int type Int :=
 toNat : Int -> Nat;
 toNat (ofNat n) := n;
 toNat (negSuc _) := zero;
+
+builtin int-to-string axiom intToString : Int -> String;
