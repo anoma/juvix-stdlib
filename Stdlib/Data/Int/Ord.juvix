@@ -1,0 +1,11 @@
+module Stdlib.Data.Int.Ord;
+
+open import Stdlib.Data.Int;
+open import Stdlib.Data.Bool;
+import Stdlib.Data.Nat.Ord;
+
+infix 4 ==;
+builtin int-eq == : Int -> Int -> Bool;
+== (ofNat m) (ofNat n) := m Stdlib.Data.Nat.Ord.== n;
+== (negSuc m) (negSuc n) := m Stdlib.Data.Nat.Ord.== n;
+== _ _ := false;
