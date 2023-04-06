@@ -3,7 +3,7 @@ module Stdlib.Prelude;
   open import Stdlib.Data.List public;
   open import Stdlib.Data.Maybe public;
   open import Stdlib.Data.Nat public;
-  open import Stdlib.Data.Int public;
+  open import Stdlib.Data.Int hiding {+} public;
   open import Stdlib.Data.Product public;
   open import Stdlib.Data.String public;
   open import Stdlib.Function public;
