@@ -29,3 +29,7 @@ builtin int-plus + : Int -> Int -> Int;
 + (negSuc m) (ofNat n) := intSubNat n (suc m);
 + (negSuc m) (negSuc n) :=
   negSuc (suc (m Stdlib.Data.Nat.+ n));
+
+builtin int-neg-nat negNat : Nat -> Int;
+negNat zero := ofNat zero;
+negNat (suc n) := negSuc n;
