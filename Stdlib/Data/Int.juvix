@@ -33,3 +33,7 @@ builtin int-plus + : Int -> Int -> Int;
 builtin int-neg-nat negNat : Nat -> Int;
 negNat zero := ofNat zero;
 negNat (suc n) := negSuc n;
+
+builtin int-neg neg : Int -> Int;
+neg (ofNat n) := negNat n;
+neg (negSuc n) := ofNat (suc n);
