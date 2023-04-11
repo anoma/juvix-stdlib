@@ -2,6 +2,7 @@ module Stdlib.System.IO;
   open import Stdlib.Data.Nat;
   open import Stdlib.Data.String;
   open import Stdlib.Data.Bool;
+  open import Stdlib.Data.Int using {Int};
 
   builtin IO axiom IO : Type;
 
@@ -10,6 +11,7 @@ module Stdlib.System.IO;
   builtin nat-print axiom printNat : Nat → IO;
   builtin string-print axiom printString : String → IO;
   builtin bool-print axiom printBool : Bool → IO;
+  builtin int-print axiom printInt : Int → IO;
   builtin IO-readline axiom readLn : (String → IO) → IO;
 
   printNatLn : Nat → IO;
@@ -20,4 +22,8 @@ module Stdlib.System.IO;
 
   printBoolLn : Bool → IO;
   printBoolLn b := printBool b >> printString "\n";
+
+  printIntLn : Int → IO;
+  printIntLn i := printInt i >> printString "\n";
+
 end;
