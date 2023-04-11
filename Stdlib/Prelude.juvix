@@ -4,7 +4,7 @@ open import Stdlib.Data.Bool public;
 open import Stdlib.Data.List public;
 open import Stdlib.Data.Maybe public;
 open import Stdlib.Data.Nat public;
-open import Stdlib.Data.Int hiding {+;*;div} public;
+open import Stdlib.Data.Int hiding {+;*;div;mod} public;
 open import Stdlib.Data.Product public;
 open import Stdlib.Data.String public;
 open import Stdlib.Function public;

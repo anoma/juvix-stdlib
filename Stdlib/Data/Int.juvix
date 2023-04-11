@@ -65,3 +65,12 @@ div (negSuc m) (ofNat n) :=
   negNat (StdlibNat.div (suc m) n);
 div (negSuc m) (negSuc n) :=
   ofNat (StdlibNat.div (suc m) (suc n));
+
+builtin int-mod
+mod : Int -> Int -> Int;
+mod (ofNat m) (ofNat n) := ofNat (StdlibNat.mod m n);
+mod (ofNat m) (negSuc n) := ofNat (StdlibNat.mod m (suc n));
+mod (negSuc m) (ofNat n) :=
+  negNat (StdlibNat.mod (suc m) n);
+mod (negSuc m) (negSuc n) :=
+  negNat (StdlibNat.mod (suc m) (suc n));
