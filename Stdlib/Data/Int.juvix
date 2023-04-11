@@ -59,7 +59,7 @@ builtin int-mul
 infixl 6 -;
 builtin int-sub
 - : Int -> Int -> Int;
-- m n := m + (neg n);
+- m n := m + neg n;
 
 builtin int-div
 div : Int -> Int -> Int;
