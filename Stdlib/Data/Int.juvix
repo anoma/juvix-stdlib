@@ -1,8 +1,12 @@
 module Stdlib.Data.Int;
 
 import Stdlib.Data.Nat;
-open Stdlib.Data.Nat hiding {+;*};
+open Stdlib.Data.Nat using {Nat;suc;zero;sub};
 open import Stdlib.Data.String;
+
+module StdlibNat;
+  open import Stdlib.Data.Nat public;
+end;
 
 builtin int
 type Int :=
@@ -29,11 +33,10 @@ intSubNat m n :=
 infixl 6 +;
 builtin int-plus
 + : Int -> Int -> Int;
-+ (ofNat m) (ofNat n) := ofNat (m Stdlib.Data.Nat.+ n);
++ (ofNat m) (ofNat n) := ofNat (m StdlibNat.+ n);
 + (ofNat m) (negSuc n) := intSubNat m (suc n);
 + (negSuc m) (ofNat n) := intSubNat n (suc m);
-+ (negSuc m) (negSuc n) :=
-  negSuc (suc (m Stdlib.Data.Nat.+ n));
++ (negSuc m) (negSuc n) := negSuc (suc (m StdlibNat.+ n));
 
 builtin int-neg-nat
 negNat : Nat -> Int;
@@ -48,10 +51,7 @@ neg (negSuc n) := ofNat (suc n);
 infixl 7 *;
 builtin int-mul
 * : Int -> Int -> Int;
-* (ofNat m) (ofNat n) := ofNat (m Stdlib.Data.Nat.* n);
-* (ofNat m) (negSuc n) :=
-  negNat (m Stdlib.Data.Nat.* suc n);
-* (negSuc m) (ofNat n) :=
-  negNat (suc m Stdlib.Data.Nat.* n);
-* (negSuc m) (negSuc n) :=
-  ofNat (suc m Stdlib.Data.Nat.* suc n);
+* (ofNat m) (ofNat n) := ofNat (m StdlibNat.* n);
+* (ofNat m) (negSuc n) := negNat (m StdlibNat.* suc n);
+* (negSuc m) (ofNat n) := negNat (suc m StdlibNat.* n);
+* (negSuc m) (negSuc n) := ofNat (suc m StdlibNat.* suc n);
