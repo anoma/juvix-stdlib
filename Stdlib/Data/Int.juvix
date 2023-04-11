@@ -56,6 +56,11 @@ builtin int-mul
 * (negSuc m) (ofNat n) := negNat (suc m StdlibNat.* n);
 * (negSuc m) (negSuc n) := ofNat (suc m StdlibNat.* suc n);
 
+infixl 6 -;
+builtin int-sub
+- : Int -> Int -> Int;
+- m n := m + (neg n);
+
 builtin int-div
 div : Int -> Int -> Int;
 div (ofNat m) (ofNat n) := ofNat (StdlibNat.div m n);
