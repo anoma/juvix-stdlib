@@ -2,10 +2,44 @@ module Stdlib.Data.Int.Ord;
 
 open import Stdlib.Data.Int;
 open import Stdlib.Data.Bool;
+open import Stdlib.Data.Ord;
+
 import Stdlib.Data.Nat.Ord;
 
 infix 4 ==;
-builtin int-eq == : Int -> Int -> Bool;
+builtin int-eq
+== : Int -> Int -> Bool;
 == (ofNat m) (ofNat n) := m Stdlib.Data.Nat.Ord.== n;
 == (negSuc m) (negSuc n) := m Stdlib.Data.Nat.Ord.== n;
 == _ _ := false;
+
+infix 4 /=;
+/= : Int -> Int -> Bool;
+/= m n := not (m == n);
+
+infix 4 <=;
+builtin int-le
+<= : Int -> Int -> Bool;
+<= m n := nonNeg (n - m);
+
+infix 4 <;
+builtin int-lt
+< : Int -> Int -> Bool;
+< m n := m + 1 <= n;
+
+infix 4 >;
+> : Int -> Int -> Bool;
+> m n := n < m;
+
+infix 4 >=;
+>= : Int -> Int -> Bool;
+>= m n := n <= m;
+
+compare : Int -> Int -> Ordering;
+compare m n := if (m == n) EQ (if (m < n) LT GT);
+
+min : Int → Int → Int;
+min x y := if (x < y) x y;
+
+max : Int → Int → Int;
+max x y := if (x > y) x y;
