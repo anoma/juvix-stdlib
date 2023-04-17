@@ -1,37 +1,47 @@
 module Stdlib.Data.Nat;
-  open import Stdlib.Data.String;
-  open import Stdlib.Data.Bool;
 
-  builtin nat type Nat :=
-    | zero : Nat
-    | suc : Nat → Nat;
+open import Stdlib.Data.String;
+open import Stdlib.Data.Bool;
 
-  infixl 6 +;
-  builtin nat-plus + : Nat → Nat → Nat;
-  + zero b := b;
-  + (suc a) b := suc (a + b);
+builtin nat
+type Nat :=
+  | zero : Nat
+  | suc : Nat → Nat;
 
-  infixl 7 *;
-  builtin nat-mul * : Nat → Nat → Nat;
-  * zero _ := zero;
-  * (suc a) b := b + a * b;
+infixl 6 +;
+builtin nat-plus
++ : Nat → Nat → Nat;
++ zero b := b;
++ (suc a) b := suc (a + b);
 
-  builtin nat-sub sub : Nat → Nat → Nat;
-  sub zero _ := zero;
-  sub n zero := n;
-  sub (suc n) (suc m) := sub n m;
+infixl 7 *;
+builtin nat-mul
+* : Nat → Nat → Nat;
+* zero _ := zero;
+* (suc a) b := b + a * b;
 
-  builtin nat-udiv terminating
-  udiv : Nat → Nat → Nat;
-  udiv zero _ := zero;
-  udiv n m := suc (udiv (sub n m) m);
+builtin nat-sub
+sub : Nat → Nat → Nat;
+sub zero _ := zero;
+sub n zero := n;
+sub (suc n) (suc m) := sub n m;
 
-  builtin nat-div div : Nat → Nat → Nat;
-  div n m := udiv (sub (suc n) m) m;
+builtin nat-udiv
+terminating
+udiv : Nat → Nat → Nat;
+udiv zero _ := zero;
+udiv n m := suc (udiv (sub n m) m);
 
-  builtin nat-mod mod : Nat → Nat → Nat;
-  mod n m := sub n (div n m * m);
+builtin nat-div
+div : Nat → Nat → Nat;
+div n m := udiv (sub (suc n) m) m;
 
-  builtin nat-to-string axiom natToString : Nat -> String;
-  builtin string-to-nat axiom stringToNat : String -> Nat;
-end;
+builtin nat-mod
+mod : Nat → Nat → Nat;
+mod n m := sub n (div n m * m);
+
+builtin nat-to-string
+axiom natToString : Nat -> String;
+
+builtin string-to-nat
+axiom stringToNat : String -> Nat;

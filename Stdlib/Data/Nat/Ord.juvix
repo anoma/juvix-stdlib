@@ -1,43 +1,46 @@
 module Stdlib.Data.Nat.Ord;
-  open import Stdlib.Data.Nat;
-  open import Stdlib.Data.Ord;
-  open import Stdlib.Data.Bool;
 
-  infix 4 ==;
-  builtin nat-eq == : Nat → Nat → Bool;
-  == zero zero := true;
-  == zero _ := false;
-  == _ zero := false;
-  == (suc n) (suc m) := n == m;
+open import Stdlib.Data.Nat;
+open import Stdlib.Data.Ord;
+open import Stdlib.Data.Bool;
 
-  infix 4 /=;
-  /= : Nat → Nat → Bool;
-  /= x y := not (x == y);
+infix 4 ==;
+builtin nat-eq
+== : Nat → Nat → Bool;
+== zero zero := true;
+== zero _ := false;
+== _ zero := false;
+== (suc n) (suc m) := n == m;
 
-  infix 4 <=;
-  builtin nat-le <= : Nat → Nat → Bool;
-  <= zero _ := true;
-  <= _ zero := false;
-  <= (suc n) (suc m) := n <= m;
+infix 4 /=;
+/= : Nat → Nat → Bool;
+/= x y := not (x == y);
 
-  infix 4 <;
-  builtin nat-lt < : Nat → Nat → Bool;
-  < n m := suc n <= m;
+infix 4 <=;
+builtin nat-le
+<= : Nat → Nat → Bool;
+<= zero _ := true;
+<= _ zero := false;
+<= (suc n) (suc m) := n <= m;
 
-  infix 4 >;
-  > : Nat → Nat → Bool;
-  > n m := m < n;
+infix 4 <;
+builtin nat-lt
+< : Nat → Nat → Bool;
+< n m := suc n <= m;
 
-  infix 4 >=;
-  >= : Nat → Nat → Bool;
-  >= n m := m <= n;
+infix 4 >;
+> : Nat → Nat → Bool;
+> n m := m < n;
 
-  compare : Nat → Nat → Ordering;
-  compare n m := if (n == m) EQ (if (n < m) LT GT);
+infix 4 >=;
+>= : Nat → Nat → Bool;
+>= n m := m <= n;
 
-  min : Nat → Nat → Nat;
-  min x y := if (x < y) x y;
+compare : Nat → Nat → Ordering;
+compare n m := if (n == m) EQ (if (n < m) LT GT);
 
-  max : Nat → Nat → Nat;
-  max x y := if (x > y) x y;
-end;
+min : Nat → Nat → Nat;
+min x y := if (x < y) x y;
+
+max : Nat → Nat → Nat;
+max x y := if (x > y) x y;
