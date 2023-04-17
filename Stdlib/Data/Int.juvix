@@ -21,8 +21,7 @@ toNat (ofNat n) := n;
 toNat (negSuc _) := zero;
 
 builtin int-to-string
-axiom
-intToString : Int -> String;
+axiom intToString : Int -> String;
 
 builtin int-sub-nat
 intSubNat : Nat -> Nat -> Int;

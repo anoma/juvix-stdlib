@@ -1,3 +1,4 @@
 module Stdlib.Debug.Trace;
-  builtin trace axiom trace : {A : Type} → A → A;
-end;
+
+builtin trace
+axiom trace : {A : Type} → A → A;

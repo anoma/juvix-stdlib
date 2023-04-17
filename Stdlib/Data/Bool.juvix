@@ -1,29 +1,33 @@
 module Stdlib.Data.Bool;
-  builtin bool type Bool :=
-    | true : Bool
-    | false : Bool;
 
-  not : Bool → Bool;
-  not true := false;
-  not false := true;
+builtin bool
+type Bool :=
+  | true : Bool
+  | false : Bool;
 
-  infixr 2 ||;
-  builtin bool-or || : Bool → Bool → Bool;
-  || true _ := true;
-  || false a := a;
+not : Bool → Bool;
+not true := false;
+not false := true;
 
-  infixr 2 &&;
-  builtin bool-and && : Bool → Bool → Bool;
-  && true a := a;
-  && false _ := false;
+infixr 2 ||;
+builtin bool-or
+|| : Bool → Bool → Bool;
+|| true _ := true;
+|| false a := a;
 
-  builtin bool-if if : {A : Type} → Bool → A → A → A;
-  if true a _ := a;
-  if false _ b := b;
+infixr 2 &&;
+builtin bool-and
+&& : Bool → Bool → Bool;
+&& true a := a;
+&& false _ := false;
 
-  or : Bool → Bool → Bool;
-  or a b := a || b;
+builtin bool-if
+if : {A : Type} → Bool → A → A → A;
+if true a _ := a;
+if false _ b := b;
 
-  and : Bool → Bool → Bool;
-  and a b := a && b;
-end;
+or : Bool → Bool → Bool;
+or a b := a || b;
+
+and : Bool → Bool → Bool;
+and a b := a && b;

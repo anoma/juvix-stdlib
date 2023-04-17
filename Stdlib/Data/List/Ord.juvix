@@ -1,15 +1,19 @@
 module Stdlib.Data.List.Ord;
-  open import Stdlib.Data.Ord;
-  open import Stdlib.Data.List;
 
-  compare : {A : Type} → (A → A → Ordering) → List A → List
-    A → Ordering;
-  compare _ nil nil := EQ;
-  compare _ nil (_ :: _) := LT;
-  compare _ (_ :: _) nil := GT;
-  compare cmp (x :: xs) (y :: ys) :=
-    case cmp x y
+open import Stdlib.Data.Ord;
+open import Stdlib.Data.List;
+
+compare :
+  {A : Type}
+    → (A → A → Ordering)
+    → List A
+    → List A
+    → Ordering;
+compare _ nil nil := EQ;
+compare _ nil (_ :: _) := LT;
+compare _ (_ :: _) nil := GT;
+compare cmp (x :: xs) (y :: ys) :=
+  case cmp x y
     | LT := LT
     | EQ := compare cmp xs ys
     | GT := GT;
-end;
