@@ -1,3 +1,4 @@
+--- This module reexports most of the standard library.
 module Stdlib.Prelude;
 
 open import Stdlib.Data.Bool public;

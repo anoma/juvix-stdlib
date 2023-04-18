@@ -1,6 +1,7 @@
 module Stdlib.Function;
 
 infixr 9 ∘;
+--- Function composition.
 ∘ :
   {A : Type}
     → {B : Type}
@@ -11,12 +12,15 @@ infixr 9 ∘;
     → C;
 ∘ f g x := f (g x);
 
+--- Always returns the first argument.
 const : {A : Type} → {B : Type} → A → B → A;
 const a _ := a;
 
+--- The identity function.
 id : {A : Type} → A → A;
 id a := a;
 
+--- Swaps the order of the arguments of the given function.
 flip :
   {A : Type}
     → {B : Type}
@@ -28,6 +32,8 @@ flip :
 flip f b a := f a b;
 
 infixr 0 $;
+--- Application operator with right associativity. Usually used as a syntactical
+--- facility.
 $ : {A : Type} → {B : Type} → (A → B) → A → B;
 $ f x := f x;
 

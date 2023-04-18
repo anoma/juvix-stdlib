@@ -4,6 +4,7 @@ open import Stdlib.Data.Nat;
 open import Stdlib.Data.Ord;
 open import Stdlib.Data.Bool;
 
+--- Tests for equality.
 infix 4 ==;
 builtin nat-eq
 == : Nat → Nat → Bool;
@@ -12,10 +13,12 @@ builtin nat-eq
 == _ zero := false;
 == (suc n) (suc m) := n == m;
 
+--- Tests for inequality.
 infix 4 /=;
 /= : Nat → Nat → Bool;
 /= x y := not (x == y);
 
+--- Returns ;true; iff the first element is less than or equal to the second.
 infix 4 <=;
 builtin nat-le
 <= : Nat → Nat → Bool;
@@ -23,24 +26,30 @@ builtin nat-le
 <= _ zero := false;
 <= (suc n) (suc m) := n <= m;
 
+--- Returns ;true; iff the first element is less than the second.
 infix 4 <;
 builtin nat-lt
 < : Nat → Nat → Bool;
 < n m := suc n <= m;
 
+--- Returns ;true; iff the first element is greater than the second.
 infix 4 >;
 > : Nat → Nat → Bool;
 > n m := m < n;
 
+--- Returns ;true; iff the first element is greater than or equal to the second.
 infix 4 >=;
 >= : Nat → Nat → Bool;
 >= n m := m <= n;
 
+--- Tests for ;Ordering;.
 compare : Nat → Nat → Ordering;
 compare n m := if (n == m) EQ (if (n < m) LT GT);
 
+--- Returns the smallest ;Nat;.
 min : Nat → Nat → Nat;
 min x y := if (x < y) x y;
 
+--- Returns the biggest ;Nat;.
 max : Nat → Nat → Nat;
 max x y := if (x > y) x y;

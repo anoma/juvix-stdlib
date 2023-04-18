@@ -2,6 +2,7 @@ module Stdlib.Data.Product;
 
 infixr 2 ×;
 infixr 4 ,;
+--- Inductive pair. I.e. a tuple with two components.
 type × (A : Type) (B : Type) :=
   | , : A → B → A × B;
 
@@ -14,15 +15,19 @@ uncurry :
     → C;
 uncurry f (a, b) := f a b;
 
+--- Projects the first component of a tuple.
 fst : {A : Type} → {B : Type} → A × B → A;
 fst (a, _) := a;
 
+--- Projects the second component of a tuple.
 snd : {A : Type} → {B : Type} → A × B → B;
 snd (_, b) := b;
 
+--- Swaps the components of a tuple.
 swap : {A : Type} → {B : Type} → A × B → B × A;
 swap (a, b) := b, a;
 
+--- Applies a function to the first component.
 first :
   {A : Type}
     → {B : Type}
@@ -32,6 +37,7 @@ first :
     → A' × B;
 first f (a, b) := f a, b;
 
+--- Applies a function to the second component.
 second :
   {A : Type}
     → {B : Type}
@@ -41,5 +47,6 @@ second :
     → A × B';
 second f (a, b) := a, f b;
 
+--- Applies a function to both components.
 both : {A : Type} → {B : Type} → (A → B) → A × A → B × B;
 both f (a, b) := f a, f b;
