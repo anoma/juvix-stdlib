@@ -133,7 +133,7 @@ transpose : {A : Type} → List (List A) → List (List A);
 transpose (nil :: _) := nil;
 transpose xss := map head xss :: transpose (map tail xss);
 
---- 𝒪(𝓃). Returns ;true; if at least on element of the ;List; satisfies the predicate.
+--- 𝒪(𝓃). Returns ;true; if at least one element of the ;List; satisfies the predicate.
 any : {A : Type} → (A → Bool) → List A → Bool;
 any f xs := foldl or false (map f xs);
 
