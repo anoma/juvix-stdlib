@@ -20,7 +20,7 @@ const a _ := a;
 id : {A : Type} → A → A;
 id a := a;
 
---- Swaps the order of the argumets of the given function.
+--- Swaps the order of the arguments of the given function.
 flip :
   {A : Type}
     → {B : Type}
