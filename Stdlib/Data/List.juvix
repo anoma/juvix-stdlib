@@ -88,7 +88,7 @@ merge cmp (x :: xs) (y :: ys) :=
 merge _ nil ys := ys;
 merge _ xs nil := xs;
 
---- 𝒪(𝓃). Returns a tuple for the first component has the items that
+--- 𝒪(𝓃). Returns a tuple where the first component has the items that
 --- satisfy the predicate and the second component has the elements that don't.
 partition :
   {A : Type} → (A → Bool) → List A → List A × List A;
