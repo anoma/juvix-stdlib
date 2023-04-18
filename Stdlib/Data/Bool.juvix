@@ -25,7 +25,7 @@ builtin bool-and
 && true a := a;
 && false _ := false;
 
---- Returns the first argument if ;true;, otherwise it returns the second argument.
+--- Returns the first argument if ;true;, otherwise it returns the second argument. Cannot be partially applied.
 builtin bool-if
 if : {A : Type} → Bool → A → A → A;
 if true a _ := a;
