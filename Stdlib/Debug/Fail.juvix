@@ -2,5 +2,6 @@ module Stdlib.Debug.Fail;
 
 open import Stdlib.Data.String;
 
+--- Primitive that exits the program with an error message.
 builtin fail
 axiom fail : {A : Type} → String → A;

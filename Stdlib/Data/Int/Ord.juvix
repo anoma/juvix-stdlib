@@ -4,42 +4,51 @@ open import Stdlib.Data.Int;
 open import Stdlib.Data.Bool;
 open import Stdlib.Data.Ord;
 
-import Stdlib.Data.Nat.Ord;
+import Stdlib.Data.Nat.Ord as Nat;
 
+--- Tests for equality.
 infix 4 ==;
 builtin int-eq
 == : Int -> Int -> Bool;
-== (ofNat m) (ofNat n) := m Stdlib.Data.Nat.Ord.== n;
-== (negSuc m) (negSuc n) := m Stdlib.Data.Nat.Ord.== n;
+== (ofNat m) (ofNat n) := m Nat.== n;
+== (negSuc m) (negSuc n) := m Nat.== n;
 == _ _ := false;
 
+--- Tests for inequality.
 infix 4 /=;
 /= : Int -> Int -> Bool;
 /= m n := not (m == n);
 
+--- Returns ;true; iff the first element is lesser or equal than the second.
 infix 4 <=;
 builtin int-le
 <= : Int -> Int -> Bool;
 <= m n := nonNeg (n - m);
 
+--- Returns ;true; iff the first element is lesser than the second.
 infix 4 <;
 builtin int-lt
 < : Int -> Int -> Bool;
 < m n := m + 1 <= n;
 
+--- Returns ;true; iff the first element is greater than the second.
 infix 4 >;
 > : Int -> Int -> Bool;
 > m n := n < m;
 
+--- Returns ;true; iff the first element is greater or equal than the second.
 infix 4 >=;
 >= : Int -> Int -> Bool;
 >= m n := n <= m;
 
+--- Tests for ;Ordering;.
 compare : Int -> Int -> Ordering;
 compare m n := if (m == n) EQ (if (m < n) LT GT);
 
+--- Returns the smallest ;Int;.
 min : Int → Int → Int;
 min x y := if (x < y) x y;
 
+--- Returns the biggest ;Int;.
 max : Int → Int → Int;
 max x y := if (x > y) x y;

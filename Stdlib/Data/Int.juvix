@@ -1,14 +1,11 @@
 module Stdlib.Data.Int;
 
-import Stdlib.Data.Nat;
-open Stdlib.Data.Nat using {Nat;suc;zero;sub};
+import Stdlib.Data.Nat as Nat;
+open Nat using {Nat;suc;zero;sub};
 open import Stdlib.Data.String;
 open import Stdlib.Data.Bool;
 
-module StdlibNat;
-  open import Stdlib.Data.Nat public;
-end;
-
+--- Inductive integers. I.e. whole numbers that can be positive, zero, or negative.
 builtin int
 type Int :=
   | --- ofNat n represents the integer n
@@ -16,13 +13,16 @@ type Int :=
   | --- negSuc n represents the integer -(n + 1)
     negSuc : Nat -> Int;
 
+--- Converts an ;Int; to a ;Nat;. If the ;Int; is negative, it returns ;zero;.
 toNat : Int -> Nat;
 toNat (ofNat n) := n;
 toNat (negSuc _) := zero;
 
+--- Converts an ;Int; into ;String;.
 builtin int-to-string
 axiom intToString : Int -> String;
 
+--- Subtraction for ;Nat;s.
 builtin int-sub-nat
 intSubNat : Nat -> Nat -> Int;
 intSubNat m n :=
@@ -31,56 +31,61 @@ intSubNat m n :=
     | suc k := negSuc k;
 
 infixl 6 +;
+--- Addition for ;Int;s.
 builtin int-plus
 + : Int -> Int -> Int;
-+ (ofNat m) (ofNat n) := ofNat (m StdlibNat.+ n);
++ (ofNat m) (ofNat n) := ofNat (m Nat.+ n);
 + (ofNat m) (negSuc n) := intSubNat m (suc n);
 + (negSuc m) (ofNat n) := intSubNat n (suc m);
-+ (negSuc m) (negSuc n) := negSuc (suc (m StdlibNat.+ n));
++ (negSuc m) (negSuc n) := negSuc (suc (m Nat.+ n));
 
+--- Negation for ;Nat;s.
 builtin int-neg-nat
 negNat : Nat -> Int;
 negNat zero := ofNat zero;
 negNat (suc n) := negSuc n;
 
+--- Negation for ;Int;s.
 builtin int-neg
 neg : Int -> Int;
 neg (ofNat n) := negNat n;
 neg (negSuc n) := ofNat (suc n);
 
+--- Non-negative predicate for ;Int;s.
 builtin int-nonneg
 nonNeg : Int -> Bool;
 nonNeg (ofNat n) := true;
 nonNeg (negSuc _) := false;
 
 infixl 7 *;
+--- Multiplication for ;Int;s.
 builtin int-mul
 * : Int -> Int -> Int;
-* (ofNat m) (ofNat n) := ofNat (m StdlibNat.* n);
-* (ofNat m) (negSuc n) := negNat (m StdlibNat.* suc n);
-* (negSuc m) (ofNat n) := negNat (suc m StdlibNat.* n);
-* (negSuc m) (negSuc n) := ofNat (suc m StdlibNat.* suc n);
+* (ofNat m) (ofNat n) := ofNat (m Nat.* n);
+* (ofNat m) (negSuc n) := negNat (m Nat.* suc n);
+* (negSuc m) (ofNat n) := negNat (suc m Nat.* n);
+* (negSuc m) (negSuc n) := ofNat (suc m Nat.* suc n);
 
 infixl 6 -;
+--- Subtraction for ;Int;s.
 builtin int-sub
 - : Int -> Int -> Int;
 - m n := m + neg n;
 
+--- Division for ;Int;s.
 builtin int-div
 div : Int -> Int -> Int;
-div (ofNat m) (ofNat n) := ofNat (StdlibNat.div m n);
-div (ofNat m) (negSuc n) :=
-  negNat (StdlibNat.div m (suc n));
-div (negSuc m) (ofNat n) :=
-  negNat (StdlibNat.div (suc m) n);
+div (ofNat m) (ofNat n) := ofNat (Nat.div m n);
+div (ofNat m) (negSuc n) := negNat (Nat.div m (suc n));
+div (negSuc m) (ofNat n) := negNat (Nat.div (suc m) n);
 div (negSuc m) (negSuc n) :=
-  ofNat (StdlibNat.div (suc m) (suc n));
+  ofNat (Nat.div (suc m) (suc n));
 
+--- Modulo for ;Int;s.
 builtin int-mod
 mod : Int -> Int -> Int;
-mod (ofNat m) (ofNat n) := ofNat (StdlibNat.mod m n);
-mod (ofNat m) (negSuc n) := ofNat (StdlibNat.mod m (suc n));
-mod (negSuc m) (ofNat n) :=
-  negNat (StdlibNat.mod (suc m) n);
+mod (ofNat m) (ofNat n) := ofNat (Nat.mod m n);
+mod (ofNat m) (negSuc n) := ofNat (Nat.mod m (suc n));
+mod (negSuc m) (ofNat n) := negNat (Nat.mod (suc m) n);
 mod (negSuc m) (negSuc n) :=
-  negNat (StdlibNat.mod (suc m) (suc n));
+  negNat (Nat.mod (suc m) (suc n));
