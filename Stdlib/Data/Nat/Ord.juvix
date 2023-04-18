@@ -37,7 +37,7 @@ infix 4 >;
 > : Nat → Nat → Bool;
 > n m := m < n;
 
---- Returns ;true; iff the first element is greater or equal than the second.
+--- Returns ;true; iff the first element is greater than or equal to the second.
 infix 4 >=;
 >= : Nat → Nat → Bool;
 >= n m := m <= n;
