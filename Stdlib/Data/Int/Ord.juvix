@@ -25,7 +25,7 @@ builtin int-le
 <= : Int -> Int -> Bool;
 <= m n := nonNeg (n - m);
 
---- Returns ;true; iff the first element is lesser than the second.
+--- Returns ;true; iff the first element is less than the second.
 infix 4 <;
 builtin int-lt
 < : Int -> Int -> Bool;
