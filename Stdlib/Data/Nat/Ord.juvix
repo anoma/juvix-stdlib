@@ -26,7 +26,7 @@ builtin nat-le
 <= _ zero := false;
 <= (suc n) (suc m) := n <= m;
 
---- Returns ;true; iff the first element is lesser than the second.
+--- Returns ;true; iff the first element is less than the second.
 infix 4 <;
 builtin nat-lt
 < : Nat → Nat → Bool;
