@@ -19,7 +19,7 @@ infix 4 /=;
 /= : Int -> Int -> Bool;
 /= m n := not (m == n);
 
---- Returns ;true; iff the first element is lesser or equal than the second.
+--- Returns ;true; iff the first element is less than or equal to the second.
 infix 4 <=;
 builtin int-le
 <= : Int -> Int -> Bool;
