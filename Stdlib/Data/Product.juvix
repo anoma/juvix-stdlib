@@ -47,6 +47,6 @@ second :
     → A × B';
 second f (a, b) := a, f b;
 
---- Applies a function to both component.
+--- Applies a function to both components.
 both : {A : Type} → {B : Type} → (A → B) → A × A → B × B;
 both f (a, b) := f a, f b;
