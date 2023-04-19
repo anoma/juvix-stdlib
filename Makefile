@@ -25,3 +25,7 @@ $(TOFORMAT): %:
 	@mv $@.tmp $@
 	@echo "Typechecking formatted $@"
 	@juvix typecheck $@ --only-errors
+
+.PHONY: test
+test:
+	$(MAKE) -C test/

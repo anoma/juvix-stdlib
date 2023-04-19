@@ -1,0 +1,130 @@
+module Test;
+
+open import Stdlib.Prelude hiding {+};
+
+import Stdlib.Data.Nat.Ord as Nat;
+import Stdlib.Data.Nat as Nat;
+
+open import Stdlib.Data.Int.Ord;
+open import Stdlib.Data.Int;
+open import Data.List;
+open import Data.String;
+open import Data.Int;
+
+import Test.QuickCheckTest as QC;
+
+prop-reverseDoesNotChangeLength : List Int -> Bool;
+prop-reverseDoesNotChangeLength xs :=
+  length (reverse xs) Nat.== length xs;
+
+prop-reverseReverseIsIdentity : List Int -> Bool;
+prop-reverseReverseIsIdentity xs :=
+  eqListInt xs (reverse (reverse xs));
+
+prop-tailLengthOneLess : List Int -> Bool;
+prop-tailLengthOneLess xs :=
+  null xs
+    || ofNat (length (tail xs)) == intSubNat (length xs) 1;
+
+prop-splitAtRecombine : Nat -> List Int -> Bool;
+prop-splitAtRecombine n xs :=
+  case splitAt n xs
+    | lhs, rhs := eqListInt xs (lhs ++ rhs);
+
+prop-mergeSumLengths : List Int -> List Int -> Bool;
+prop-mergeSumLengths xs ys :=
+  length xs Nat.+ length ys
+    Nat.== length (merge compare xs ys);
+
+prop-partition : List Int -> (Int -> Bool) -> Bool;
+prop-partition xs p :=
+  case partition p xs
+    | lhs, rhs :=
+      all p lhs
+        && not (any p rhs)
+        && eqListInt (sortInt xs) (sortInt (lhs ++ rhs));
+
+prop-distributive : Int -> Int -> (Int -> Int) -> Bool;
+prop-distributive a b f := f (a + b) == f a + f b;
+
+prop-add-sub : Int -> Int -> Bool;
+prop-add-sub a b := a == a + b - b;
+
+prop-add-sub-bad : Int -> Int -> Bool;
+prop-add-sub-bad a b := a == 2;
+
+prop-gcd-bad : Int -> Int -> Bool;
+prop-gcd-bad a b := gcd a b > 1;
+
+gcdNoCoprimeTest : QC.Test;
+gcdNoCoprimeTest :=
+  QC.mkTest
+    QC.testableBinaryInt
+    "no integers are coprime"
+    prop-gcd-bad;
+
+partitionTest : QC.Test;
+partitionTest :=
+  QC.mkTest
+    QC.testableListIntHofIntBool
+    "partition: recombination of the output equals the input"
+    prop-partition;
+
+testDistributive : QC.Test;
+testDistributive :=
+  QC.mkTest
+    QC.testableIntIntHofIntInt
+    "all functions are distributive over +"
+    prop-distributive;
+
+reverseLengthTest : QC.Test;
+reverseLengthTest :=
+  QC.mkTest
+    QC.testableListInt
+    "reverse preserves length"
+    prop-reverseDoesNotChangeLength;
+
+reverseReverseIdTest : QC.Test;
+reverseReverseIdTest :=
+  QC.mkTest
+    QC.testableListInt
+    "reverse of reverse is identity"
+    prop-reverseReverseIsIdentity;
+
+splitAtRecombineTest : QC.Test;
+splitAtRecombineTest :=
+  QC.mkTest
+    QC.testableNatListInt
+    "splitAt: recombination of the output is equal to the input list"
+    prop-splitAtRecombine;
+
+mergeSumLengthsTest : QC.Test;
+mergeSumLengthsTest :=
+  QC.mkTest
+    QC.testableListIntListInt
+    "merge: sum of the lengths of input lists is equal to the length of output list"
+    prop-mergeSumLengths;
+
+tailLengthOneLessTest : QC.Test;
+tailLengthOneLessTest :=
+  QC.mkTest
+    QC.testableListInt
+    "tail: length of output is one less than input unless empty"
+    prop-tailLengthOneLess;
+
+main : IO;
+main :=
+  readLn
+    \ {
+      | seed :=
+        QC.runTestsIO
+          100
+          (stringToNat seed)
+          (partitionTest
+            :: reverseLengthTest
+            :: reverseReverseIdTest
+            :: splitAtRecombineTest
+            :: mergeSumLengthsTest
+            :: tailLengthOneLessTest
+            :: nil)
+    };
