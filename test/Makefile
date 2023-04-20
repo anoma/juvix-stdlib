@@ -3,7 +3,7 @@ all: test
 
 deps/quickcheck:
 	@mkdir -p deps/
-	@git clone --branch main --depth 1 https://github.com/paulcadman/quickcheck.git deps/quickcheck
+	@git clone --branch v0.2.0 --depth 1 https://github.com/anoma/juvix-quickcheck.git deps/quickcheck
 
 build/Test: Test.juvix deps/quickcheck
 	@mkdir -p build
