@@ -1,5 +1,7 @@
 module Stdlib.Function;
 
+open import Stdlib.Data.Nat;
+
 infixr 9 ∘;
 --- Function composition.
 ∘ :
@@ -36,6 +38,11 @@ infixr 0 $;
 --- facility.
 $ : {A : Type} → {B : Type} → (A → B) → A → B;
 $ f x := f x;
+
+--- Applies a function n times.
+iterate : {A : Type} -> Nat -> (A -> A) -> A -> A;
+iterate zero _ a := a;
+iterate (suc n) f a := iterate n f (f a);
 
 infixl 0 on;
 on :
