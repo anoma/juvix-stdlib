@@ -187,3 +187,41 @@ zip {A} {B} as bs :=
     go nil _ acc := acc;
     go (a :: az) (b :: bz) acc := go az bz (snoc acc (a, b));
   in go as bs nil;
+
+--- 𝒪(𝓃 log 𝓃). Sorts a list of elements in ascending order using the MergeSort
+--- algorithm.
+mergeSort :
+  {A : Type} → (A → A → Ordering) → List A → List A;
+mergeSort {A} cmp :=
+  let
+    terminating
+    go : List A -> List A;
+    go nil := nil;
+    go xs@(_ :: nil) := xs;
+    go xs :=
+      let
+        splitXs :
+            List A × List A := splitAt (div (length xs) 2) xs;
+        left : List A := fst splitXs;
+        right : List A := snd splitXs;
+      in merge cmp (go left) (go right);
+  in go;
+
+--- 𝒪(𝓃²). Sorts a list of elements in ascending order using te QuickSort
+--- algorithm.
+terminating
+quickSort :
+  {A : Type} → (A → A → Ordering) → List A → List A;
+quickSort {A} cmp :=
+  let
+    qsHelper : {A : Type} → A → List A × List A → List A;
+    qsHelper a (l, r) := l ++ (a :: nil) ++ r;
+    terminating
+    go : List A → List A;
+    go nil := nil;
+    go xs@(_ :: nil) := xs;
+    go (x :: xs) :=
+      qsHelper
+        x
+        (both go (partition (isGT ∘ cmp x) xs));
+  in go;
