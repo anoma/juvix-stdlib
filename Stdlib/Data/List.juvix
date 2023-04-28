@@ -107,6 +107,10 @@ infixr 5 ++;
 ++ nil ys := ys;
 ++ (x :: xs) ys := x :: xs ++ ys;
 
+--- 𝒪(𝓃). Append an element.
+snoc : {A : Type} -> List A -> A -> List A;
+snoc xs x := xs ++ x :: nil;
+
 --- Concatenates a ;List; of ;List;s.
 flatten : {A : Type} → List (List A) → List A;
 flatten := foldl (++) nil;
