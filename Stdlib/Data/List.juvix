@@ -96,8 +96,8 @@ partition _ nil := nil, nil;
 partition f (x :: xs) :=
   if (f x) first second ((::) x) (partition f xs);
 
---- Concatenates two ;List;s.
 infixr 5 ++;
+--- Concatenates two ;List;s.
 ++ : {A : Type} → List A → List A → List A;
 ++ nil ys := ys;
 ++ (x :: xs) ys := x :: xs ++ ys;
@@ -145,3 +145,30 @@ all f xs := foldl and true (map f xs);
 null : {A : Type} → List A → Bool;
 null nil := true;
 null _ := false;
+
+--- 𝓞(min(𝓶, 𝓷)). Returns a list containing the results of applying a function
+--- to each pair of elements from the input lists.
+zipWith :
+  {A : Type}
+    -> {B : Type}
+    -> {C : Type}
+    -> (A -> B -> C)
+    -> List A
+    -> List B
+    -> List C;
+zipWith {A} {B} {C} f as bs :=
+  let
+    go : List A -> List B -> List C;
+    go _ nil := nil;
+    go nil _ := nil;
+    go (a :: az) (b :: bz) := f a b :: go az bz;
+  in go as bs;
+
+--- 𝓞(min(𝓶, 𝓷)). Returns a list of pairs formed from the input lists.
+zip :
+  {A : Type}
+    -> {B : Type}
+    -> List A
+    -> List B
+    -> List (A × B);
+zip := zipWith (,);
