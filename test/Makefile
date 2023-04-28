@@ -5,7 +5,7 @@ deps/quickcheck:
 	@mkdir -p deps/
 	@git clone --branch v0.2.0 --depth 1 https://github.com/anoma/juvix-quickcheck.git deps/quickcheck
 
-build/Test: Test.juvix deps/quickcheck
+build/Test: $(shell find ../ -name "*.juvix") $(wildcard deps/**/*.juvix) Test.juvix deps/quickcheck
 	@mkdir -p build
 	juvix compile -o build/Test Test.juvix
 
