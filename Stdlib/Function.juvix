@@ -61,24 +61,3 @@ infixl 1 >>>;
 builtin seq
 >>> : {A B : Type} → A → B → B;
 >>> x y := y;
-
---- Converts a function of two arguments to a function with a product argument.
-uncurry :
-  {A : Type}
-    -> {B : Type}
-    -> {C : Type}
-    -> (A -> B -> C)
-    -> A × B
-    -> C;
-uncurry f (a, b) := f a b;
-
---- Converts a function with a product argument to a function of two arguments.
-curry :
-  {A : Type}
-    -> {B : Type}
-    -> {C : Type}
-    -> (A × B -> C)
-    -> A
-    -> B
-    -> C;
-curry f a b := f (a, b);
