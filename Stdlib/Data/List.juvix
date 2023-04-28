@@ -64,6 +64,11 @@ take : {A : Type} → Nat → List A → List A;
 take (suc n) (x :: xs) := x :: take n xs;
 take _ _ := nil;
 
+--- Drops the first n elements of a ;List;.
+drop : {A : Type} → Nat → List A → List A;
+drop (suc n) (x :: xs) := drop n xs;
+drop _ xs := xs;
+
 --- 𝒪(𝓃). splitAt n xs returns a tuple where first element is xs
 --- prefix of length n and second element is the remainder of the ;List;.
 splitAt : {A : Type} → Nat → List A → List A × List A;
