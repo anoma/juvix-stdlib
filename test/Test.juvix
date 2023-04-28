@@ -4,6 +4,7 @@ open import Stdlib.Prelude hiding {+};
 
 import Stdlib.Data.Nat.Ord as Nat;
 import Stdlib.Data.Nat as Nat;
+import Stdlib.Data.Ord as Ord;
 
 open import Stdlib.Data.Int.Ord;
 open import Stdlib.Data.Int;
@@ -55,6 +56,110 @@ prop-add-sub-bad a b := a == 2;
 
 prop-gcd-bad : Int -> Int -> Bool;
 prop-gcd-bad a b := gcd a b > 1;
+
+prop-equal-compare-to-eq : Nat -> Bool;
+prop-equal-compare-to-eq a := Ord.isEQ (Nat.compare a a);
+
+prop-sort : (List Int -> List Int) -> List Int -> Bool;
+prop-sort sort xs :=
+   let
+     sorted : List Int := sort xs;
+     isSorted : List Int -> Bool;
+     isSorted nil := true;
+     isSorted (_ :: nil) := true;
+     isSorted (x :: y :: xs) := (x <= y) && isSorted (y :: xs);
+   in
+     length sorted Nat.== length xs
+     && eqListInt sorted (sort sorted)
+     && isSorted sorted;
+
+prop-zip : List Int -> List Int -> Bool;
+prop-zip xs ys :=
+  let
+    zs : List (Int × Int) := zip xs ys;
+    expectedLen : Nat := Nat.min (length xs) (length ys);
+  in length zs Nat.== expectedLen
+    && eqListInt (take expectedLen xs) (map fst zs)
+    && eqListInt (take expectedLen ys) (map snd zs);
+
+prop-zipWith :
+  (Int -> Int -> Int) -> List Int -> List Int -> Bool;
+prop-zipWith f xs ys :=
+  let
+    zs : List Int := zipWith f xs ys;
+    zsFlip : List Int := zipWith (flip f) ys xs;
+    expectedLen : Nat := Nat.min (length xs) (length ys);
+  in length zs Nat.== expectedLen
+    && eqListInt zs zsFlip
+    && eqListInt
+      (map
+        λ {
+          | x := f x x
+        }
+        xs)
+      (zipWith f xs xs);
+
+prop-snoc : List Int -> Int -> Bool;
+prop-snoc xs x :=
+  let
+    snoc-x : List Int := snoc xs x;
+  in eqListInt snoc-x (reverse (x :: reverse xs));
+
+prop-drop : Nat -> List Int -> Bool;
+prop-drop n xs :=
+  let
+    drop-n : List Int;
+    drop-n := drop n xs;
+  in
+    length drop-n Nat.<= length xs
+    && eqListInt (drop n (drop n xs)) (drop (2 Nat.* n) xs);
+
+sortTest : String -> (List Int -> List Int) -> QC.Test;
+sortTest sortName sort :=
+  QC.mkTest
+    (QC.testableFunction QC.argumentListInt QC.testableBool)
+    ("sort properties: " ++str sortName)
+    (prop-sort sort);
+
+dropTest : QC.Test;
+dropTest :=
+  QC.mkTest
+    (QC.testableFunction
+      QC.argumentNat
+      (QC.testableFunction
+        QC.argumentListInt QC.testableBool))
+    "drop properties"
+    prop-drop;
+
+snocTest : QC.Test;
+snocTest :=
+  QC.mkTest
+    (QC.testableFunction
+      QC.argumentListInt
+      (QC.testableFunction QC.argumentInt QC.testableBool))
+    "snoc properties"
+    prop-snoc;
+
+zipTest : QC.Test;
+zipTest :=
+  QC.mkTest
+    QC.testableListIntListInt
+    "zip properties"
+    prop-zip;
+
+zipWithTest : QC.Test;
+zipWithTest :=
+  QC.mkTest
+    QC.testableHofIntIntListIntListInt
+    "zipWith properties"
+    prop-zipWith;
+
+equalCompareToEqTest : QC.Test;
+equalCompareToEqTest :=
+  QC.mkTest
+    (QC.testableFunction QC.argumentNat QC.testableBool)
+    "equal Nats compare to EQ"
+    prop-equal-compare-to-eq;
 
 gcdNoCoprimeTest : QC.Test;
 gcdNoCoprimeTest :=
@@ -126,5 +231,12 @@ main :=
             :: splitAtRecombineTest
             :: mergeSumLengthsTest
             :: tailLengthOneLessTest
+            :: equalCompareToEqTest
+            :: zipTest
+            :: zipWithTest
+            :: snocTest
+            :: dropTest
+            :: (sortTest "mergeSort" (mergeSort compare))
+            :: (sortTest "quickSort" (quickSort compare))
             :: nil)
     };
