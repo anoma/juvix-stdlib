@@ -155,7 +155,7 @@ null : {A : Type} → List A → Bool;
 null nil := true;
 null _ := false;
 
---- 𝓞(min(𝓶, 𝓷)). Returns a list containing the results of applying a function
+--- 𝒪(min(𝓂, 𝓃)). Returns a list containing the results of applying a function
 --- to each pair of elements from the input lists.
 zipWith :
   {A : Type}
@@ -173,7 +173,7 @@ zipWith {A} {B} {C} f as bs :=
     go (a :: az) (b :: bz) := f a b :: go az bz;
   in go as bs;
 
---- 𝓞(min(𝓶, 𝓷)). Returns a list of pairs formed from the input lists.
+--- 𝒪(min(𝓂, 𝓃)). Returns a list of pairs formed from the input lists.
 zip :
   {A : Type}
     -> {B : Type}
