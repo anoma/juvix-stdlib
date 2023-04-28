@@ -167,11 +167,11 @@ zipWith :
     -> List C;
 zipWith {A} {B} {C} f as bs :=
   let
-    go : List A -> List B -> List C;
-    go _ nil := nil;
-    go nil _ := nil;
-    go (a :: az) (b :: bz) := f a b :: go az bz;
-  in go as bs;
+    go : List A -> List B -> List C -> List C;
+    go _ nil acc := acc;
+    go nil _ acc := acc;
+    go (a :: az) (b :: bz) acc := go az bz (snoc acc (f a b));
+  in go as bs nil;
 
 --- 𝒪(min(𝓂, 𝓃)). Returns a list of pairs formed from the input lists.
 zip :
@@ -180,4 +180,10 @@ zip :
     -> List A
     -> List B
     -> List (A × B);
-zip := zipWith (,);
+zip {A} {B} as bs :=
+  let
+    go : List A -> List B -> List (A × B) -> List (A × B);
+    go _ nil acc := acc;
+    go nil _ acc := acc;
+    go (a :: az) (b :: bz) acc := go az bz (snoc acc (a, b));
+  in go as bs nil;
