@@ -137,6 +137,10 @@ transpose xss := map head xss :: transpose (map tail xss);
 any : {A : Type} → (A → Bool) → List A → Bool;
 any f xs := foldl or false (map f xs);
 
+--- 𝒪(𝓃). Returns ;true; if all elements of the ;List; satisfy the predicate.
+all : {A : Type} -> (A -> Bool) -> List A -> Bool;
+all f xs := foldl and true (map f xs);
+
 --- 𝒪(1). Returns ;true; if the ;List; is empty.
 null : {A : Type} → List A → Bool;
 null nil := true;
