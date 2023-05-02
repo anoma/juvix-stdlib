@@ -11,29 +11,33 @@ open Show using {Show};
 
 open import Stdlib.Data.Bool;
 
-module BoolTrait;
+module BoolTraits;
 
-Eq : Eq Bool;
-Eq := Eq.eq λ {
-  true true := true
-  | false false := true
-  | _ _ := false
-};
+  Eq : Eq Bool;
+  Eq :=
+    Eq.eq
+      λ {
+        | true true := true
+        | false false := true
+        | _ _ := false
+      };
 
-Ord : Ord Bool;
-Ord := Ord.ord λ {
-  | false false := Ord.EQ
-  | false true := Ord.LT
-  | true false := Ord.GT
-  | true true := Ord.EQ
-};
+  Ord : Ord Bool;
+  Ord :=
+    Ord.ord
+      λ {
+        | false false := Ord.EQ
+        | false true := Ord.LT
+        | true false := Ord.GT
+        | true true := Ord.EQ
+      };
 
-Show : Show Bool;
-Show :=
-  Show.show
-    λ {
-      | true := "true"
-      | false := "false"
-    };
+  Show : Show Bool;
+  Show :=
+    Show.show
+      λ {
+        | true := "true"
+        | false := "false"
+      };
 
 end;

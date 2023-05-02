@@ -13,7 +13,7 @@ open Ord using {Ord};
 import Stdlib.Trait.Show as Show;
 open Show using {Show};
 
-module ListTrait;
+module ListTraits;
 
   Eq : {A : Type} -> Eq A -> Eq (List A);
   Eq {A} (Eq.eq eq-a) :=

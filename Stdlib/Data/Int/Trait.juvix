@@ -13,7 +13,7 @@ open import Stdlib.Data.Int;
 
 import Stdlib.Data.Int.Ord as Int;
 
-module IntTrait;
+module IntTraits;
   Eq : Eq Int;
   Eq := Eq.eq (Int.==);
 

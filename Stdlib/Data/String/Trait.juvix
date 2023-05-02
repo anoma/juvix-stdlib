@@ -10,7 +10,7 @@ import Stdlib.Data.String.Ord as String;
 
 open import Stdlib.Data.String;
 
-module StringTrait;
+module StringTraits;
 
   Eq : Eq String;
   Eq := Eq.eq (String.==);

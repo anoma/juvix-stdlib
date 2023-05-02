@@ -13,7 +13,7 @@ open import Stdlib.Data.Nat;
 
 import Stdlib.Data.Nat.Ord as Nat;
 
-module NatTrait;
+module NatTraits;
   Eq : Eq Nat;
   Eq := Eq.eq (Nat.==);
 
