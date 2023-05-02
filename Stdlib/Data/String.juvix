@@ -1,10 +1,25 @@
 module Stdlib.Data.String;
 
---- Primitive representation of a sequence of characters.
-builtin string
-axiom String : Type;
+open import Stdlib.Data.String.Base public;
 
---- Concatenation of two ;String;s.
-infixr 5 ++str;
-builtin string-concat
-axiom ++str : String -> String -> String;
+import Stdlib.Trait.Eq as Eq;
+open Eq using {Eq};
+
+import Stdlib.Trait.Show as Show;
+open Show using {Show};
+
+import Stdlib.Data.String.Ord as String;
+
+module StringTraits;
+
+  Eq : Eq String;
+  Eq := Eq.mkEq (String.==);
+
+  Show : Show String;
+  Show :=
+    let
+      go : String -> String;
+      go s := "\"" ++str s ++str "\"";
+    in Show.mkShow go;
+
+end;

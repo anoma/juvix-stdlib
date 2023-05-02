@@ -1,6 +1,6 @@
 module Stdlib.Data.String.Ord;
 
-open import Stdlib.Data.String;
+open import Stdlib.Data.String.Base;
 open import Stdlib.Data.Bool;
 
 --- Equality for ;String;s.

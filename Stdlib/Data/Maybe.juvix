@@ -1,18 +1,45 @@
 module Stdlib.Data.Maybe;
 
---- Represent an optional value that may or may not be present. Providing a way
---- to handle null or missing values in a type-safe manner.
-type Maybe (A : Type) :=
-  | nothing : Maybe A
-  | just : A → Maybe A;
+open import Stdlib.Data.Maybe.Base public;
 
---- Extracts the value from a ;Maybe; if present, else returns the given value.
-fromMaybe : {A : Type} → A → Maybe A → A;
-fromMaybe a nothing := a;
-fromMaybe _ (just a) := a;
+import Stdlib.Trait.Eq as Eq;
+open Eq using {Eq};
 
---- Applies a function to the value from a ;Maybe; if present, else returns the
---- given value.
-maybe : {A : Type} → {B : Type} → B → (A → B) → Maybe A → B;
-maybe b _ nothing := b;
-maybe _ f (just a) := f a;
+import Stdlib.Trait.Ord as Ord;
+open Ord using {Ord};
+
+import Stdlib.Trait.Show as Show;
+open Show using {Show};
+
+open import Stdlib.Data.Bool.Base;
+open import Stdlib.Data.String.Base;
+
+module MaybeTraits;
+  Eq : {A : Type} -> Eq A -> Eq (Maybe A);
+  Eq (Eq.mkEq eq) :=
+    Eq.mkEq
+      λ {
+        | nothing nothing := true
+        | (just a1) (just a2) := eq a1 a2
+        | _ _ := false
+      };
+
+  Show : {A : Type} -> Show A -> Show (Maybe A);
+  Show (Show.mkShow show) :=
+    Show.mkShow
+      λ {
+        | nothing := "nothing"
+        | (just a) := "just " ++str show a
+      };
+
+  Ord : {A : Type} -> Ord A -> Ord (Maybe A);
+  Ord (Ord.mkOrd cmp) :=
+    Ord.mkOrd
+      λ {
+        | nothing nothing := Ord.EQ
+        | (just a1) (just a2) := cmp a1 a2
+        | nothing (just _) := Ord.LT
+        | (just _) nothing := Ord.GT
+      };
+
+end;

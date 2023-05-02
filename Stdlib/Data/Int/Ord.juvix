@@ -1,6 +1,6 @@
 module Stdlib.Data.Int.Ord;
 
-open import Stdlib.Data.Int;
+open import Stdlib.Data.Int.Base;
 open import Stdlib.Data.Bool;
 open import Stdlib.Trait.Ord;
 

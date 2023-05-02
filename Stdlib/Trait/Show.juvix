@@ -1,6 +1,6 @@
 module Stdlib.Trait.Show;
 
-open import Stdlib.Data.String;
+open import Stdlib.Data.String.Base;
 
 type Show (A : Type) :=
   | mkShow : (A -> String) -> Show A;
