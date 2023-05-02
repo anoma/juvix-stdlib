@@ -1,7 +1,7 @@
 module Stdlib.Data.Nat.Ord;
 
 open import Stdlib.Data.Nat;
-open import Stdlib.Data.Ord;
+open import Stdlib.Trait.Ord;
 open import Stdlib.Data.Bool;
 
 --- Tests for equality.

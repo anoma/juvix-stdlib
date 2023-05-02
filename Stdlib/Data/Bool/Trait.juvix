@@ -1,0 +1,39 @@
+module Stdlib.Data.Bool.Trait;
+
+import Stdlib.Trait.Eq as Eq;
+open Eq using {Eq};
+
+import Stdlib.Trait.Ord as Ord;
+open Ord using {Ord};
+
+import Stdlib.Trait.Show as Show;
+open Show using {Show};
+
+open import Stdlib.Data.Bool;
+
+module BoolTrait;
+
+Eq : Eq Bool;
+Eq := Eq.eq λ {
+  true true := true
+  | false false := true
+  | _ _ := false
+};
+
+Ord : Ord Bool;
+Ord := Ord.ord λ {
+  | false false := Ord.EQ
+  | false true := Ord.LT
+  | true false := Ord.GT
+  | true true := Ord.EQ
+};
+
+Show : Show Bool;
+Show :=
+  Show.show
+    λ {
+      | true := "true"
+      | false := "false"
+    };
+
+end;

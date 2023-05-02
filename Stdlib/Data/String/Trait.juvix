@@ -1,0 +1,25 @@
+module Stdlib.Data.String.Trait;
+
+import Stdlib.Trait.Eq as Eq;
+open Eq using {Eq};
+
+import Stdlib.Trait.Show as Show;
+open Show using {Show};
+
+import Stdlib.Data.String.Ord as String;
+
+open import Stdlib.Data.String;
+
+module StringTrait;
+
+  Eq : Eq String;
+  Eq := Eq.eq (String.==);
+
+  Show : Show String;
+  Show :=
+    let
+      go : String -> String;
+      go s := "\"" ++str s ++str "\"";
+    in Show.show go;
+
+end;

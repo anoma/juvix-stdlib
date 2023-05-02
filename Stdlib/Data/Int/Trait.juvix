@@ -1,0 +1,25 @@
+module Stdlib.Data.Int.Trait;
+
+import Stdlib.Trait.Eq as Eq;
+open Eq using {Eq};
+
+import Stdlib.Trait.Ord as Ord;
+open Ord using {Ord};
+
+import Stdlib.Trait.Show as Show;
+open Show using {Show};
+
+open import Stdlib.Data.Int;
+
+import Stdlib.Data.Int.Ord as Int;
+
+module IntTrait;
+  Eq : Eq Int;
+  Eq := Eq.eq (Int.==);
+
+  Ord : Ord Int;
+  Ord := Ord.ord Int.compare;
+
+  Show : Show Int;
+  Show := Show.show intToString;
+end;

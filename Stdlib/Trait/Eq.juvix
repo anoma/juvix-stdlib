@@ -1,0 +1,7 @@
+module Stdlib.Trait.Eq;
+
+open import Stdlib.Data.Bool;
+
+--- A trait defining equality
+type Eq (A : Type) :=
+  | eq : (A -> A -> Bool) -> Eq A;

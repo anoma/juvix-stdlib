@@ -10,3 +10,9 @@ open import Stdlib.Data.Product public;
 open import Stdlib.Data.String public;
 open import Stdlib.Function public;
 open import Stdlib.System.IO public;
+
+open import Stdlib.Data.Bool.Trait public;
+open import Stdlib.Data.Nat.Trait public;
+open import Stdlib.Data.Int.Trait public;
+open import Stdlib.Data.List.Trait public;
+open import Stdlib.Data.String.Trait public;

@@ -2,7 +2,7 @@ module Stdlib.Data.Int.Ord;
 
 open import Stdlib.Data.Int;
 open import Stdlib.Data.Bool;
-open import Stdlib.Data.Ord;
+open import Stdlib.Trait.Ord;
 
 import Stdlib.Data.Nat.Ord as Nat;
 
