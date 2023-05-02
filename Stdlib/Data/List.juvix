@@ -170,8 +170,8 @@ zipWith {A} {B} {C} f as bs :=
     go : List A -> List B -> List C -> List C;
     go _ nil acc := acc;
     go nil _ acc := acc;
-    go (a :: az) (b :: bz) acc := go az bz (snoc acc (f a b));
-  in go as bs nil;
+    go (a :: az) (b :: bz) acc := go az bz (f a b :: acc);
+  in reverse (go as bs nil);
 
 --- 𝒪(min(𝓂, 𝓃)). Returns a list of pairs formed from the input lists.
 zip :
@@ -185,8 +185,8 @@ zip {A} {B} as bs :=
     go : List A -> List B -> List (A × B) -> List (A × B);
     go _ nil acc := acc;
     go nil _ acc := acc;
-    go (a :: az) (b :: bz) acc := go az bz (snoc acc (a, b));
-  in go as bs nil;
+    go (a :: az) (b :: bz) acc := go az bz ((a, b) :: acc);
+  in reverse (go as bs nil);
 
 --- 𝒪(𝓃 log 𝓃). Sorts a list of elements in ascending order using the MergeSort
 --- algorithm.
@@ -221,7 +221,5 @@ quickSort {A} cmp :=
     go nil := nil;
     go xs@(_ :: nil) := xs;
     go (x :: xs) :=
-      qsHelper
-        x
-        (both go (partition (isGT ∘ cmp x) xs));
+      qsHelper x (both go (partition (isGT ∘ cmp x) xs));
   in go;
