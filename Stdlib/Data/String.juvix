@@ -1,10 +1,13 @@
 module Stdlib.Data.String;
 
---- Primitive representation of a sequence of characters.
-builtin string
-axiom String : Type;
+open import Stdlib.Data.String.Base public;
+open import Stdlib.Data.List;
 
 --- Concatenation of two ;String;s.
 infixr 5 ++str;
 builtin string-concat
 axiom ++str : String -> String -> String;
+
+unlines : List String -> String;
+unlines nil := "";
+unlines (x :: xs) := x ++str "\n" ++str unlines xs;

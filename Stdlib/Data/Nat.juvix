@@ -1,6 +1,6 @@
 module Stdlib.Data.Nat;
 
-open import Stdlib.Data.String;
+open import Stdlib.Data.String.Base;
 open import Stdlib.Data.Bool;
 
 --- Inductive natural numbers. I.e. whole non-negative numbers.

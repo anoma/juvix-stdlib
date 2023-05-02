@@ -1,0 +1,5 @@
+module Stdlib.Data.String.Base;
+
+--- Primitive representation of a sequence of characters.
+builtin string
+axiom String : Type;
