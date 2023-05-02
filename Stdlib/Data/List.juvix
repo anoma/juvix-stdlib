@@ -207,8 +207,8 @@ mergeSort {A} cmp :=
       in merge cmp (go left) (go right);
   in go;
 
---- 𝒪(𝓃²). Sorts a list of elements in ascending order using te QuickSort
---- algorithm.
+--- On average 𝒪(𝓃 log 𝓃), worst case 𝒪(𝓃²). Sorts a list of elements in
+--- ascending order using te QuickSort algorithm.
 terminating
 quickSort :
   {A : Type} → (A → A → Ordering) → List A → List A;
