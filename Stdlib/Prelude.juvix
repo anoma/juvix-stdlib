@@ -19,4 +19,5 @@ open import Stdlib.Data.Bool.Trait public;
 open import Stdlib.Data.Nat.Trait public;
 open import Stdlib.Data.Int.Trait public;
 open import Stdlib.Data.List.Trait public;
+open import Stdlib.Data.Product.Trait public;
 open import Stdlib.Data.String.Trait public;
