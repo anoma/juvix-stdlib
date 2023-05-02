@@ -3,4 +3,4 @@ module Stdlib.Trait.Show;
 open import Stdlib.Data.String;
 
 type Show (A : Type) :=
-  | show : (A -> String) -> Show A;
+  | mkShow : (A -> String) -> Show A;

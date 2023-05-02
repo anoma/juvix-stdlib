@@ -15,11 +15,11 @@ import Stdlib.Data.Nat.Ord as Nat;
 
 module NatTraits;
   Eq : Eq Nat;
-  Eq := Eq.eq (Nat.==);
+  Eq := Eq.mkEq (Nat.==);
 
   Ord : Ord Nat;
-  Ord := Ord.ord Nat.compare;
+  Ord := Ord.mkOrd Nat.compare;
 
   Show : Show Nat;
-  Show := Show.show natToString;
+  Show := Show.mkShow natToString;
 end;

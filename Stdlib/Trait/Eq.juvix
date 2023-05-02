@@ -4,4 +4,4 @@ open import Stdlib.Data.Bool;
 
 --- A trait defining equality
 type Eq (A : Type) :=
-  | eq : (A -> A -> Bool) -> Eq A;
+  | mkEq : (A -> A -> Bool) -> Eq A;

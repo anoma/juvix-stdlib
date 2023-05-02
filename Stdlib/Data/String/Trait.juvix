@@ -13,13 +13,13 @@ open import Stdlib.Data.String;
 module StringTraits;
 
   Eq : Eq String;
-  Eq := Eq.eq (String.==);
+  Eq := Eq.mkEq (String.==);
 
   Show : Show String;
   Show :=
     let
       go : String -> String;
       go s := "\"" ++str s ++str "\"";
-    in Show.show go;
+    in Show.mkShow go;
 
 end;

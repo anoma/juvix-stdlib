@@ -15,11 +15,11 @@ import Stdlib.Data.Int.Ord as Int;
 
 module IntTraits;
   Eq : Eq Int;
-  Eq := Eq.eq (Int.==);
+  Eq := Eq.mkEq (Int.==);
 
   Ord : Ord Int;
-  Ord := Ord.ord Int.compare;
+  Ord := Ord.mkOrd Int.compare;
 
   Show : Show Int;
-  Show := Show.show intToString;
+  Show := Show.mkShow intToString;
 end;

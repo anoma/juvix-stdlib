@@ -6,6 +6,7 @@ open import Stdlib.Data.Nat;
 open import Stdlib.Trait.Ord;
 open import Stdlib.Data.Product;
 open import Stdlib.Debug.Fail;
+open import Stdlib.Trait.Ord;
 
 infixr 5 ::;
 --- Inductive list.
@@ -81,15 +82,15 @@ splitAt (suc (suc m)) (x :: xs) :=
 --- 𝒪(𝓃 + 𝓂). Merges two lists according the given ordering.
 merge :
   {A : Type}
-    → (A → A → Ordering)
+    → Ord A
     → List A
     → List A
     → List A;
-merge cmp (x :: xs) (y :: ys) :=
+merge o@(mkOrd cmp) (x :: xs) (y :: ys) :=
   if
     (isLT (cmp x y))
-    (x :: merge cmp xs (y :: ys))
-    (y :: merge cmp (x :: xs) ys);
+    (x :: merge o xs (y :: ys))
+    (y :: merge o (x :: xs) ys);
 merge _ nil ys := ys;
 merge _ xs nil := xs;
 
@@ -191,8 +192,8 @@ zip {A} {B} as bs :=
 --- 𝒪(𝓃 log 𝓃). Sorts a list of elements in ascending order using the MergeSort
 --- algorithm.
 mergeSort :
-  {A : Type} → (A → A → Ordering) → List A → List A;
-mergeSort {A} cmp :=
+  {A : Type} → Ord A → List A → List A;
+mergeSort {A} o :=
   let
     terminating
     go : List A -> List A;
@@ -204,15 +205,15 @@ mergeSort {A} cmp :=
             List A × List A := splitAt (div (length xs) 2) xs;
         left : List A := fst splitXs;
         right : List A := snd splitXs;
-      in merge cmp (go left) (go right);
+      in merge o (go left) (go right);
   in go;
 
 --- On average 𝒪(𝓃 log 𝓃), worst case 𝒪(𝓃²). Sorts a list of elements in
 --- ascending order using te QuickSort algorithm.
 terminating
 quickSort :
-  {A : Type} → (A → A → Ordering) → List A → List A;
-quickSort {A} cmp :=
+  {A : Type} → Ord A → List A → List A;
+quickSort {A} (mkOrd cmp) :=
   let
     qsHelper : {A : Type} → A → List A × List A → List A;
     qsHelper a (l, r) := l ++ (a :: nil) ++ r;

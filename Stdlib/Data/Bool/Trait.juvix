@@ -15,7 +15,7 @@ module BoolTraits;
 
   Eq : Eq Bool;
   Eq :=
-    Eq.eq
+    Eq.mkEq
       λ {
         | true true := true
         | false false := true
@@ -24,7 +24,7 @@ module BoolTraits;
 
   Ord : Ord Bool;
   Ord :=
-    Ord.ord
+    Ord.mkOrd
       λ {
         | false false := Ord.EQ
         | false true := Ord.LT
@@ -34,7 +34,7 @@ module BoolTraits;
 
   Show : Show Bool;
   Show :=
-    Show.show
+    Show.mkShow
       λ {
         | true := "true"
         | false := "false"

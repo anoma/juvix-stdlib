@@ -16,17 +16,17 @@ open Show using {Show};
 module ListTraits;
 
   Eq : {A : Type} -> Eq A -> Eq (List A);
-  Eq {A} (Eq.eq eq-a) :=
+  Eq {A} (Eq.mkEq eq-a) :=
     let
       go : List A -> List A -> Bool;
       go nil nil := true;
       go nil _ := false;
       go _ nil := false;
       go (x :: xs) (y :: ys) := if (eq-a x y) (go xs ys) false;
-    in Eq.eq go;
+    in Eq.mkEq go;
 
   Ord : {A : Type} -> Ord A -> Ord (List A);
-  Ord {A} (Ord.ord cmp-a) :=
+  Ord {A} (Ord.mkOrd cmp-a) :=
     let
       go : List A -> List A -> Ord.Ordering;
       go nil nil := Ord.EQ;
@@ -37,15 +37,15 @@ module ListTraits;
           | Ord.LT := Ord.LT
           | Ord.GT := Ord.GT
           | Ord.EQ := go xs ys;
-    in Ord.ord go;
+    in Ord.mkOrd go;
 
   Show : {A : Type} -> Show A -> Show (List A);
-  Show {A} (Show.show to-str) :=
+  Show {A} (Show.mkShow to-str) :=
     let
       go : List A -> String;
       go nil := "nil";
       go (x :: xs) := to-str x ++str " :: " ++str go xs;
-    in Show.show
+    in Show.mkShow
       λ {
         | nil := "nil"
         | s := "(" ++str go s ++str ")"

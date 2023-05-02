@@ -11,6 +11,10 @@ open import Stdlib.Data.String public;
 open import Stdlib.Function public;
 open import Stdlib.System.IO public;
 
+open import Stdlib.Trait.Ord public;
+open import Stdlib.Trait.Eq public;
+open import Stdlib.Trait.Show public;
+
 open import Stdlib.Data.Bool.Trait public;
 open import Stdlib.Data.Nat.Trait public;
 open import Stdlib.Data.Int.Trait public;
