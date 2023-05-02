@@ -64,6 +64,11 @@ take : {A : Type} → Nat → List A → List A;
 take (suc n) (x :: xs) := x :: take n xs;
 take _ _ := nil;
 
+--- Drops the first n elements of a ;List;.
+drop : {A : Type} → Nat → List A → List A;
+drop (suc n) (x :: xs) := drop n xs;
+drop _ xs := xs;
+
 --- 𝒪(𝓃). splitAt n xs returns a tuple where first element is xs
 --- prefix of length n and second element is the remainder of the ;List;.
 splitAt : {A : Type} → Nat → List A → List A × List A;
@@ -96,11 +101,15 @@ partition _ nil := nil, nil;
 partition f (x :: xs) :=
   if (f x) first second ((::) x) (partition f xs);
 
---- Concatenates two ;List;s.
 infixr 5 ++;
+--- Concatenates two ;List;s.
 ++ : {A : Type} → List A → List A → List A;
 ++ nil ys := ys;
 ++ (x :: xs) ys := x :: xs ++ ys;
+
+--- 𝒪(𝓃). Append an element.
+snoc : {A : Type} -> List A -> A -> List A;
+snoc xs x := xs ++ x :: nil;
 
 --- Concatenates a ;List; of ;List;s.
 flatten : {A : Type} → List (List A) → List A;
@@ -137,7 +146,80 @@ transpose xss := map head xss :: transpose (map tail xss);
 any : {A : Type} → (A → Bool) → List A → Bool;
 any f xs := foldl or false (map f xs);
 
+--- 𝒪(𝓃). Returns ;true; if all elements of the ;List; satisfy the predicate.
+all : {A : Type} -> (A -> Bool) -> List A -> Bool;
+all f xs := foldl and true (map f xs);
+
 --- 𝒪(1). Returns ;true; if the ;List; is empty.
 null : {A : Type} → List A → Bool;
 null nil := true;
 null _ := false;
+
+--- 𝒪(min(𝓂, 𝓃)). Returns a list containing the results of applying a function
+--- to each pair of elements from the input lists.
+zipWith :
+  {A : Type}
+    -> {B : Type}
+    -> {C : Type}
+    -> (A -> B -> C)
+    -> List A
+    -> List B
+    -> List C;
+zipWith {A} {B} {C} f as bs :=
+  let
+    go : List A -> List B -> List C -> List C;
+    go _ nil acc := acc;
+    go nil _ acc := acc;
+    go (a :: az) (b :: bz) acc := go az bz (f a b :: acc);
+  in reverse (go as bs nil);
+
+--- 𝒪(min(𝓂, 𝓃)). Returns a list of pairs formed from the input lists.
+zip :
+  {A : Type}
+    -> {B : Type}
+    -> List A
+    -> List B
+    -> List (A × B);
+zip {A} {B} as bs :=
+  let
+    go : List A -> List B -> List (A × B) -> List (A × B);
+    go _ nil acc := acc;
+    go nil _ acc := acc;
+    go (a :: az) (b :: bz) acc := go az bz ((a, b) :: acc);
+  in reverse (go as bs nil);
+
+--- 𝒪(𝓃 log 𝓃). Sorts a list of elements in ascending order using the MergeSort
+--- algorithm.
+mergeSort :
+  {A : Type} → (A → A → Ordering) → List A → List A;
+mergeSort {A} cmp :=
+  let
+    terminating
+    go : List A -> List A;
+    go nil := nil;
+    go xs@(_ :: nil) := xs;
+    go xs :=
+      let
+        splitXs :
+            List A × List A := splitAt (div (length xs) 2) xs;
+        left : List A := fst splitXs;
+        right : List A := snd splitXs;
+      in merge cmp (go left) (go right);
+  in go;
+
+--- On average 𝒪(𝓃 log 𝓃), worst case 𝒪(𝓃²). Sorts a list of elements in
+--- ascending order using te QuickSort algorithm.
+terminating
+quickSort :
+  {A : Type} → (A → A → Ordering) → List A → List A;
+quickSort {A} cmp :=
+  let
+    qsHelper : {A : Type} → A → List A × List A → List A;
+    qsHelper a (l, r) := l ++ (a :: nil) ++ r;
+    terminating
+    go : List A → List A;
+    go nil := nil;
+    go xs@(_ :: nil) := xs;
+    go (x :: xs) :=
+      qsHelper x (both go (partition (isGT ∘ cmp x) xs));
+  in go;

@@ -3,9 +3,12 @@ all: test
 
 deps/quickcheck:
 	@mkdir -p deps/
-	@git clone --branch v0.2.0 --depth 1 https://github.com/anoma/juvix-quickcheck.git deps/quickcheck
+	@git clone https://github.com/anoma/juvix-quickcheck.git deps/quickcheck
+	@git -C deps/quickcheck checkout 2a23d8ed14d171fecf95892da401ddd37f96d40a
+	@mkdir -p deps/quickcheck/deps/stdlib
+	@rsync -av ../* deps/quickcheck/deps/stdlib --exclude "test"
 
-build/Test: Test.juvix deps/quickcheck
+build/Test: $(shell find ../ -name "*.juvix") $(wildcard deps/**/*.juvix) Test.juvix deps/quickcheck
 	@mkdir -p build
 	juvix compile -o build/Test Test.juvix
 

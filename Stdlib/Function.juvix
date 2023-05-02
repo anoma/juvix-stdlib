@@ -1,6 +1,7 @@
 module Stdlib.Function;
 
 open import Stdlib.Data.Nat;
+open import Stdlib.Data.Product;
 
 infixr 9 ∘;
 --- Function composition.
