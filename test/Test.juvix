@@ -4,7 +4,7 @@ open import Stdlib.Prelude hiding {+};
 
 import Stdlib.Data.Nat.Ord as Nat;
 import Stdlib.Data.Nat as Nat;
-import Stdlib.Data.Ord as Ord;
+import Stdlib.Trait.Ord as Ord;
 
 open import Stdlib.Data.Int.Ord;
 open import Stdlib.Data.Int;
