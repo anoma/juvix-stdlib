@@ -35,7 +35,7 @@ prop-splitAtRecombine n xs :=
 prop-mergeSumLengths : List Int -> List Int -> Bool;
 prop-mergeSumLengths xs ys :=
   length xs Nat.+ length ys
-    Nat.== length (merge compare xs ys);
+    Nat.== length (merge (IntTraits.Ord) xs ys);
 
 prop-partition : List Int -> (Int -> Bool) -> Bool;
 prop-partition xs p :=
@@ -62,16 +62,15 @@ prop-equal-compare-to-eq a := Ord.isEQ (Nat.compare a a);
 
 prop-sort : (List Int -> List Int) -> List Int -> Bool;
 prop-sort sort xs :=
-   let
-     sorted : List Int := sort xs;
-     isSorted : List Int -> Bool;
-     isSorted nil := true;
-     isSorted (_ :: nil) := true;
-     isSorted (x :: y :: xs) := (x <= y) && isSorted (y :: xs);
-   in
-     length sorted Nat.== length xs
-     && eqListInt sorted (sort sorted)
-     && isSorted sorted;
+  let
+    sorted : List Int := sort xs;
+    isSorted : List Int -> Bool;
+    isSorted nil := true;
+    isSorted (_ :: nil) := true;
+    isSorted (x :: y :: xs) := x <= y && isSorted (y :: xs);
+  in length sorted Nat.== length xs
+    && eqListInt sorted (sort sorted)
+    && isSorted sorted;
 
 prop-zip : List Int -> List Int -> Bool;
 prop-zip xs ys :=
@@ -110,8 +109,7 @@ prop-drop n xs :=
   let
     drop-n : List Int;
     drop-n := drop n xs;
-  in
-    length drop-n Nat.<= length xs
+  in length drop-n Nat.<= length xs
     && eqListInt (drop n (drop n xs)) (drop (2 Nat.* n) xs);
 
 sortTest : String -> (List Int -> List Int) -> QC.Test;
@@ -126,8 +124,7 @@ dropTest :=
   QC.mkTest
     (QC.testableFunction
       QC.argumentNat
-      (QC.testableFunction
-        QC.argumentListInt QC.testableBool))
+      (QC.testableFunction QC.argumentListInt QC.testableBool))
     "drop properties"
     prop-drop;
 
@@ -236,7 +233,7 @@ main :=
             :: zipWithTest
             :: snocTest
             :: dropTest
-            :: (sortTest "mergeSort" (mergeSort compare))
-            :: (sortTest "quickSort" (quickSort compare))
+            :: sortTest "mergeSort" (mergeSort IntTraits.Ord)
+            :: sortTest "quickSort" (quickSort IntTraits.Ord)
             :: nil)
     };
