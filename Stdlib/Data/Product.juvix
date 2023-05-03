@@ -20,7 +20,7 @@ module ProductTraits;
       λ {
         | (a1, b1) (a2, b2) := eq-a a1 a2 && eq-b b1 b2
       };
-
+  
   Ord : {A B : Type} -> Ord A -> Ord B -> Ord (A × B);
   Ord (Ord.mkOrd cmp-a) (Ord.mkOrd cmp-b) :=
     Ord.mkOrd
@@ -31,7 +31,7 @@ module ProductTraits;
             | Ord.GT := Ord.GT
             | Ord.EQ := cmp-b b1 b2
       };
-
+  
   Show : {A B : Type} -> Show A -> Show B -> Show (A × B);
   Show (Show.mkShow show-a) (Show.mkShow show-b) :=
     Show.mkShow

@@ -80,12 +80,7 @@ splitAt (suc (suc m)) (x :: xs) :=
   first ((::) x) (splitAt m xs);
 
 --- 𝒪(𝓃 + 𝓂). Merges two lists according the given ordering.
-merge :
-  {A : Type}
-    → Ord A
-    → List A
-    → List A
-    → List A;
+merge : {A : Type} → Ord A → List A → List A → List A;
 merge o@(mkOrd cmp) (x :: xs) (y :: ys) :=
   if
     (isLT (cmp x y))
@@ -180,8 +175,7 @@ zip {A} {B} as bs :=
 
 --- 𝒪(𝓃 log 𝓃). Sorts a list of elements in ascending order using the MergeSort
 --- algorithm.
-mergeSort :
-  {A : Type} → Ord A → List A → List A;
+mergeSort : {A : Type} → Ord A → List A → List A;
 mergeSort {A} o :=
   let
     terminating
@@ -200,8 +194,7 @@ mergeSort {A} o :=
 --- On average 𝒪(𝓃 log 𝓃), worst case 𝒪(𝓃²). Sorts a list of elements in
 --- ascending order using te QuickSort algorithm.
 terminating
-quickSort :
-  {A : Type} → Ord A → List A → List A;
+quickSort : {A : Type} → Ord A → List A → List A;
 quickSort {A} (mkOrd cmp) :=
   let
     qsHelper : {A : Type} → A → List A × List A → List A;
@@ -213,7 +206,6 @@ quickSort {A} (mkOrd cmp) :=
     go (x :: xs) :=
       qsHelper x (both go (partition (isGT ∘ cmp x) xs));
   in go;
-
 
 --- 𝒪(𝓃) Filters out every ;nothing; from a ;List;.
 catMaybes : {A : Type} -> List (Maybe A) -> List A;

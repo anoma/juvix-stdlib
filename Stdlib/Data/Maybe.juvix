@@ -23,7 +23,7 @@ module MaybeTraits;
         | (just a1) (just a2) := eq a1 a2
         | _ _ := false
       };
-
+  
   Show : {A : Type} -> Show A -> Show (Maybe A);
   Show (Show.mkShow show) :=
     Show.mkShow
@@ -31,7 +31,7 @@ module MaybeTraits;
         | nothing := "nothing"
         | (just a) := "just " ++str show a
       };
-
+  
   Ord : {A : Type} -> Ord A -> Ord (Maybe A);
   Ord (Ord.mkOrd cmp) :=
     Ord.mkOrd

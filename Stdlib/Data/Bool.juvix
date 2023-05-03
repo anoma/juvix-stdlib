@@ -12,7 +12,7 @@ import Stdlib.Trait.Show as Show;
 open Show using {Show};
 
 module BoolTraits;
-
+  
   Eq : Eq Bool;
   Eq :=
     Eq.mkEq
@@ -21,7 +21,7 @@ module BoolTraits;
         | false false := true
         | _ _ := false
       };
-
+  
   Ord : Ord Bool;
   Ord :=
     Ord.mkOrd
@@ -31,7 +31,7 @@ module BoolTraits;
         | true false := Ord.GT
         | true true := Ord.EQ
       };
-
+  
   Show : Show Bool;
   Show :=
     Show.mkShow

@@ -1,6 +1,7 @@
 module Stdlib.Data.Int;
 
 open import Stdlib.Data.Int.Base public;
+
 import Stdlib.Data.Nat as Nat;
 open Nat using {Nat;suc;zero;sub};
 open import Stdlib.Data.String;
@@ -24,10 +25,10 @@ axiom intToString : Int -> String;
 module IntTraits;
   Eq : Eq Int;
   Eq := Eq.mkEq (Int.==);
-
+  
   Ord : Ord Int;
   Ord := Ord.mkOrd Int.compare;
-
+  
   Show : Show Int;
   Show := Show.mkShow intToString;
 end;

@@ -6,38 +6,38 @@ open import Stdlib.Trait.Ord;
 
 import Stdlib.Data.Nat.Ord as Nat;
 
---- Tests for equality.
 infix 4 ==;
+--- Tests for equality.
 builtin int-eq
 == : Int -> Int -> Bool;
 == (ofNat m) (ofNat n) := m Nat.== n;
 == (negSuc m) (negSuc n) := m Nat.== n;
 == _ _ := false;
 
---- Tests for inequality.
 infix 4 /=;
+--- Tests for inequality.
 /= : Int -> Int -> Bool;
 /= m n := not (m == n);
 
---- Returns ;true; iff the first element is less than or equal to the second.
 infix 4 <=;
+--- Returns ;true; iff the first element is less than or equal to the second.
 builtin int-le
 <= : Int -> Int -> Bool;
 <= m n := nonNeg (n - m);
 
---- Returns ;true; iff the first element is less than the second.
 infix 4 <;
+--- Returns ;true; iff the first element is less than the second.
 builtin int-lt
 < : Int -> Int -> Bool;
 < m n := m + 1 <= n;
 
---- Returns ;true; iff the first element is greater than the second.
 infix 4 >;
+--- Returns ;true; iff the first element is greater than the second.
 > : Int -> Int -> Bool;
 > m n := n < m;
 
---- Returns ;true; iff the first element is greater than or equal to the second.
 infix 4 >=;
+--- Returns ;true; iff the first element is greater than or equal to the second.
 >= : Int -> Int -> Bool;
 >= m n := n <= m;
 

@@ -26,7 +26,7 @@ transpose (nil :: _) := nil;
 transpose xss := map head xss :: transpose (map tail xss);
 
 module ListTraits;
-
+  
   Eq : {A : Type} -> Eq A -> Eq (List A);
   Eq {A} (Eq.mkEq eq-a) :=
     let
@@ -36,7 +36,7 @@ module ListTraits;
       go _ nil := false;
       go (x :: xs) (y :: ys) := if (eq-a x y) (go xs ys) false;
     in Eq.mkEq go;
-
+  
   Ord : {A : Type} -> Ord A -> Ord (List A);
   Ord {A} (Ord.mkOrd cmp-a) :=
     let
@@ -50,7 +50,7 @@ module ListTraits;
           | Ord.GT := Ord.GT
           | Ord.EQ := go xs ys;
     in Ord.mkOrd go;
-
+  
   Show : {A : Type} -> Show A -> Show (List A);
   Show {A} (Show.mkShow to-str) :=
     let

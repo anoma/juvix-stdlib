@@ -6,8 +6,8 @@ open import Stdlib.Data.List.Base;
 builtin string
 axiom String : Type;
 
---- Concatenation of two ;String;s.
 infixr 5 ++str;
+--- Concatenation of two ;String;s.
 builtin string-concat
 axiom ++str : String -> String -> String;
 
