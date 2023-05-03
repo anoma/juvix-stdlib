@@ -89,3 +89,8 @@ mod (ofNat m) (negSuc n) := ofNat (Nat.mod m (suc n));
 mod (negSuc m) (ofNat n) := negNat (Nat.mod (suc m) n);
 mod (negSuc m) (negSuc n) :=
   negNat (Nat.mod (suc m) (suc n));
+
+--- Absolute value
+abs : Int -> Nat;
+abs (ofNat n) := n;
+abs (negSuc n) := suc n;

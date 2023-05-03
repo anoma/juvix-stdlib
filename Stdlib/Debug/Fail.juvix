@@ -1,6 +1,6 @@
 module Stdlib.Debug.Fail;
 
-open import Stdlib.Data.String;
+open import Stdlib.Data.String.Base;
 
 --- Primitive that exits the program with an error message.
 builtin fail

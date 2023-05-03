@@ -3,10 +3,8 @@ all: test
 
 deps/quickcheck:
 	@mkdir -p deps/
-	@git clone https://github.com/anoma/juvix-quickcheck.git deps/quickcheck
-	@git -C deps/quickcheck checkout 2a23d8ed14d171fecf95892da401ddd37f96d40a
-	@mkdir -p deps/quickcheck/deps/stdlib
-	@rsync -av ../* deps/quickcheck/deps/stdlib --exclude "test"
+	@git clone --branch use-abs-stdlib https://github.com/anoma/juvix-quickcheck.git deps/quickcheck
+	$(MAKE) -C deps/quickcheck deps
 
 build/Test: $(shell find ../ -name "*.juvix") $(wildcard deps/**/*.juvix) Test.juvix deps/quickcheck
 	@mkdir -p build

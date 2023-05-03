@@ -1,6 +1,7 @@
 module Stdlib.Data.List;
 
 open import Stdlib.Data.Bool;
+open import Stdlib.Data.Maybe;
 open import Stdlib.Function;
 open import Stdlib.Data.Nat;
 open import Stdlib.Data.Ord;
@@ -223,3 +224,15 @@ quickSort {A} cmp :=
     go (x :: xs) :=
       qsHelper x (both go (partition (isGT ∘ cmp x) xs));
   in go;
+
+--- 𝒪(𝓃) Filters out every ;nothing; from a ;List;.
+catMaybes : {A : Type} -> List (Maybe A) -> List A;
+catMaybes nil := nil;
+catMaybes (just h :: hs) := h :: catMaybes hs;
+catMaybes (nothing :: hs) := catMaybes hs;
+
+--- Applies a function to every item on a ;List; and concatenates the result.
+--- 𝒪(𝓃), where 𝓃 is the number of items in the resulting list.
+concatMap :
+  {A B : Type} -> (A -> List B) -> List A -> List B;
+concatMap f := flatten ∘ map f;
