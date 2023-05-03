@@ -1,0 +1,6 @@
+module Stdlib.Data.Unit;
+
+--- The unit type.
+type Unit :=
+  | --- The only constructor of ;Unit;.
+    unit : Unit;
