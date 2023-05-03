@@ -3,6 +3,7 @@ module Stdlib.Data.List;
 open import Stdlib.Data.List.Base public;
 open import Stdlib.Data.Bool.Base;
 open import Stdlib.Data.String.Base;
+open import Stdlib.Debug.Fail;
 
 import Stdlib.Trait.Eq as Eq;
 open Eq using {Eq};
@@ -12,6 +13,17 @@ open Ord using {Ord};
 
 import Stdlib.Trait.Show as Show;
 open Show using {Show};
+
+--- 𝒪(1). Partial function that returns the first element of a ;List;.
+head : {A : Type} → List A → A;
+head (x :: _) := x;
+head nil := fail "head: empty list";
+
+--- 𝒪(𝓃 * 𝓂). Partial function that transposes a ;List; of ;List;s interpreted as a matrix.
+terminating
+transpose : {A : Type} → List (List A) → List (List A);
+transpose (nil :: _) := nil;
+transpose xss := map head xss :: transpose (map tail xss);
 
 module ListTraits;
 

@@ -1,7 +1,7 @@
 module Stdlib.Data.Nat;
 
 open import Stdlib.Data.Nat.Base public;
-open import Stdlib.Data.String;
+open import Stdlib.Data.String.Base;
 
 import Stdlib.Trait.Eq as Eq;
 open Eq using {Eq};

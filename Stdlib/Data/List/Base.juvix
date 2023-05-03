@@ -1,11 +1,11 @@
 module Stdlib.Data.List.Base;
 
-open import Stdlib.Data.Bool;
+open import Stdlib.Data.Bool.Base;
 open import Stdlib.Function;
-open import Stdlib.Data.Nat;
+open import Stdlib.Data.Nat.Base;
+open import Stdlib.Data.Maybe.Base;
 open import Stdlib.Trait.Ord;
-open import Stdlib.Data.Product;
-open import Stdlib.Debug.Fail;
+open import Stdlib.Data.Product.Base;
 open import Stdlib.Trait.Ord;
 
 infixr 5 ::;
@@ -127,21 +127,10 @@ intersperse : {A : Type} → A → List A → List A;
 intersperse _ nil := nil;
 intersperse sep (x :: xs) := x :: prependToAll sep xs;
 
---- 𝒪(1). Partial function that returns the first element of a ;List;.
-head : {A : Type} → List A → A;
-head (x :: _) := x;
-head nil := fail "head: empty list";
-
 --- 𝒪(1). Drops the first element of a ;List;.
 tail : {A : Type} → List A → List A;
 tail (_ :: xs) := xs;
 tail nil := nil;
-
---- 𝒪(𝓃 * 𝓂). Partial function that transposes a ;List; of ;List;s interpreted as a matrix.
-terminating
-transpose : {A : Type} → List (List A) → List (List A);
-transpose (nil :: _) := nil;
-transpose xss := map head xss :: transpose (map tail xss);
 
 --- 𝒪(𝓃). Returns ;true; if at least one element of the ;List; satisfies the predicate.
 any : {A : Type} → (A → Bool) → List A → Bool;
@@ -224,3 +213,16 @@ quickSort {A} (mkOrd cmp) :=
     go (x :: xs) :=
       qsHelper x (both go (partition (isGT ∘ cmp x) xs));
   in go;
+
+
+--- 𝒪(𝓃) Filters out every ;nothing; from a ;List;.
+catMaybes : {A : Type} -> List (Maybe A) -> List A;
+catMaybes nil := nil;
+catMaybes (just h :: hs) := h :: catMaybes hs;
+catMaybes (nothing :: hs) := catMaybes hs;
+
+--- Applies a function to every item on a ;List; and concatenates the result.
+--- 𝒪(𝓃), where 𝓃 is the number of items in the resulting list.
+concatMap :
+  {A B : Type} -> (A -> List B) -> List A -> List B;
+concatMap f := flatten ∘ map f;
