@@ -1,0 +1,220 @@
+module Stdlib.Data.List.Base;
+
+open import Stdlib.Data.Bool.Base;
+open import Stdlib.Function;
+open import Stdlib.Data.Nat.Base;
+open import Stdlib.Data.Maybe.Base;
+open import Stdlib.Trait.Ord;
+open import Stdlib.Data.Product.Base;
+open import Stdlib.Trait.Ord;
+
+infixr 5 ::;
+--- Inductive list.
+type List (a : Type) :=
+  | --- The empty list
+    nil : List a
+  | --- An element followed by a list
+    :: : a → List a → List a;
+
+--- 𝒪(𝓃). Returns ;true; if the given
+--- object is in the ;List;.
+elem : {A : Type} → (A → A → Bool) → A → List A → Bool;
+elem _ _ nil := false;
+elem eq s (x :: xs) := eq s x || elem eq s xs;
+
+--- Right-associative fold.
+foldr :
+  {A : Type} → {B : Type} → (A → B → B) → B → List A → B;
+foldr _ z nil := z;
+foldr f z (h :: hs) := f h (foldr f z hs);
+
+--- Left-associative and tail-recursive fold.
+foldl :
+  {A : Type} → {B : Type} → (B → A → B) → B → List A → B;
+foldl f z nil := z;
+foldl f z (h :: hs) := foldl f (f z h) hs;
+
+--- 𝒪(𝓃). Maps a function over each element of a ;List;.
+map : {A : Type} → {B : Type} → (A → B) → List A → List B;
+map f nil := nil;
+map f (h :: hs) := f h :: map f hs;
+
+--- 𝒪(𝓃). Only keeps the elements for which the
+--- given predicate returns ;true;.
+filter : {A : Type} → (A → Bool) → List A → List A;
+filter _ nil := nil;
+filter f (h :: hs) :=
+  if (f h) (h :: filter f hs) (filter f hs);
+
+--- 𝒪(𝓃). Returns the length of the ;List;.
+length : {A : Type} → List A → Nat;
+length nil := zero;
+length (_ :: l) := suc (length l);
+
+--- 𝒪(𝓃). Returns the given ;List; in reverse order.
+reverse : {A : Type} → List A → List A;
+reverse := foldl (flip (::)) nil;
+
+--- Returns a ;List; of length n where every element is the given value.
+replicate : {A : Type} → Nat → A → List A;
+replicate zero _ := nil;
+replicate (suc n) x := x :: replicate n x;
+
+--- Takes the first n elements of a ;List;.
+take : {A : Type} → Nat → List A → List A;
+take (suc n) (x :: xs) := x :: take n xs;
+take _ _ := nil;
+
+--- Drops the first n elements of a ;List;.
+drop : {A : Type} → Nat → List A → List A;
+drop (suc n) (x :: xs) := drop n xs;
+drop _ xs := xs;
+
+--- 𝒪(𝓃). splitAt n xs returns a tuple where first element is xs
+--- prefix of length n and second element is the remainder of the ;List;.
+splitAt : {A : Type} → Nat → List A → List A × List A;
+splitAt _ nil := nil, nil;
+splitAt zero xs := nil, xs;
+splitAt (suc zero) (x :: xs) := x :: nil, xs;
+splitAt (suc (suc m)) (x :: xs) :=
+  first ((::) x) (splitAt m xs);
+
+--- 𝒪(𝓃 + 𝓂). Merges two lists according the given ordering.
+merge : {A : Type} → Ord A → List A → List A → List A;
+merge o@(mkOrd cmp) (x :: xs) (y :: ys) :=
+  if
+    (isLT (cmp x y))
+    (x :: merge o xs (y :: ys))
+    (y :: merge o (x :: xs) ys);
+merge _ nil ys := ys;
+merge _ xs nil := xs;
+
+--- 𝒪(𝓃). Returns a tuple where the first component has the items that
+--- satisfy the predicate and the second component has the elements that don't.
+partition :
+  {A : Type} → (A → Bool) → List A → List A × List A;
+partition _ nil := nil, nil;
+partition f (x :: xs) :=
+  if (f x) first second ((::) x) (partition f xs);
+
+infixr 5 ++;
+--- Concatenates two ;List;s.
+++ : {A : Type} → List A → List A → List A;
+++ nil ys := ys;
+++ (x :: xs) ys := x :: xs ++ ys;
+
+--- 𝒪(𝓃). Append an element.
+snoc : {A : Type} -> List A -> A -> List A;
+snoc xs x := xs ++ x :: nil;
+
+--- Concatenates a ;List; of ;List;s.
+flatten : {A : Type} → List (List A) → List A;
+flatten := foldl (++) nil;
+
+--- 𝒪(𝓃). Inserts the given element before every element in the given ;List;.
+prependToAll : {A : Type} → A → List A → List A;
+prependToAll _ nil := nil;
+prependToAll sep (x :: xs) :=
+  sep :: x :: prependToAll sep xs;
+
+--- 𝒪(𝓃). Inserts the given element inbetween every two elements in the given ;List;.
+intersperse : {A : Type} → A → List A → List A;
+intersperse _ nil := nil;
+intersperse sep (x :: xs) := x :: prependToAll sep xs;
+
+--- 𝒪(1). Drops the first element of a ;List;.
+tail : {A : Type} → List A → List A;
+tail (_ :: xs) := xs;
+tail nil := nil;
+
+--- 𝒪(𝓃). Returns ;true; if at least one element of the ;List; satisfies the predicate.
+any : {A : Type} → (A → Bool) → List A → Bool;
+any f xs := foldl or false (map f xs);
+
+--- 𝒪(𝓃). Returns ;true; if all elements of the ;List; satisfy the predicate.
+all : {A : Type} -> (A -> Bool) -> List A -> Bool;
+all f xs := foldl and true (map f xs);
+
+--- 𝒪(1). Returns ;true; if the ;List; is empty.
+null : {A : Type} → List A → Bool;
+null nil := true;
+null _ := false;
+
+--- 𝒪(min(𝓂, 𝓃)). Returns a list containing the results of applying a function
+--- to each pair of elements from the input lists.
+zipWith :
+  {A : Type}
+    -> {B : Type}
+    -> {C : Type}
+    -> (A -> B -> C)
+    -> List A
+    -> List B
+    -> List C;
+zipWith {A} {B} {C} f as bs :=
+  let
+    go : List A -> List B -> List C -> List C;
+    go _ nil acc := acc;
+    go nil _ acc := acc;
+    go (a :: az) (b :: bz) acc := go az bz (f a b :: acc);
+  in reverse (go as bs nil);
+
+--- 𝒪(min(𝓂, 𝓃)). Returns a list of pairs formed from the input lists.
+zip :
+  {A : Type}
+    -> {B : Type}
+    -> List A
+    -> List B
+    -> List (A × B);
+zip {A} {B} as bs :=
+  let
+    go : List A -> List B -> List (A × B) -> List (A × B);
+    go _ nil acc := acc;
+    go nil _ acc := acc;
+    go (a :: az) (b :: bz) acc := go az bz ((a, b) :: acc);
+  in reverse (go as bs nil);
+
+--- 𝒪(𝓃 log 𝓃). Sorts a list of elements in ascending order using the MergeSort
+--- algorithm.
+mergeSort : {A : Type} → Ord A → List A → List A;
+mergeSort {A} o :=
+  let
+    terminating
+    go : List A -> List A;
+    go nil := nil;
+    go xs@(_ :: nil) := xs;
+    go xs :=
+      let
+        splitXs :
+            List A × List A := splitAt (div (length xs) 2) xs;
+        left : List A := fst splitXs;
+        right : List A := snd splitXs;
+      in merge o (go left) (go right);
+  in go;
+
+--- On average 𝒪(𝓃 log 𝓃), worst case 𝒪(𝓃²). Sorts a list of elements in
+--- ascending order using te QuickSort algorithm.
+terminating
+quickSort : {A : Type} → Ord A → List A → List A;
+quickSort {A} (mkOrd cmp) :=
+  let
+    qsHelper : {A : Type} → A → List A × List A → List A;
+    qsHelper a (l, r) := l ++ (a :: nil) ++ r;
+    terminating
+    go : List A → List A;
+    go nil := nil;
+    go xs@(_ :: nil) := xs;
+    go (x :: xs) :=
+      qsHelper x (both go (partition (isGT ∘ cmp x) xs));
+  in go;
+
+--- 𝒪(𝓃) Filters out every ;nothing; from a ;List;.
+catMaybes : {A : Type} -> List (Maybe A) -> List A;
+catMaybes nil := nil;
+catMaybes (just h :: hs) := h :: catMaybes hs;
+catMaybes (nothing :: hs) := catMaybes hs;
+
+--- Applies a function to every item on a ;List; and concatenates the result.
+--- 𝒪(𝓃), where 𝓃 is the number of items in the resulting list.
+concatMap :
+  {A B : Type} -> (A -> List B) -> List A -> List B;
+concatMap f := flatten ∘ map f;

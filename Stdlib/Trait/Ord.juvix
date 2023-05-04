@@ -1,6 +1,6 @@
-module Stdlib.Data.Ord;
+module Stdlib.Trait.Ord;
 
-open import Stdlib.Data.Bool;
+open import Stdlib.Data.Bool.Base;
 
 type Ordering :=
   | LT : Ordering
@@ -18,3 +18,7 @@ isEQ _ := false;
 isGT : Ordering → Bool;
 isGT GT := true;
 isGT _ := false;
+
+--- A trait for defining a total order
+type Ord (A : Type) :=
+  | mkOrd : (A -> A -> Ordering) -> Ord A;

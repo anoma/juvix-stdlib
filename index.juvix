@@ -1,8 +1,8 @@
-{- 
+{-
 
 The Juvix standard library
 ------------------------------
-   
+
 Sources: http://github.com/anoma/juvix-stdlib
 Compiler: http://github.com/anoma/juvix
 
@@ -11,5 +11,5 @@ module index;
 
 import Stdlib.Prelude;
 import Stdlib.Data.Nat.Ord;
-import Stdlib.Data.List.Ord;
+import Stdlib.Data.Int.Ord;
 import Stdlib.Data.String.Ord;

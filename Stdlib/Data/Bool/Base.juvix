@@ -1,0 +1,40 @@
+module Stdlib.Data.Bool.Base;
+
+--- Inductive definition of booleans.
+builtin bool
+type Bool :=
+  | true : Bool
+  | false : Bool;
+
+--- Logical negation.
+not : Bool → Bool;
+not true := false;
+not false := true;
+
+infixr 2 ||;
+--- Logical disjunction. Cannot be partially applied
+builtin bool-or
+|| : Bool → Bool → Bool;
+|| true _ := true;
+|| false a := a;
+
+infixr 2 &&;
+--- Logical conjunction. Cannot be partially applied.
+builtin bool-and
+&& : Bool → Bool → Bool;
+&& true a := a;
+&& false _ := false;
+
+--- Returns the first argument if ;true;, otherwise it returns the second argument. Cannot be partially applied.
+builtin bool-if
+if : {A : Type} → Bool → A → A → A;
+if true a _ := a;
+if false _ b := b;
+
+--- Logical disjunction.
+or : Bool → Bool → Bool;
+or a b := a || b;
+
+--- Logical conjunction.
+and : Bool → Bool → Bool;
+and a b := a && b;

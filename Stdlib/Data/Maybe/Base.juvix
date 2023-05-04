@@ -1,0 +1,18 @@
+module Stdlib.Data.Maybe.Base;
+
+--- Represents an optional value that may or may not be present. Providing a way
+--- to handle null or missing values in a type-safe manner.
+type Maybe (A : Type) :=
+  | nothing : Maybe A
+  | just : A → Maybe A;
+
+--- Extracts the value from a ;Maybe; if present, else returns the given value.
+fromMaybe : {A : Type} → A → Maybe A → A;
+fromMaybe a nothing := a;
+fromMaybe _ (just a) := a;
+
+--- Applies a function to the value from a ;Maybe; if present, else returns the
+--- given value.
+maybe : {A : Type} → {B : Type} → B → (A → B) → Maybe A → B;
+maybe b _ nothing := b;
+maybe _ f (just a) := f a;

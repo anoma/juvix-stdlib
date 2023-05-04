@@ -1,64 +1,42 @@
 module Stdlib.Data.Product;
 
-infixr 2 ×;
-infixr 4 ,;
---- Inductive pair. I.e. a tuple with two components.
-type × (A : Type) (B : Type) :=
-  | , : A → B → A × B;
+import Stdlib.Trait.Eq as Eq;
+open Eq using {Eq};
 
---- Converts a function of two arguments to a function with a product argument.
-uncurry :
-  {A : Type}
-    -> {B : Type}
-    -> {C : Type}
-    -> (A -> B -> C)
-    -> A × B
-    -> C;
-uncurry f (a, b) := f a b;
+import Stdlib.Trait.Ord as Ord;
+open Ord using {Ord};
 
---- Converts a function with a product argument to a function of two arguments.
-curry :
-  {A : Type}
-    -> {B : Type}
-    -> {C : Type}
-    -> (A × B -> C)
-    -> A
-    -> B
-    -> C;
-curry f a b := f (a, b);
+import Stdlib.Trait.Show as Show;
+open Show using {Show};
 
---- Projects the first component of a tuple.
-fst : {A : Type} → {B : Type} → A × B → A;
-fst (a, _) := a;
+open import Stdlib.Data.Product.Base public;
+open import Stdlib.Data.Bool.Base;
+open import Stdlib.Data.String.Base;
 
---- Projects the second component of a tuple.
-snd : {A : Type} → {B : Type} → A × B → B;
-snd (_, b) := b;
-
---- Swaps the components of a tuple.
-swap : {A : Type} → {B : Type} → A × B → B × A;
-swap (a, b) := b, a;
-
---- Applies a function to the first component.
-first :
-  {A : Type}
-    → {B : Type}
-    → {A' : Type}
-    → (A → A')
-    → A × B
-    → A' × B;
-first f (a, b) := f a, b;
-
---- Applies a function to the second component.
-second :
-  {A : Type}
-    → {B : Type}
-    → {B' : Type}
-    → (B → B')
-    → A × B
-    → A × B';
-second f (a, b) := a, f b;
-
---- Applies a function to both components.
-both : {A : Type} → {B : Type} → (A → B) → A × A → B × B;
-both f (a, b) := f a, f b;
+module ProductTraits;
+  Eq : {A B : Type} -> Eq A -> Eq B -> Eq (A × B);
+  Eq (Eq.mkEq eq-a) (Eq.mkEq eq-b) :=
+    Eq.mkEq
+      λ {
+        | (a1, b1) (a2, b2) := eq-a a1 a2 && eq-b b1 b2
+      };
+  
+  Ord : {A B : Type} -> Ord A -> Ord B -> Ord (A × B);
+  Ord (Ord.mkOrd cmp-a) (Ord.mkOrd cmp-b) :=
+    Ord.mkOrd
+      λ {
+        | (a1, b1) (a2, b2) :=
+          case cmp-a a1 a2
+            | Ord.LT := Ord.LT
+            | Ord.GT := Ord.GT
+            | Ord.EQ := cmp-b b1 b2
+      };
+  
+  Show : {A B : Type} -> Show A -> Show B -> Show (A × B);
+  Show (Show.mkShow show-a) (Show.mkShow show-b) :=
+    Show.mkShow
+      λ {
+        | (a, b) :=
+          "(" ++str show-a a ++str " , " ++str show-b b ++str ")"
+      };
+end;

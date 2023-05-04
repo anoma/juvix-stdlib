@@ -1,13 +1,25 @@
 module Stdlib.Data.String;
 
 open import Stdlib.Data.String.Base public;
-open import Stdlib.Data.List;
 
---- Concatenation of two ;String;s.
-infixr 5 ++str;
-builtin string-concat
-axiom ++str : String -> String -> String;
+import Stdlib.Trait.Eq as Eq;
+open Eq using {Eq};
 
-unlines : List String -> String;
-unlines nil := "";
-unlines (x :: xs) := x ++str "\n" ++str unlines xs;
+import Stdlib.Trait.Show as Show;
+open Show using {Show};
+
+import Stdlib.Data.String.Ord as String;
+
+module StringTraits;
+  
+  Eq : Eq String;
+  Eq := Eq.mkEq (String.==);
+  
+  Show : Show String;
+  Show :=
+    let
+      go : String -> String;
+      go s := "\"" ++str s ++str "\"";
+    in Show.mkShow go;
+
+end;

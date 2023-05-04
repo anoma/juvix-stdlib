@@ -1,40 +1,43 @@
 module Stdlib.Data.Bool;
 
---- Inductive definition of booleans.
-builtin bool
-type Bool :=
-  | true : Bool
-  | false : Bool;
+open import Stdlib.Data.Bool.Base public;
 
---- Logical negation.
-not : Bool → Bool;
-not true := false;
-not false := true;
+import Stdlib.Trait.Eq as Eq;
+open Eq using {Eq};
 
-infixr 2 ||;
---- Logical disjunction. Cannot be partially applied
-builtin bool-or
-|| : Bool → Bool → Bool;
-|| true _ := true;
-|| false a := a;
+import Stdlib.Trait.Ord as Ord;
+open Ord using {Ord};
 
-infixr 2 &&;
---- Logical conjunction. Cannot be partially applied.
-builtin bool-and
-&& : Bool → Bool → Bool;
-&& true a := a;
-&& false _ := false;
+import Stdlib.Trait.Show as Show;
+open Show using {Show};
 
---- Returns the first argument if ;true;, otherwise it returns the second argument. Cannot be partially applied.
-builtin bool-if
-if : {A : Type} → Bool → A → A → A;
-if true a _ := a;
-if false _ b := b;
+module BoolTraits;
+  
+  Eq : Eq Bool;
+  Eq :=
+    Eq.mkEq
+      λ {
+        | true true := true
+        | false false := true
+        | _ _ := false
+      };
+  
+  Ord : Ord Bool;
+  Ord :=
+    Ord.mkOrd
+      λ {
+        | false false := Ord.EQ
+        | false true := Ord.LT
+        | true false := Ord.GT
+        | true true := Ord.EQ
+      };
+  
+  Show : Show Bool;
+  Show :=
+    Show.mkShow
+      λ {
+        | true := "true"
+        | false := "false"
+      };
 
---- Logical disjunction.
-or : Bool → Bool → Bool;
-or a b := a || b;
-
---- Logical conjunction.
-and : Bool → Bool → Bool;
-and a b := a && b;
+end;

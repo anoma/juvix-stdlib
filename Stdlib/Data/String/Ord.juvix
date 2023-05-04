@@ -1,9 +1,9 @@
 module Stdlib.Data.String.Ord;
 
-open import Stdlib.Data.String;
+open import Stdlib.Data.String.Base;
 open import Stdlib.Data.Bool;
 
---- Equality for ;String;s.
 infix 4 ==;
+--- Equality for ;String;s.
 builtin string-eq
 axiom == : String → String → Bool;
