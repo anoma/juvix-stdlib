@@ -1,6 +1,7 @@
 module Stdlib.Data.String.Base;
 
 open import Stdlib.Data.List.Base;
+open import Stdlib.Function;
 
 --- Primitive representation of a sequence of characters.
 builtin string
@@ -11,6 +12,10 @@ infixr 5 ++str;
 builtin string-concat
 axiom ++str : String -> String -> String;
 
+--- Concatenates a ;List; of ;String;s.
+concatStr : List String -> String;
+concatStr := foldl (++str) "";
+
+--- Joins a ;List; of ;String;s with "\n".
 unlines : List String -> String;
-unlines nil := "";
-unlines (x :: xs) := x ++str "\n" ++str unlines xs;
+unlines := concatStr ∘ intersperse "\n";
