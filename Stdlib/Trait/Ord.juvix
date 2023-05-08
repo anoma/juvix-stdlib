@@ -22,3 +22,6 @@ isGT _ := false;
 --- A trait for defining a total order
 type Ord (A : Type) :=
   | mkOrd : (A -> A -> Ordering) -> Ord A;
+
+cmp : {A : Type} -> Ord A -> A -> A -> Ordering;
+cmp (mkOrd f) := f;

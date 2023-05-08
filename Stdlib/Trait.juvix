@@ -1,0 +1,5 @@
+module Stdlib.Trait;
+
+open import Stdlib.Trait.Eq public;
+open import Stdlib.Trait.Show public;
+open import Stdlib.Trait.Ord public;

@@ -5,3 +5,6 @@ open import Stdlib.Data.Bool.Base;
 --- A trait defining equality
 type Eq (A : Type) :=
   | mkEq : (A -> A -> Bool) -> Eq A;
+
+eq : {A : Type} -> Eq A -> A -> A -> Bool;
+eq (mkEq f) := f;
