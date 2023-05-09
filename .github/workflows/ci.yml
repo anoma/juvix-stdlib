@@ -12,6 +12,8 @@ on:
       - reopened
       - synchronize
       - ready_for_review
+  schedule:
+    - cron: '0 3 * * 1'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
