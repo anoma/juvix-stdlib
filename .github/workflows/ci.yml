@@ -27,6 +27,10 @@ jobs:
           repository: anoma/juvix
           path: juvix
 
+      - name: install LLVM
+        run: |
+          sudo apt install llvm
+
       - name: Make runtime
         run: |
           cd juvix
