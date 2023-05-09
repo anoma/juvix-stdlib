@@ -1,6 +1,9 @@
 name: Juvix standard library CI
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     branches:
       - main
@@ -9,8 +12,8 @@ on:
       - reopened
       - synchronize
       - ready_for_review
-      - review_requested
-      - closed
+  schedule:
+    - cron: '0 3 * * 1'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
@@ -18,61 +21,37 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-20.04]
-        ghc: ["9.2.5"]
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/cache@v3
-        name: Cache Stack
-        id: cache
-        env:
-          cache-name: cache-env
-        with:
-          path: |
-            ~/.stack
-            juvix/.stack-work
-            juvix/.hie
-          key: ${{ runner.os }}-v1-build-${{ matrix.ghc }}-${{ hashFiles('juvix/src/**/*.hs', 'juvix/app/**/*.hs',  'juvix/test/**/*.hs', 'juvix/package.yaml', 'juvix/stack.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-v1-build-${{ matrix.ghc }}-
-            ${{ runner.os }}-v1-build-
-            ${{ runner.os }}-v1-
-
-      - uses: haskell/actions/setup@v1
-        name: Setup Haskell
-        with:
-          ghc-version: ${{ matrix.ghc }}
-          enable-stack: true
-          stack-version: 'latest'
-
-      - name: Cache LLVM and Clang
-        id: cache-llvm
-        uses: actions/cache@v3
-        with:
-          path: |
-            C:/Program Files/LLVM
-            ./llvm
-          key: ${{ runner.os }}-llvm-13
-
-      - name: Install LLVM and Clang
-        uses: KyleMayes/install-llvm-action@v1
-        with:
-          version: "13.0"
-          cached: ${{ steps.cache-llvm.outputs.cache-hit }}
-
       - name: Checkout Juvix
         uses: actions/checkout@v3
         with:
           repository: anoma/juvix
           path: juvix
+          submodules: true
+
+      - name: install LLVM
+        run: |
+          sudo apt install llvm
+
+      - name: Make runtime
+        run: |
+          cd juvix
+          make runtime
+
+      - name: Stack setup
+        id: stack
+        uses: freckle/stack-action@v4
+        with:
+          working-directory: juvix
+          test: false
+          fast: false
       
       - name: Install Juvix
         run: |
           cd juvix
           echo "$GITHUB_WORKSPACE/.local/bin" >> $GITHUB_PATH
-          make install
+          stack install
 
       - name: Checkout Std Library
         uses: actions/checkout@v3
