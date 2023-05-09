@@ -42,12 +42,13 @@ jobs:
         with:
           working-directory: juvix
           test: false
+          fast: false
       
       - name: Install Juvix
         run: |
           cd juvix
           echo "$GITHUB_WORKSPACE/.local/bin" >> $GITHUB_PATH
-          make install
+          stack install
 
       - name: Checkout Std Library
         uses: actions/checkout@v3
