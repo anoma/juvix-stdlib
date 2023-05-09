@@ -26,6 +26,7 @@ jobs:
         with:
           repository: anoma/juvix
           path: juvix
+          submodules: true
 
       - name: install LLVM
         run: |
