@@ -1,0 +1,40 @@
+--- The unit type.
+module Stdlib.Data.Unit;
+
+open import Stdlib.Data.Bool.Base;
+
+import Stdlib.Trait.Eq as Eq;
+open Eq using {Eq};
+
+import Stdlib.Trait.Ord as Ord;
+open Ord using {Ord};
+
+import Stdlib.Trait.Show as Show;
+open Show using {Show};
+
+type Unit :=
+  | --- The only constructor of ;Unit;.
+    unit : Unit;
+
+module UnitTraits;
+  Eq : Eq Unit;
+  Eq :=
+    Eq.mkEq
+      λ {
+        | unit unit := true
+      };
+
+  Ord : Ord Unit;
+  Ord :=
+    Ord.mkOrd
+      λ {
+        | unit unit := Ord.EQ
+      };
+
+  Show : Show Unit;
+  Show :=
+    Show.mkShow
+      λ {
+        | unit := "unit"
+      };
+end;
