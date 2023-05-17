@@ -76,7 +76,7 @@ splitAt : {A : Type} → Nat → List A → List A × List A;
 splitAt _ nil := nil, nil;
 splitAt zero xs := nil, xs;
 splitAt (suc zero) (x :: xs) := x :: nil, xs;
-splitAt (suc (suc m)) (x :: xs) :=
+splitAt (suc m) (x :: xs) :=
   first ((::) x) (splitAt m xs);
 
 --- 𝒪(𝓃 + 𝓂). Merges two lists according the given ordering.
