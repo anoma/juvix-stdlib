@@ -32,6 +32,16 @@ prop-splitAtRecombine n xs :=
   case splitAt n xs
     | lhs, rhs := eqListInt xs (lhs ++ rhs);
 
+prop-splitAtLength : Nat -> List Int -> Bool;
+prop-splitAtLength n xs :=
+  case splitAt
+    n
+    -- Make sure the list has length at least n
+    (xs ++ replicate (sub n (length xs)) (ofNat 0))
+    | lhs, rhs :=
+      length lhs Nat.== n
+        && length rhs Nat.== sub (length xs) n;
+
 prop-mergeSumLengths : List Int -> List Int -> Bool;
 prop-mergeSumLengths xs ys :=
   length xs Nat.+ length ys
@@ -200,6 +210,13 @@ splitAtRecombineTest :=
     "splitAt: recombination of the output is equal to the input list"
     prop-splitAtRecombine;
 
+splitAtLengthTest : QC.Test;
+splitAtLengthTest :=
+  QC.mkTest
+    QC.testableNatListInt
+    "splitAt: Check lengths of output if the input Nat is greater than the length of the input list"
+    prop-splitAtLength;
+
 mergeSumLengthsTest : QC.Test;
 mergeSumLengthsTest :=
   QC.mkTest
@@ -226,6 +243,7 @@ main :=
             :: reverseLengthTest
             :: reverseReverseIdTest
             :: splitAtRecombineTest
+            :: splitAtLengthTest
             :: mergeSumLengthsTest
             :: tailLengthOneLessTest
             :: equalCompareToEqTest
