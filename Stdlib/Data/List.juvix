@@ -19,12 +19,6 @@ head : {A : Type} → List A → A;
 head (x :: _) := x;
 head nil := fail "head: empty list";
 
---- 𝒪(𝓃 * 𝓂). Partial function that transposes a ;List; of ;List;s interpreted as a matrix.
-terminating
-transpose : {A : Type} → List (List A) → List (List A);
-transpose (nil :: _) := nil;
-transpose xss := map head xss :: transpose (map tail xss);
-
 module ListTraits;
   
   Eq : {A : Type} -> Eq A -> Eq (List A);
