@@ -218,3 +218,9 @@ catMaybes (nothing :: hs) := catMaybes hs;
 concatMap :
   {A B : Type} -> (A -> List B) -> List A -> List B;
 concatMap f := flatten ∘ map f;
+
+--- 𝒪(𝓃 * 𝓂). Transposes a ;List; of ;List;s interpreted as a matrix.
+transpose : {A : Type} -> List (List A) -> List (List A);
+transpose nil := nil;
+transpose (xs :: nil) := map (λ { x := x :: nil }) xs;
+transpose (xs :: xss) := zipWith (::) xs (transpose xss);

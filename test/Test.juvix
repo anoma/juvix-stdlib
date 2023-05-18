@@ -13,6 +13,7 @@ open import Data.String;
 open import Data.Int;
 
 import Test.QuickCheckTest as QC;
+import Test.Arb as QC;
 
 prop-reverseDoesNotChangeLength : List Int -> Bool;
 prop-reverseDoesNotChangeLength xs :=
@@ -121,6 +122,27 @@ prop-drop n xs :=
     drop-n := drop n xs;
   in length drop-n Nat.<= length xs
     && eqListInt (drop n (drop n xs)) (drop (2 Nat.* n) xs);
+
+-- Assumption: The input list represents a rectangular matrix
+prop-transposeMatrixId : List (List Int) -> Bool;
+prop-transposeMatrixId xs :=
+  eq
+    (ListTraits.Eq (ListTraits.Eq (IntTraits.Eq)))
+    xs
+    (transpose (transpose xs));
+
+-- Assumption: The input list represents a rectangular matrix
+prop-transposeMatrixDimensions : List (List Int) -> Bool;
+prop-transposeMatrixDimensions xs :=
+  let txs : List (List Int) := transpose xs;
+      checkTxsRowXsCol : Bool := case xs
+         | (x :: _) := length txs Nat.== length x
+         | _ := null txs;
+      checkXsRowTxsCol : Bool := case txs
+         | (tx :: _) := length xs Nat.== length tx
+         | _ := null xs;
+   in
+     checkTxsRowXsCol && checkXsRowTxsCol;
 
 sortTest : String -> (List Int -> List Int) -> QC.Test;
 sortTest sortName sort :=
@@ -231,6 +253,20 @@ tailLengthOneLessTest :=
     "tail: length of output is one less than input unless empty"
     prop-tailLengthOneLess;
 
+transposeMatrixIdTest : QC.Test;
+transposeMatrixIdTest :=
+  QC.mkTest
+    (QC.testableFunction QC.argumentMatrixInt QC.testableBool)
+    "transpose: recrangular matrix has property transpose . transpose = id"
+    prop-transposeMatrixId;
+
+transposeMatrixDimentionsTest : QC.Test;
+transposeMatrixDimentionsTest :=
+  QC.mkTest
+    (QC.testableFunction QC.argumentMatrixInt QC.testableBool)
+    "transpose: transpose swaps dimensions"
+    prop-transposeMatrixDimensions;
+
 main : IO;
 main :=
   readLn
@@ -253,5 +289,7 @@ main :=
             :: dropTest
             :: sortTest "mergeSort" (mergeSort IntTraits.Ord)
             :: sortTest "quickSort" (quickSort IntTraits.Ord)
+            :: transposeMatrixIdTest
+            :: transposeMatrixDimentionsTest
             :: nil)
     };
