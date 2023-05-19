@@ -1,17 +1,17 @@
 --- This module reexports most of the standard library.
 module Stdlib.Prelude;
 
-open import Stdlib.Data.Bool public;
-open import Stdlib.Data.Unit public;
-open import Stdlib.Data.List public;
-open import Stdlib.Data.Maybe public;
-open import Stdlib.Data.Nat public;
-open import Stdlib.Data.Int hiding {+;*;div;mod} public;
-open import Stdlib.Data.Product public;
-open import Stdlib.Data.String public;
-open import Stdlib.Function public;
-open import Stdlib.System.IO public;
+import Stdlib.Data.Bool open public;
+import Stdlib.Data.Unit open public;
+import Stdlib.Data.List open public;
+import Stdlib.Data.Maybe open public;
+import Stdlib.Data.Nat open public;
+import Stdlib.Data.Int open hiding {+;*;div;mod} public;
+import Stdlib.Data.Product open public;
+import Stdlib.Data.String open public;
+import Stdlib.Function open public;
+import Stdlib.System.IO open public;
 
-open import Stdlib.Trait.Ord public;
-open import Stdlib.Trait.Eq public;
-open import Stdlib.Trait.Show public;
+import Stdlib.Trait.Ord open public;
+import Stdlib.Trait.Eq open public;
+import Stdlib.Trait.Show open public;

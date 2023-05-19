@@ -1,6 +1,6 @@
 module Stdlib.Data.Bool;
 
-open import Stdlib.Data.Bool.Base public;
+import Stdlib.Data.Bool.Base open public;
 
 import Stdlib.Trait.Eq as Eq;
 open Eq using {Eq};
@@ -21,7 +21,7 @@ module BoolTraits;
         | false false := true
         | _ _ := false
       };
-  
+
   Ord : Ord Bool;
   Ord :=
     Ord.mkOrd
@@ -31,7 +31,7 @@ module BoolTraits;
         | true false := Ord.GT
         | true true := Ord.EQ
       };
-  
+
   Show : Show Bool;
   Show :=
     Show.mkShow

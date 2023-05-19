@@ -1,16 +1,16 @@
 module Test;
 
-open import Stdlib.Prelude hiding {+};
+import Stdlib.Prelude open hiding {+};
 
 import Stdlib.Data.Nat.Ord as Nat;
 import Stdlib.Data.Nat as Nat;
 import Stdlib.Trait.Ord as Ord;
 
-open import Stdlib.Data.Int.Ord;
-open import Stdlib.Data.Int;
-open import Data.List;
-open import Data.String;
-open import Data.Int;
+import Stdlib.Data.Int.Ord open;
+import Stdlib.Data.Int open;
+import Data.List open;
+import Data.String open;
+import Data.Int open;
 
 import Test.QuickCheckTest as QC;
 import Test.Arb as QC;
@@ -37,11 +37,11 @@ prop-splitAtLength : Nat -> List Int -> Bool;
 prop-splitAtLength n xs :=
   case splitAt
     n
-    -- Make sure the list has length at least n
     (xs ++ replicate (sub n (length xs)) (ofNat 0))
     | lhs, rhs :=
       length lhs Nat.== n
         && length rhs Nat.== sub (length xs) n;
+-- Make sure the list has length at least n
 
 prop-mergeSumLengths : List Int -> List Int -> Bool;
 prop-mergeSumLengths xs ys :=
@@ -101,13 +101,7 @@ prop-zipWith f xs ys :=
     expectedLen : Nat := Nat.min (length xs) (length ys);
   in length zs Nat.== expectedLen
     && eqListInt zs zsFlip
-    && eqListInt
-      (map
-        λ {
-          | x := f x x
-        }
-        xs)
-      (zipWith f xs xs);
+    && eqListInt (map λ {x := f x x} xs) (zipWith f xs xs);
 
 prop-snoc : List Int -> Int -> Bool;
 prop-snoc xs x :=
@@ -134,15 +128,19 @@ prop-transposeMatrixId xs :=
 -- Assumption: The input list represents a rectangular matrix
 prop-transposeMatrixDimensions : List (List Int) -> Bool;
 prop-transposeMatrixDimensions xs :=
-  let txs : List (List Int) := transpose xs;
-      checkTxsRowXsCol : Bool := case xs
-         | (x :: _) := length txs Nat.== length x
-         | _ := null txs;
-      checkXsRowTxsCol : Bool := case txs
-         | (tx :: _) := length xs Nat.== length tx
-         | _ := null xs;
-   in
-     checkTxsRowXsCol && checkXsRowTxsCol;
+  let
+    txs : List (List Int) := transpose xs;
+    checkTxsRowXsCol :
+        Bool :=
+          case xs
+            | x :: _ := length txs Nat.== length x
+            | _ := null txs;
+    checkXsRowTxsCol :
+        Bool :=
+          case txs
+            | tx :: _ := length xs Nat.== length tx
+            | _ := null xs;
+  in checkTxsRowXsCol && checkXsRowTxsCol;
 
 sortTest : String -> (List Int -> List Int) -> QC.Test;
 sortTest sortName sort :=
@@ -270,26 +268,24 @@ transposeMatrixDimentionsTest :=
 main : IO;
 main :=
   readLn
-    \ {
-      | seed :=
-        QC.runTestsIO
-          100
-          (stringToNat seed)
-          (partitionTest
-            :: reverseLengthTest
-            :: reverseReverseIdTest
-            :: splitAtRecombineTest
-            :: splitAtLengthTest
-            :: mergeSumLengthsTest
-            :: tailLengthOneLessTest
-            :: equalCompareToEqTest
-            :: zipTest
-            :: zipWithTest
-            :: snocTest
-            :: dropTest
-            :: sortTest "mergeSort" (mergeSort IntTraits.Ord)
-            :: sortTest "quickSort" (quickSort IntTraits.Ord)
-            :: transposeMatrixIdTest
-            :: transposeMatrixDimentionsTest
-            :: nil)
-    };
+    \ {seed :=
+      QC.runTestsIO
+        100
+        (stringToNat seed)
+        (partitionTest
+          :: reverseLengthTest
+          :: reverseReverseIdTest
+          :: splitAtRecombineTest
+          :: splitAtLengthTest
+          :: mergeSumLengthsTest
+          :: tailLengthOneLessTest
+          :: equalCompareToEqTest
+          :: zipTest
+          :: zipWithTest
+          :: snocTest
+          :: dropTest
+          :: sortTest "mergeSort" (mergeSort IntTraits.Ord)
+          :: sortTest "quickSort" (quickSort IntTraits.Ord)
+          :: transposeMatrixIdTest
+          :: transposeMatrixDimentionsTest
+          :: nil)};

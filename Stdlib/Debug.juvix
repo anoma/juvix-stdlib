@@ -1,4 +1,4 @@
 module Stdlib.Debug;
 
-open import Stdlib.Debug.Trace public;
-open import Stdlib.Debug.Fail public;
+import Stdlib.Debug.Trace open public;
+import Stdlib.Debug.Fail open public;

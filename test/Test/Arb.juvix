@@ -1,30 +1,28 @@
 module Test.Arb;
 
-open import Stdlib.Prelude;
-open import Test.QuickCheck;
-open import Test.QuickCheck.Arbitrary;
-open import Test.QuickCheck.Gen;
-open import Data.Random;
+import Stdlib.Prelude open;
+import Test.QuickCheck open;
+import Test.QuickCheck.Arbitrary open;
+import Test.QuickCheck.Gen open;
+import Data.Random open;
 
 arbitrarySizedList :
   {A : Type} -> Nat -> Arbitrary A -> Arbitrary (List A);
 arbitrarySizedList {A} size (arbitrary g) :=
   arbitrary
     (gen
-      \ {
-        | rand :=
-          let
-            randList : StdGen -> Nat -> List A;
-            randList _ zero := nil;
-            randList r (suc n) :=
-              let
-                rSplit : StdGen × StdGen;
-                rSplit := stdSplit r;
-                r1 : StdGen := fst rSplit;
-                r2 : StdGen := snd rSplit;
-              in runGen g r1 :: randList r2 n;
-          in randList rand size
-      });
+      \ {rand :=
+        let
+          randList : StdGen -> Nat -> List A;
+          randList _ zero := nil;
+          randList r (suc n) :=
+            let
+              rSplit : StdGen × StdGen;
+              rSplit := stdSplit r;
+              r1 : StdGen := fst rSplit;
+              r2 : StdGen := snd rSplit;
+            in runGen g r1 :: randList r2 n;
+        in randList rand size});
 
 --- Generate an arbitrary rectangular matrix
 arbitraryMatrix :
@@ -32,16 +30,14 @@ arbitraryMatrix :
 arbitraryMatrix {A} arbA :=
   arbitrary
     (gen
-      \ {
-        | rand :=
-          let
-            randSplit : StdGen × StdGen := stdSplit rand;
-            rand1 : StdGen := fst randSplit;
-            rand2 : StdGen := snd randSplit;
-            cols : Nat := fst (randNat rand1 1 10);
-            arbRow : Arbitrary (List A) := arbitrarySizedList cols arbA;
-          in runArb (arbitraryList arbRow) rand2
-      });
+      \ {rand :=
+        let
+          randSplit : StdGen × StdGen := stdSplit rand;
+          rand1 : StdGen := fst randSplit;
+          rand2 : StdGen := snd randSplit;
+          cols : Nat := fst (randNat rand1 1 10);
+          arbRow : Arbitrary (List A) := arbitrarySizedList cols arbA;
+        in runArb (arbitraryList arbRow) rand2});
 
 argumentMatrixInt : Argument (List (List Int));
 argumentMatrixInt :=

@@ -1,7 +1,7 @@
 module Stdlib.Data.String.Ord;
 
-open import Stdlib.Data.String.Base;
-open import Stdlib.Data.Bool;
+import Stdlib.Data.String.Base open;
+import Stdlib.Data.Bool open;
 
 syntax infix 4 ==;
 --- Equality for ;String;s.

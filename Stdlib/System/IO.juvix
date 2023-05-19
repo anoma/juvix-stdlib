@@ -1,9 +1,9 @@
 module Stdlib.System.IO;
 
-open import Stdlib.Data.Nat;
-open import Stdlib.Data.String;
-open import Stdlib.Data.Bool;
-open import Stdlib.Data.Int using {Int};
+import Stdlib.Data.Nat open;
+import Stdlib.Data.String open;
+import Stdlib.Data.Bool open;
+import Stdlib.Data.Int open using {Int};
 
 builtin IO
 axiom IO : Type;
