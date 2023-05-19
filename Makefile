@@ -33,9 +33,9 @@ format-juvix-files:
 		${JUVIXBIN} format $(JUVIXFORMATFLAGS) "$$file" > /dev/null 2>&1; \
 		exit_code=$$?; \
 		if [ $$exit_code -eq 0 ]; then \
-			echo "[OK] $$file"; \
+			echo "[OK] $$file is formatted"; \
       	else \
- 			echo "[FAIL] $$file formatting failed"; \
+ 			echo "[FAIL] $$file formatting failed" && exit 1; \
       	fi; \
       	done;
 
