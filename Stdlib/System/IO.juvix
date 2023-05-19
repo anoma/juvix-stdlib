@@ -8,7 +8,7 @@ open import Stdlib.Data.Int using {Int};
 builtin IO
 axiom IO : Type;
 
-infixl 1 >>;
+syntax infixl 1 >>;
 builtin IO-sequence
 axiom >> : IO → IO → IO;
 

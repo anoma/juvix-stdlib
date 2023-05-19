@@ -31,7 +31,7 @@ intSubNat m n :=
     | zero := ofNat (Nat.sub m n)
     | suc k := negSuc k;
 
-infixl 6 +;
+syntax infixl 6 +;
 --- Addition for ;Int;s.
 builtin int-plus
 + : Int -> Int -> Int;
@@ -52,7 +52,7 @@ neg : Int -> Int;
 neg (ofNat n) := negNat n;
 neg (negSuc n) := ofNat (suc n);
 
-infixl 7 *;
+syntax infixl 7 *;
 --- Multiplication for ;Int;s.
 builtin int-mul
 * : Int -> Int -> Int;
@@ -61,7 +61,7 @@ builtin int-mul
 * (negSuc m) (ofNat n) := negNat (suc m Nat.* n);
 * (negSuc m) (negSuc n) := ofNat (suc m Nat.* suc n);
 
-infixl 6 -;
+syntax infixl 6 -;
 --- Subtraction for ;Int;s.
 builtin int-sub
 - : Int -> Int -> Int;

@@ -11,14 +11,14 @@ not : Bool → Bool;
 not true := false;
 not false := true;
 
-infixr 2 ||;
+syntax infixr 2 ||;
 --- Logical disjunction. Cannot be partially applied
 builtin bool-or
 || : Bool → Bool → Bool;
 || true _ := true;
 || false a := a;
 
-infixr 2 &&;
+syntax infixr 2 &&;
 --- Logical conjunction. Cannot be partially applied.
 builtin bool-and
 && : Bool → Bool → Bool;

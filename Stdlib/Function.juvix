@@ -3,7 +3,7 @@ module Stdlib.Function;
 open import Stdlib.Data.Nat.Base;
 open import Stdlib.Data.Product.Base;
 
-infixr 9 ∘;
+syntax infixr 9 ∘;
 --- Function composition.
 ∘ :
   {A : Type}
@@ -34,7 +34,7 @@ flip :
     → C;
 flip f b a := f a b;
 
-infixr 0 $;
+syntax infixr 0 $;
 --- Application operator with right associativity. Usually used as a syntactical
 --- facility.
 $ : {A : Type} → {B : Type} → (A → B) → A → B;
@@ -45,7 +45,7 @@ iterate : {A : Type} -> Nat -> (A -> A) -> A -> A;
 iterate zero _ a := a;
 iterate (suc n) f a := iterate n f (f a);
 
-infixl 0 on;
+syntax infixl 0 on;
 on :
   {A : Type}
     → {B : Type}
@@ -57,7 +57,7 @@ on :
     → C;
 on f g a b := f (g a) (g b);
 
-infixl 1 >>>;
+syntax infixl 1 >>>;
 builtin seq
 >>> : {A B : Type} → A → B → B;
 >>> x y := y;
