@@ -43,8 +43,8 @@ format-juvix-files:
 check-format-juvix-files:
 	@JUVIXFORMATFLAGS=--check ${MAKE} format-juvix-files
 
-.PHONY: typecheck-juvix-examples
-typecheck-juvix-examples:
+.PHONY: typecheck-juvix-files
+typecheck-juvix-files:
 	@for file in $(JUVIXFILES); do \
 		${JUVIXBIN} typecheck "$$file" $(JUVIXTYPECHECKFLAGS); \
 		exit_code=$$?; \
