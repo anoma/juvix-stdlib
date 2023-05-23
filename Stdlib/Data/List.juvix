@@ -1,9 +1,9 @@
 module Stdlib.Data.List;
 
-open import Stdlib.Data.List.Base public;
-open import Stdlib.Data.Bool.Base;
-open import Stdlib.Data.String.Base;
-open import Stdlib.Debug.Fail;
+import Stdlib.Data.List.Base open public;
+import Stdlib.Data.Bool.Base open;
+import Stdlib.Data.String.Base open;
+import Stdlib.Debug.Fail open;
 
 import Stdlib.Trait.Eq as Eq;
 open Eq using {Eq};
@@ -30,7 +30,7 @@ module ListTraits;
       go _ nil := false;
       go (x :: xs) (y :: ys) := if (eq-a x y) (go xs ys) false;
     in Eq.mkEq go;
-  
+
   Ord : {A : Type} -> Ord A -> Ord (List A);
   Ord {A} (Ord.mkOrd cmp-a) :=
     let
@@ -44,7 +44,7 @@ module ListTraits;
           | Ord.GT := Ord.GT
           | Ord.EQ := go xs ys;
     in Ord.mkOrd go;
-  
+
   Show : {A : Type} -> Show A -> Show (List A);
   Show {A} (Show.mkShow to-str) :=
     let

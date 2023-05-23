@@ -1,8 +1,8 @@
 module Stdlib.Data.Int.Ord;
 
-open import Stdlib.Data.Int.Base;
-open import Stdlib.Data.Bool;
-open import Stdlib.Trait.Ord;
+import Stdlib.Data.Int.Base open;
+import Stdlib.Data.Bool open;
+import Stdlib.Trait.Ord open;
 
 import Stdlib.Data.Nat.Ord as Nat;
 

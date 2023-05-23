@@ -1,7 +1,7 @@
 module Stdlib.Data.Nat.Gcd;
 
-open import Stdlib.Prelude;
-open import Stdlib.Data.Nat.Ord;
+import Stdlib.Prelude open;
+import Stdlib.Data.Nat.Ord open;
 
 --- Internal helper for computing the greatest common divisor. The first element
 --- should be smaller than the second.

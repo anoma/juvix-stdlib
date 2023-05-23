@@ -65,6 +65,11 @@ jobs:
       - name: test
         run: make test
 
+      - name: check-format-and-typecheck-all
+        shell: bash
+        run: |
+          make check-format && make typecheck
+
       - if: github.event.pull_request.merged == true
         name: Deploy HTML to github pages
         uses: peaceiris/actions-gh-pages@v3

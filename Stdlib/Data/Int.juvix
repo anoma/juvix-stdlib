@@ -1,11 +1,11 @@
 module Stdlib.Data.Int;
 
-open import Stdlib.Data.Int.Base public;
+import Stdlib.Data.Int.Base open public;
 
 import Stdlib.Data.Nat as Nat;
-open Nat using {Nat;suc;zero;sub};
-open import Stdlib.Data.String;
-open import Stdlib.Data.Bool;
+open Nat using {Nat; suc; zero; sub};
+import Stdlib.Data.String open;
+import Stdlib.Data.Bool open;
 
 import Stdlib.Trait.Eq as Eq;
 open Eq using {Eq};
@@ -25,10 +25,10 @@ axiom intToString : Int -> String;
 module IntTraits;
   Eq : Eq Int;
   Eq := Eq.mkEq (Int.==);
-  
+
   Ord : Ord Int;
   Ord := Ord.mkOrd Int.compare;
-  
+
   Show : Show Int;
   Show := Show.mkShow intToString;
 end;

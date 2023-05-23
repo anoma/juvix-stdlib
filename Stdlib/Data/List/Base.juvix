@@ -1,12 +1,12 @@
 module Stdlib.Data.List.Base;
 
-open import Stdlib.Data.Bool.Base;
-open import Stdlib.Function;
-open import Stdlib.Data.Nat.Base;
-open import Stdlib.Data.Maybe.Base;
-open import Stdlib.Trait.Ord;
-open import Stdlib.Data.Product.Base;
-open import Stdlib.Trait.Ord;
+import Stdlib.Data.Bool.Base open;
+import Stdlib.Function open;
+import Stdlib.Data.Nat.Base open;
+import Stdlib.Data.Maybe.Base open;
+import Stdlib.Trait.Ord open;
+import Stdlib.Data.Product.Base open;
+import Stdlib.Trait.Ord open;
 
 syntax infixr 5 ::;
 --- Inductive list.
@@ -76,8 +76,7 @@ splitAt : {A : Type} → Nat → List A → List A × List A;
 splitAt _ nil := nil, nil;
 splitAt zero xs := nil, xs;
 splitAt (suc zero) (x :: xs) := x :: nil, xs;
-splitAt (suc m) (x :: xs) :=
-  first ((::) x) (splitAt m xs);
+splitAt (suc m) (x :: xs) := first ((::) x) (splitAt m xs);
 
 --- 𝒪(𝓃 + 𝓂). Merges two lists according the given ordering.
 merge : {A : Type} → Ord A → List A → List A → List A;
@@ -222,5 +221,5 @@ concatMap f := flatten ∘ map f;
 --- 𝒪(𝓃 * 𝓂). Transposes a ;List; of ;List;s interpreted as a matrix.
 transpose : {A : Type} -> List (List A) -> List (List A);
 transpose nil := nil;
-transpose (xs :: nil) := map (λ { x := x :: nil }) xs;
+transpose (xs :: nil) := map λ {x := x :: nil} xs;
 transpose (xs :: xss) := zipWith (::) xs (transpose xss);

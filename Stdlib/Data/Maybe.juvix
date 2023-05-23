@@ -1,6 +1,6 @@
 module Stdlib.Data.Maybe;
 
-open import Stdlib.Data.Maybe.Base public;
+import Stdlib.Data.Maybe.Base open public;
 
 import Stdlib.Trait.Eq as Eq;
 open Eq using {Eq};
@@ -11,8 +11,8 @@ open Ord using {Ord};
 import Stdlib.Trait.Show as Show;
 open Show using {Show};
 
-open import Stdlib.Data.Bool.Base;
-open import Stdlib.Data.String.Base;
+import Stdlib.Data.Bool.Base open;
+import Stdlib.Data.String.Base open;
 
 module MaybeTraits;
   Eq : {A : Type} -> Eq A -> Eq (Maybe A);
@@ -23,7 +23,7 @@ module MaybeTraits;
         | (just a1) (just a2) := eq a1 a2
         | _ _ := false
       };
-  
+
   Show : {A : Type} -> Show A -> Show (Maybe A);
   Show (Show.mkShow show) :=
     Show.mkShow
@@ -31,7 +31,7 @@ module MaybeTraits;
         | nothing := "nothing"
         | (just a) := "just " ++str show a
       };
-  
+
   Ord : {A : Type} -> Ord A -> Ord (Maybe A);
   Ord (Ord.mkOrd cmp) :=
     Ord.mkOrd

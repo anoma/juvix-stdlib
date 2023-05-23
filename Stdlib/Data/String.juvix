@@ -1,6 +1,6 @@
 module Stdlib.Data.String;
 
-open import Stdlib.Data.String.Base public;
+import Stdlib.Data.String.Base open public;
 
 import Stdlib.Trait.Eq as Eq;
 open Eq using {Eq};
@@ -14,7 +14,7 @@ module StringTraits;
   
   Eq : Eq String;
   Eq := Eq.mkEq (String.==);
-  
+
   Show : Show String;
   Show :=
     let
