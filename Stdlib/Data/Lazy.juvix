@@ -1,0 +1,26 @@
+module Stdlib.Data.Lazy;
+
+open import Stdlib.Function;
+
+import Stdlib.Trait.Eq as Eq;
+open Eq using {Eq};
+
+import Stdlib.Trait.Ord as Ord;
+open Ord using {Ord};
+
+type Unit :=
+  | unit : Unit;
+
+type Lazy (a : Type) :=
+  | lazy : (Unit -> a) -> Lazy a;
+
+! : {a : Type} -> Lazy a -> a;
+! (lazy b) := b unit;
+
+module LazyTraits;
+  Eq : {a : Type} -> Eq a -> Eq (Lazy a);
+  Eq (Eq.mkEq eq-a):= Eq.mkEq (eq-a on !);
+
+  Ord : {a : Type} -> Ord a -> Ord (Lazy a);
+  Ord (Ord.mkOrd ord-a):= Ord.mkOrd (ord-a on !);
+end;
