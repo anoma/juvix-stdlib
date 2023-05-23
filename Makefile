@@ -26,25 +26,29 @@ JUVIXFILES?=$(shell find \
 
 JUVIXFORMATFLAGS?=--in-place
 JUVIXTYPECHECKFLAGS?=--only-errors
+FORMATCHECK?=0
 
-.PHONY: format-juvix-files
-format-juvix-files:
+.PHONY: format
+format:
 	@for file in $(JUVIXFILES); do \
 		${JUVIXBIN} format $(JUVIXFORMATFLAGS) "$$file" > /dev/null 2>&1; \
 		exit_code=$$?; \
 		if [ $$exit_code -eq 0 ]; then \
 			echo "[OK] $$file is formatted"; \
-      	else \
+      	elif [ $$exit_code -eq 1 ] && [ $(FORMATCHECK) -eq 0 ]; then \
+			echo "[OK] $$file was formatted"; \
+	  	else \
  			echo "[FAIL] $$file formatting failed" && exit 1; \
       	fi; \
       	done;
 
-.PHONY: check-format-juvix-files
-check-format-juvix-files:
-	@JUVIXFORMATFLAGS=--check ${MAKE} format-juvix-files
+.PHONY: check-format
+check-format: FORMATCHECK=1
+check-format: JUVIXFORMATFLAGS=--check
+check-format: format
 
 .PHONY: typecheck-juvix-files
-typecheck-juvix-files:
+typecheck:
 	@for file in $(JUVIXFILES); do \
 		${JUVIXBIN} typecheck "$$file" $(JUVIXTYPECHECKFLAGS); \
 		exit_code=$$?; \

@@ -1,7 +1,7 @@
 module Stdlib.Data.Int.Base;
 
 import Stdlib.Data.Nat.Base as Nat;
-open Nat using {Nat;zero;suc;sub};
+open Nat using {Nat; zero; suc; sub};
 import Stdlib.Data.Bool open;
 
 --- Inductive integers. I.e. whole numbers that can be positive, zero, or negative.

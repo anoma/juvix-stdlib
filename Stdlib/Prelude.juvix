@@ -6,7 +6,7 @@ import Stdlib.Data.Unit open public;
 import Stdlib.Data.List open public;
 import Stdlib.Data.Maybe open public;
 import Stdlib.Data.Nat open public;
-import Stdlib.Data.Int open hiding {+;*;div;mod} public;
+import Stdlib.Data.Int open hiding {+; *; div; mod} public;
 import Stdlib.Data.Product open public;
 import Stdlib.Data.String open public;
 import Stdlib.Function open public;

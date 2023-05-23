@@ -68,7 +68,7 @@ jobs:
       - name: check-format-and-typecheck-all
         shell: bash
         run: |
-          make check-format-juvix-files && make typecheck-juvix-files
+          make check-format && make typecheck
 
       - if: github.event.pull_request.merged == true
         name: Deploy HTML to github pages
