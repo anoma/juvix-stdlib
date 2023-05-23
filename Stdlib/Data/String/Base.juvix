@@ -7,7 +7,7 @@ open import Stdlib.Function;
 builtin string
 axiom String : Type;
 
-infixr 5 ++str;
+syntax infixr 5 ++str;
 --- Concatenation of two ;String;s.
 builtin string-concat
 axiom ++str : String -> String -> String;

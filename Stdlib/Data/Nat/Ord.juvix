@@ -4,7 +4,7 @@ open import Stdlib.Data.Nat.Base;
 open import Stdlib.Trait.Ord;
 open import Stdlib.Data.Bool;
 
-infix 4 ==;
+syntax infix 4 ==;
 --- Tests for equality.
 builtin nat-eq
 == : Nat → Nat → Bool;
@@ -13,12 +13,12 @@ builtin nat-eq
 == _ zero := false;
 == (suc n) (suc m) := n == m;
 
-infix 4 /=;
+syntax infix 4 /=;
 --- Tests for inequality.
 /= : Nat → Nat → Bool;
 /= x y := not (x == y);
 
-infix 4 <=;
+syntax infix 4 <=;
 --- Returns ;true; iff the first element is less than or equal to the second.
 builtin nat-le
 <= : Nat → Nat → Bool;
@@ -26,18 +26,18 @@ builtin nat-le
 <= _ zero := false;
 <= (suc n) (suc m) := n <= m;
 
-infix 4 <;
+syntax infix 4 <;
 --- Returns ;true; iff the first element is less than the second.
 builtin nat-lt
 < : Nat → Nat → Bool;
 < n m := suc n <= m;
 
-infix 4 >;
+syntax infix 4 >;
 --- Returns ;true; iff the first element is greater than the second.
 > : Nat → Nat → Bool;
 > n m := m < n;
 
-infix 4 >=;
+syntax infix 4 >=;
 --- Returns ;true; iff the first element is greater than or equal to the second.
 >= : Nat → Nat → Bool;
 >= n m := m <= n;

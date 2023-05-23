@@ -1,7 +1,7 @@
 module Stdlib.Data.Product.Base;
 
-infixr 2 ×;
-infixr 4 ,;
+syntax infixr 2 ×;
+syntax infixr 4 ,;
 --- Inductive pair. I.e. a tuple with two components.
 type × (A : Type) (B : Type) :=
   | , : A → B → A × B;

@@ -8,7 +8,7 @@ open import Stdlib.Trait.Ord;
 open import Stdlib.Data.Product.Base;
 open import Stdlib.Trait.Ord;
 
-infixr 5 ::;
+syntax infixr 5 ::;
 --- Inductive list.
 type List (a : Type) :=
   | --- The empty list
@@ -97,7 +97,7 @@ partition _ nil := nil, nil;
 partition f (x :: xs) :=
   if (f x) first second ((::) x) (partition f xs);
 
-infixr 5 ++;
+syntax infixr 5 ++;
 --- Concatenates two ;List;s.
 ++ : {A : Type} → List A → List A → List A;
 ++ nil ys := ys;
