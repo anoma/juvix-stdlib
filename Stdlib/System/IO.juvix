@@ -1,40 +1,7 @@
 module Stdlib.System.IO;
 
-import Stdlib.Data.Nat open;
-import Stdlib.Data.String open;
-import Stdlib.Data.Bool open;
-import Stdlib.Data.Int open using {Int};
-
-builtin IO
-axiom IO : Type;
-
-syntax infixl 1 >>;
-builtin IO-sequence
-axiom >> : IO → IO → IO;
-
-builtin nat-print
-axiom printNat : Nat → IO;
-
-builtin string-print
-axiom printString : String → IO;
-
-builtin bool-print
-axiom printBool : Bool → IO;
-
-builtin int-print
-axiom printInt : Int → IO;
-
-builtin IO-readline
-axiom readLn : (String → IO) → IO;
-
-printNatLn : Nat → IO;
-printNatLn n := printNat n >> printString "\n";
-
-printStringLn : String → IO;
-printStringLn s := printString s >> printString "\n";
-
-printBoolLn : Bool → IO;
-printBoolLn b := printBool b >> printString "\n";
-
-printIntLn : Int → IO;
-printIntLn i := printInt i >> printString "\n";
+import Stdlib.System.IO.Base open public;
+import Stdlib.System.IO.Bool open public;
+import Stdlib.System.IO.Nat open public;
+import Stdlib.System.IO.Int open public;
+import Stdlib.System.IO.String open public;

@@ -1,0 +1,9 @@
+module Stdlib.System.IO.Base;
+
+builtin IO
+axiom IO : Type;
+
+syntax infixl 1 >>;
+builtin IO-sequence
+axiom >> : IO → IO → IO;
+

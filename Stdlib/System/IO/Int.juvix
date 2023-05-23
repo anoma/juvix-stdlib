@@ -1,0 +1,6 @@
+module Stdlib.System.IO.Int;
+
+import Stdlib.System.IO.Base open;
+import Stdlib.Data.Int open using {Int};
+
+axiom printInt : Int → IO;

@@ -1,0 +1,11 @@
+module Stdlib.System.IO.Bool;
+
+import Stdlib.System.IO.Base open;
+import Stdlib.Data.Bool open;
+import Stdlib.System.IO.String open;
+
+builtin bool-print
+axiom printBool : Bool → IO;
+
+printBoolLn : Bool → IO;
+printBoolLn b := printBool b >> printString "\n";

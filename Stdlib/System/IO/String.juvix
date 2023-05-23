@@ -1,0 +1,13 @@
+module Stdlib.System.IO.String;
+
+import Stdlib.System.IO.Base open;
+import Stdlib.Data.String open;
+
+builtin string-print
+axiom printString : String → IO;
+
+builtin IO-readline
+axiom readLn : (String → IO) → IO;
+
+printStringLn : String → IO;
+printStringLn s := printString s >> printString "\n";

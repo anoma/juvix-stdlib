@@ -1,0 +1,11 @@
+module Stdlib.System.IO.Nat;
+
+import Stdlib.System.IO.Base open;
+import Stdlib.Data.Nat open;
+import Stdlib.System.IO.String open;
+
+builtin nat-print
+axiom printNat : Nat → IO;
+
+printNatLn : Nat → IO;
+printNatLn n := printNat n >> printString "\n";
