@@ -2,5 +2,10 @@ module Stdlib.System.IO.Int;
 
 import Stdlib.System.IO.Base open;
 import Stdlib.Data.Int open using {Int};
+import Stdlib.System.IO.String open;
 
+builtin int-print
 axiom printInt : Int → IO;
+
+printIntLn : Int → IO;
+printIntLn i := printInt i >> printString "\n";
