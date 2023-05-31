@@ -5,6 +5,7 @@ import Stdlib.Data.Product.Base open;
 
 syntax infixr 9 ∘;
 --- Function composition.
+{-# inline: 2 #-}
 ∘ :
   {A : Type}
     → {B : Type}
@@ -16,6 +17,7 @@ syntax infixr 9 ∘;
 ∘ f g x := f (g x);
 
 --- Always returns the first argument.
+{-# inline: 1 #-}
 const : {A : Type} → {B : Type} → A → B → A;
 const a _ := a;
 
@@ -24,6 +26,7 @@ id : {A : Type} → A → A;
 id a := a;
 
 --- Swaps the order of the arguments of the given function.
+{-# inline: 1 #-}
 flip :
   {A : Type}
     → {B : Type}
@@ -46,6 +49,7 @@ iterate zero _ a := a;
 iterate (suc n) f a := iterate n f (f a);
 
 syntax infixl 0 on;
+{-# inline: 2 #-}
 on :
   {A : Type}
     → {B : Type}
