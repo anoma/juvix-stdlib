@@ -131,15 +131,15 @@ prop-transposeMatrixDimensions xs :=
   let
     txs : List (List Int) := transpose xs;
     checkTxsRowXsCol :
-        Bool :=
-          case xs
-            | x :: _ := length txs Nat.== length x
-            | _ := null txs;
+      Bool :=
+        case xs
+          | x :: _ := length txs Nat.== length x
+          | _ := null txs;
     checkXsRowTxsCol :
-        Bool :=
-          case txs
-            | tx :: _ := length xs Nat.== length tx
-            | _ := null xs;
+      Bool :=
+        case txs
+          | tx :: _ := length xs Nat.== length tx
+          | _ := null xs;
   in checkTxsRowXsCol && checkXsRowTxsCol;
 
 sortTest : String -> (List Int -> List Int) -> QC.Test;
