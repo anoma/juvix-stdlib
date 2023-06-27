@@ -18,21 +18,25 @@ type List (a : Type) :=
 
 --- 𝒪(𝓃). Returns ;true; if the given
 --- object is in the ;List;.
+{-# specialize: [1] #-}
 elem : {A : Type} → (A → A → Bool) → A → List A → Bool;
 elem _ _ nil := false;
 elem eq s (x :: xs) := eq s x || elem eq s xs;
 
 --- Right-associative fold.
+{-# specialize: [1] #-}
 foldr : {A B : Type} → (A → B → B) → B → List A → B;
 foldr _ z nil := z;
 foldr f z (h :: hs) := f h (foldr f z hs);
 
 syntax iterator rfor {init: 1, range: 1};
+{-# specialize: [1] #-}
 rfor : {A B : Type} → (B → A → B) → B → List A → B;
 rfor _ acc nil := acc;
 rfor f acc (x :: xs) := f (rfor f acc xs) x;
 
 --- Left-associative and tail-recursive fold.
+{-# specialize: [1] #-}
 foldl : {A B : Type} → (B → A → B) → B → List A → B;
 foldl f z nil := z;
 foldl f z (h :: hs) := foldl f (f z h) hs;
@@ -44,13 +48,15 @@ for := foldl;
 
 syntax iterator map {init: 0, range: 1};
 --- 𝒪(𝓃). Maps a function over each element of a ;List;.
-map : {A : Type} → {B : Type} → (A → B) → List A → List B;
+{-# specialize: [1] #-}
+map : {A B : Type} → (A → B) → List A → List B;
 map f nil := nil;
 map f (h :: hs) := f h :: map f hs;
 
 syntax iterator filter {init: 0, range: 1};
 --- 𝒪(𝓃). Filters a ;List; according to a given predicate, i.e.,
 --- keeps the elements for which the given predicate returns ;true;.
+{-# specialize: [1] #-}
 filter : {A : Type} → (A → Bool) → List A → List A;
 filter _ nil := nil;
 filter f (h :: hs) :=
@@ -58,11 +64,11 @@ filter f (h :: hs) :=
 
 --- 𝒪(𝓃). Returns the length of the ;List;.
 length : {A : Type} → List A → Nat;
-length l := for (acc := 0) (_ in l) acc + 1;
+length l := for (acc := 0) (_ in l) {acc + 1};
 
 --- 𝒪(𝓃). Returns the given ;List; in reverse order.
 reverse : {A : Type} → List A → List A;
-reverse l := for (acc := nil) (x in l) x :: acc;
+reverse l := for (acc := nil) (x in l) {x :: acc};
 
 --- Returns a ;List; of length n where every element is the given value.
 replicate : {A : Type} → Nat → A → List A;
@@ -140,12 +146,14 @@ tail nil := nil;
 
 syntax iterator any {init: 0, range: 1};
 --- 𝒪(𝓃). Returns ;true; if at least one element of the ;List; satisfies the predicate.
+{-# specialize: [1] #-}
 any : {A : Type} → (A → Bool) → List A → Bool;
 any f nil := false;
 any f (x :: xs) := if (f x) true (any f xs);
 
 syntax iterator all {init: 0, range: 1};
 --- 𝒪(𝓃). Returns ;true; if all elements of the ;List; satisfy the predicate.
+{-# specialize: [1] #-}
 all : {A : Type} -> (A -> Bool) -> List A -> Bool;
 all f nil := true;
 all f (x :: xs) := if (f x) (all f xs) false;
@@ -157,6 +165,7 @@ null _ := false;
 
 --- 𝒪(min(𝓂, 𝓃)). Returns a list containing the results of applying a function
 --- to each pair of elements from the input lists.
+{-# specialize: [1] #-}
 zipWith :
   {A B C : Type}
     -> (A -> B -> C)

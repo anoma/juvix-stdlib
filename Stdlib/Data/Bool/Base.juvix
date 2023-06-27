@@ -12,20 +12,20 @@ not true := false;
 not false := true;
 
 syntax infixr 2 ||;
---- Logical disjunction. Cannot be partially applied
+--- Logical disjunction. Evaluated lazily. Cannot be partially applied
 builtin bool-or
 || : Bool → Bool → Bool;
 || true _ := true;
 || false a := a;
 
 syntax infixr 2 &&;
---- Logical conjunction. Cannot be partially applied.
+--- Logical conjunction. Evaluated lazily. Cannot be partially applied.
 builtin bool-and
 && : Bool → Bool → Bool;
 && true a := a;
 && false _ := false;
 
---- Returns the first argument if ;true;, otherwise it returns the second argument. Cannot be partially applied.
+--- Returns the first argument if ;true;, otherwise it returns the second argument. Evaluated lazily. Cannot be partially applied.
 builtin bool-if
 if : {A : Type} → Bool → A → A → A;
 if true a _ := a;
