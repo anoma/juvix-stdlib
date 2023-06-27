@@ -16,8 +16,7 @@ for {A} f a (mkRange low high step) :=
     terminating
     go : A → Int → A;
     go acc n := if (n > high) acc (go (f acc n) (n + step));
-  in
-  go a low;
+  in go a low;
 
 syntax infix 5 to;
 to : Int → Int → Range;
