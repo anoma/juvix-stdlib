@@ -14,11 +14,11 @@ import Stdlib.Data.Bool.Base open;
 import Stdlib.Data.String.Base open;
 
 module ProductTraits;
-  Eq : {A B : Type} -> Eq A -> Eq B -> Eq (A × B);
+  Eq : {A B : Type} -> Eq.Eq A -> Eq.Eq B -> Eq.Eq (A × B);
   Eq (Eq.mkEq eq-a) (Eq.mkEq eq-b) :=
     Eq.mkEq λ {(a1, b1) (a2, b2) := eq-a a1 a2 && eq-b b1 b2};
 
-  Ord : {A B : Type} -> Ord A -> Ord B -> Ord (A × B);
+  Ord : {A B : Type} -> Ord.Ord A -> Ord.Ord B -> Ord.Ord (A × B);
   Ord (Ord.mkOrd cmp-a) (Ord.mkOrd cmp-b) :=
     Ord.mkOrd
       λ {(a1, b1) (a2, b2) :=
@@ -27,7 +27,7 @@ module ProductTraits;
           | Ord.GT := Ord.GT
           | Ord.EQ := cmp-b b1 b2};
 
-  Show : {A B : Type} -> Show A -> Show B -> Show (A × B);
+  Show : {A B : Type} -> Show.Show A -> Show.Show B -> Show.Show (A × B);
   Show (Show.mkShow show-a) (Show.mkShow show-b) :=
     Show.mkShow
       λ {(a, b) :=

@@ -12,10 +12,10 @@ import Stdlib.Data.String.Ord as String;
 
 module StringTraits;
   
-  Eq : Eq String;
+  Eq : Eq.Eq String;
   Eq := Eq.mkEq (String.==);
 
-  Show : Show String;
+  Show : Show.Show String;
   Show :=
     let
       go : String -> String;

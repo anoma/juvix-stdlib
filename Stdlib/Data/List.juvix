@@ -20,8 +20,8 @@ head (x :: _) := x;
 head nil := fail "head: empty list";
 
 module ListTraits;
-  
-  Eq : {A : Type} -> Eq A -> Eq (List A);
+
+  Eq : {A : Type} -> Eq.Eq A -> Eq.Eq (List A);
   Eq {A} (Eq.mkEq eq-a) :=
     let
       go : List A -> List A -> Bool;
@@ -31,7 +31,7 @@ module ListTraits;
       go (x :: xs) (y :: ys) := if (eq-a x y) (go xs ys) false;
     in Eq.mkEq go;
 
-  Ord : {A : Type} -> Ord A -> Ord (List A);
+  Ord : {A : Type} -> Ord.Ord A -> Ord.Ord (List A);
   Ord {A} (Ord.mkOrd cmp-a) :=
     let
       go : List A -> List A -> Ord.Ordering;
@@ -45,7 +45,7 @@ module ListTraits;
           | Ord.EQ := go xs ys;
     in Ord.mkOrd go;
 
-  Show : {A : Type} -> Show A -> Show (List A);
+  Show : {A : Type} -> Show.Show A -> Show.Show (List A);
   Show {A} (Show.mkShow to-str) :=
     let
       go : List A -> String;

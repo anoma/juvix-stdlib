@@ -17,12 +17,12 @@ type Unit :=
     unit : Unit;
 
 module UnitTraits;
-  Eq : Eq Unit;
+  Eq : Eq.Eq Unit;
   Eq := Eq.mkEq λ {unit unit := true};
 
-  Ord : Ord Unit;
+  Ord : Ord.Ord Unit;
   Ord := Ord.mkOrd λ {unit unit := Ord.EQ};
 
-  Show : Show Unit;
+  Show : Show.Show Unit;
   Show := Show.mkShow λ {unit := "unit"};
 end;
