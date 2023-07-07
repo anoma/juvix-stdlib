@@ -13,9 +13,8 @@ builtin string-concat
 axiom ++str : String -> String -> String;
 
 --- Concatenates a ;List; of ;String;s.
-concatStr : List String -> String;
-concatStr := foldl (++str) "";
+concatStr : List String -> String := foldl (++str) "";
 
 --- Joins a ;List; of ;String;s with "\n".
-unlines : List String -> String;
-unlines := concatStr ∘ intersperse "\n";
+unlines : List String -> String :=
+  concatStr ∘ intersperse "\n";

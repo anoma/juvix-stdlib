@@ -12,11 +12,9 @@ import Stdlib.Data.String.Ord as String;
 
 module StringTraits;
   
-  Eq : Eq.Eq String;
-  Eq := Eq.mkEq (String.==);
+  Eq : Eq.Eq String := Eq.mkEq (String.==);
 
-  Show : Show.Show String;
-  Show :=
+  Show : Show.Show String :=
     let
       go : String -> String;
       go s := "\"" ++str s ++str "\"";

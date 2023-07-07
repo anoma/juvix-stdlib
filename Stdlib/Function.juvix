@@ -4,64 +4,68 @@ import Stdlib.Data.Nat.Base open;
 import Stdlib.Data.Product.Base open;
 
 syntax infixr 9 ∘;
+
 --- Function composition.
 {-# inline: 2 #-}
-∘ :
-  {A : Type}
+∘
+  : {A : Type}
     → {B : Type}
     → {C : Type}
     → (B → C)
     → (A → B)
     → A
-    → C;
-∘ f g x := f (g x);
+    → C
+  | f g x := f (g x);
 
 --- Always returns the first argument.
 {-# inline: 1 #-}
-const : {A : Type} → {B : Type} → A → B → A;
-const a _ := a;
+const : {A : Type} → {B : Type} → A → B → A
+  | a _ := a;
 
 --- The identity function.
-id : {A : Type} → A → A;
-id a := a;
+id : {A : Type} → A → A
+  | a := a;
 
 --- Swaps the order of the arguments of the given function.
 {-# inline: 1 #-}
-flip :
-  {A : Type}
+flip
+  : {A : Type}
     → {B : Type}
     → {C : Type}
     → (A → B → C)
     → B
     → A
-    → C;
-flip f b a := f a b;
+    → C
+  | f b a := f a b;
 
 syntax infixr 0 $;
+
 --- Application operator with right associativity. Usually used as a syntactical
 --- facility.
-$ : {A : Type} → {B : Type} → (A → B) → A → B;
-$ f x := f x;
+$ : {A : Type} → {B : Type} → (A → B) → A → B
+  | f x := f x;
 
 --- Applies a function n times.
-iterate : {A : Type} -> Nat -> (A -> A) -> A -> A;
-iterate zero _ a := a;
-iterate (suc n) f a := iterate n f (f a);
+iterate : {A : Type} -> Nat -> (A -> A) -> A -> A
+  | zero _ a := a
+  | (suc n) f a := iterate n f (f a);
 
 syntax infixl 0 on;
+
 {-# inline: 2 #-}
-on :
-  {A : Type}
+on
+  : {A : Type}
     → {B : Type}
     → {C : Type}
     → (B → B → C)
     → (A → B)
     → A
     → A
-    → C;
-on f g a b := f (g a) (g b);
+    → C
+  | f g a b := f (g a) (g b);
 
 syntax infixl 1 >>>;
+
 builtin seq
->>> : {A B : Type} → A → B → B;
->>> x y := y;
+>>> : {A B : Type} → A → B → B
+  | x y := y;

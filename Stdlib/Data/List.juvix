@@ -15,45 +15,44 @@ import Stdlib.Trait.Show as Show;
 open Show using {Show};
 
 --- 𝒪(1). Partial function that returns the first element of a ;List;.
-head : {A : Type} → List A → A;
-head (x :: _) := x;
-head nil := fail "head: empty list";
+head : {A : Type} → List A → A
+  | (x :: _) := x
+  | nil := fail "head: empty list";
 
 module ListTraits;
+  Eq : {A : Type} -> Eq.Eq A -> Eq.Eq (List A)
+    | {A} (Eq.mkEq eq-a) :=
+      let
+        go : List A -> List A -> Bool;
+        go nil nil := true;
+        go nil _ := false;
+        go _ nil := false;
+        go (x :: xs) (y :: ys) := if (eq-a x y) (go xs ys) false;
+      in Eq.mkEq go;
 
-  Eq : {A : Type} -> Eq.Eq A -> Eq.Eq (List A);
-  Eq {A} (Eq.mkEq eq-a) :=
-    let
-      go : List A -> List A -> Bool;
-      go nil nil := true;
-      go nil _ := false;
-      go _ nil := false;
-      go (x :: xs) (y :: ys) := if (eq-a x y) (go xs ys) false;
-    in Eq.mkEq go;
+  Ord : {A : Type} -> Ord.Ord A -> Ord.Ord (List A)
+    | {A} (Ord.mkOrd cmp-a) :=
+      let
+        go : List A -> List A -> Ord.Ordering;
+        go nil nil := Ord.EQ;
+        go nil _ := Ord.LT;
+        go _ nil := Ord.GT;
+        go (x :: xs) (y :: ys) :=
+          case cmp-a x y
+            | Ord.LT := Ord.LT
+            | Ord.GT := Ord.GT
+            | Ord.EQ := go xs ys;
+      in Ord.mkOrd go;
 
-  Ord : {A : Type} -> Ord.Ord A -> Ord.Ord (List A);
-  Ord {A} (Ord.mkOrd cmp-a) :=
-    let
-      go : List A -> List A -> Ord.Ordering;
-      go nil nil := Ord.EQ;
-      go nil _ := Ord.LT;
-      go _ nil := Ord.GT;
-      go (x :: xs) (y :: ys) :=
-        case cmp-a x y
-          | Ord.LT := Ord.LT
-          | Ord.GT := Ord.GT
-          | Ord.EQ := go xs ys;
-    in Ord.mkOrd go;
-
-  Show : {A : Type} -> Show.Show A -> Show.Show (List A);
-  Show {A} (Show.mkShow to-str) :=
-    let
-      go : List A -> String;
-      go nil := "nil";
-      go (x :: xs) := to-str x ++str " :: " ++str go xs;
-    in Show.mkShow
-      λ {
-        | nil := "nil"
-        | s := "(" ++str go s ++str ")"
-      };
+  Show : {A : Type} -> Show.Show A -> Show.Show (List A)
+    | {A} (Show.mkShow to-str) :=
+      let
+        go : List A -> String;
+        go nil := "nil";
+        go (x :: xs) := to-str x ++str " :: " ++str go xs;
+      in Show.mkShow
+        λ {
+          | nil := "nil"
+          | s := "(" ++str go s ++str ")"
+        };
 end;

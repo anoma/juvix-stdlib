@@ -23,12 +23,9 @@ builtin int-to-string
 axiom intToString : Int -> String;
 
 module IntTraits;
-  Eq : Eq.Eq Int;
-  Eq := Eq.mkEq (Int.==);
+  Eq : Eq.Eq Int := Eq.mkEq (Int.==);
 
-  Ord : Ord.Ord Int;
-  Ord := Ord.mkOrd Int.compare;
+  Ord : Ord.Ord Int := Ord.mkOrd Int.compare;
 
-  Show : Show.Show Int;
-  Show := Show.mkShow intToString;
+  Show : Show.Show Int := Show.mkShow intToString;
 end;

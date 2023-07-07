@@ -8,13 +8,13 @@ type Maybe (A : Type) :=
 
 --- Extracts the value from a ;Maybe; if present, else returns the given value.
 {-# inline: true #-}
-fromMaybe : {A : Type} → A → Maybe A → A;
-fromMaybe a nothing := a;
-fromMaybe _ (just a) := a;
+fromMaybe : {A : Type} → A → Maybe A → A
+  | a nothing := a
+  | _ (just a) := a;
 
 --- Applies a function to the value from a ;Maybe; if present, else returns the
 --- given value.
 {-# inline: true #-}
-maybe : {A : Type} → {B : Type} → B → (A → B) → Maybe A → B;
-maybe b _ nothing := b;
-maybe _ f (just a) := f a;
+maybe : {A : Type} → {B : Type} → B → (A → B) → Maybe A → B
+  | b _ nothing := b
+  | _ f (just a) := f a;

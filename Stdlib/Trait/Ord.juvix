@@ -7,21 +7,21 @@ type Ordering :=
   | EQ : Ordering
   | GT : Ordering;
 
-isLT : Ordering → Bool;
-isLT LT := true;
-isLT _ := false;
+isLT : Ordering → Bool
+  | LT := true
+  | _ := false;
 
-isEQ : Ordering → Bool;
-isEQ EQ := true;
-isEQ _ := false;
+isEQ : Ordering → Bool
+  | EQ := true
+  | _ := false;
 
-isGT : Ordering → Bool;
-isGT GT := true;
-isGT _ := false;
+isGT : Ordering → Bool
+  | GT := true
+  | _ := false;
 
 --- A trait for defining a total order
 type Ord (A : Type) :=
   | mkOrd : (A -> A -> Ordering) -> Ord A;
 
-cmp : {A : Type} -> Ord A -> A -> A -> Ordering;
-cmp (mkOrd f) := f;
+cmp : {A : Type} -> Ord A -> A -> A -> Ordering
+  | (mkOrd f) := f;

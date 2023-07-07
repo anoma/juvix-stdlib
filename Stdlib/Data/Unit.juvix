@@ -17,12 +17,9 @@ type Unit :=
     unit : Unit;
 
 module UnitTraits;
-  Eq : Eq.Eq Unit;
-  Eq := Eq.mkEq λ {unit unit := true};
+  Eq : Eq.Eq Unit := Eq.mkEq λ {unit unit := true};
 
-  Ord : Ord.Ord Unit;
-  Ord := Ord.mkOrd λ {unit unit := Ord.EQ};
+  Ord : Ord.Ord Unit := Ord.mkOrd λ {unit unit := Ord.EQ};
 
-  Show : Show.Show Unit;
-  Show := Show.mkShow λ {unit := "unit"};
+  Show : Show.Show Unit := Show.mkShow λ {unit := "unit"};
 end;
