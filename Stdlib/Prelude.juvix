@@ -17,3 +17,7 @@ import Stdlib.System.IO open public;
 import Stdlib.Trait.Ord open public;
 import Stdlib.Trait.Eq open public;
 import Stdlib.Trait.Show open public;
+
+module Trait;
+  import Stdlib.Trait open public;
+end;
