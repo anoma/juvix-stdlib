@@ -7,48 +7,54 @@ import Stdlib.Trait.Ord open;
 import Stdlib.Data.Nat.Ord as Nat;
 
 syntax infix 4 ==;
+
 --- Tests for equality.
 builtin int-eq
-== : Int -> Int -> Bool;
-== (ofNat m) (ofNat n) := m Nat.== n;
-== (negSuc m) (negSuc n) := m Nat.== n;
-== _ _ := false;
+== : Int -> Int -> Bool
+  | (ofNat m) (ofNat n) := m Nat.== n
+  | (negSuc m) (negSuc n) := m Nat.== n
+  | _ _ := false;
 
 syntax infix 4 /=;
+
 --- Tests for inequality.
-/= : Int -> Int -> Bool;
-/= m n := not (m == n);
+/= : Int -> Int -> Bool
+  | m n := not (m == n);
 
 syntax infix 4 <=;
+
 --- Returns ;true; iff the first element is less than or equal to the second.
 builtin int-le
-<= : Int -> Int -> Bool;
-<= m n := nonNeg (n - m);
+<= : Int -> Int -> Bool
+  | m n := nonNeg (n - m);
 
 syntax infix 4 <;
+
 --- Returns ;true; iff the first element is less than the second.
 builtin int-lt
-< : Int -> Int -> Bool;
-< m n := m + 1 <= n;
+< : Int -> Int -> Bool
+  | m n := m + 1 <= n;
 
 syntax infix 4 >;
+
 --- Returns ;true; iff the first element is greater than the second.
-> : Int -> Int -> Bool;
-> m n := n < m;
+> : Int -> Int -> Bool
+  | m n := n < m;
 
 syntax infix 4 >=;
+
 --- Returns ;true; iff the first element is greater than or equal to the second.
->= : Int -> Int -> Bool;
->= m n := n <= m;
+>= : Int -> Int -> Bool
+  | m n := n <= m;
 
 --- Tests for ;Ordering;.
-compare : Int -> Int -> Ordering;
-compare m n := if (m == n) EQ (if (m < n) LT GT);
+compare : Int -> Int -> Ordering
+  | m n := if (m == n) EQ (if (m < n) LT GT);
 
 --- Returns the smallest ;Int;.
-min : Int → Int → Int;
-min x y := if (x < y) x y;
+min : Int → Int → Int
+  | x y := if (x < y) x y;
 
 --- Returns the biggest ;Int;.
-max : Int → Int → Int;
-max x y := if (x > y) x y;
+max : Int → Int → Int
+  | x y := if (x > y) x y;

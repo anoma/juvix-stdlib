@@ -15,31 +15,30 @@ import Stdlib.Data.Bool.Base open;
 import Stdlib.Data.String.Base open;
 
 module MaybeTraits;
-  Eq : {A : Type} -> Eq A -> Eq (Maybe A);
-  Eq (Eq.mkEq eq) :=
-    Eq.mkEq
-      λ {
-        | nothing nothing := true
-        | (just a1) (just a2) := eq a1 a2
-        | _ _ := false
-      };
+  Eq : {A : Type} -> Eq.Eq A -> Eq.Eq (Maybe A)
+    | (Eq.mkEq eq) :=
+      Eq.mkEq
+        λ {
+          | nothing nothing := true
+          | (just a1) (just a2) := eq a1 a2
+          | _ _ := false
+        };
 
-  Show : {A : Type} -> Show A -> Show (Maybe A);
-  Show (Show.mkShow show) :=
-    Show.mkShow
-      λ {
-        | nothing := "nothing"
-        | (just a) := "just " ++str show a
-      };
+  Show : {A : Type} -> Show.Show A -> Show.Show (Maybe A)
+    | (Show.mkShow show) :=
+      Show.mkShow
+        λ {
+          | nothing := "nothing"
+          | (just a) := "just " ++str show a
+        };
 
-  Ord : {A : Type} -> Ord A -> Ord (Maybe A);
-  Ord (Ord.mkOrd cmp) :=
-    Ord.mkOrd
-      λ {
-        | nothing nothing := Ord.EQ
-        | (just a1) (just a2) := cmp a1 a2
-        | nothing (just _) := Ord.LT
-        | (just _) nothing := Ord.GT
-      };
-
+  Ord : {A : Type} -> Ord.Ord A -> Ord.Ord (Maybe A)
+    | (Ord.mkOrd cmp) :=
+      Ord.mkOrd
+        λ {
+          | nothing nothing := Ord.EQ
+          | (just a1) (just a2) := cmp a1 a2
+          | nothing (just _) := Ord.LT
+          | (just _) nothing := Ord.GT
+        };
 end;

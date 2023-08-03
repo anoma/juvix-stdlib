@@ -6,5 +6,5 @@ import Stdlib.Data.Bool.Base open;
 type Eq (A : Type) :=
   | mkEq : (A -> A -> Bool) -> Eq A;
 
-eq : {A : Type} -> Eq A -> A -> A -> Bool;
-eq (mkEq f) := f;
+eq : {A : Type} -> Eq A -> A -> A -> Bool
+  | (mkEq f) := f;

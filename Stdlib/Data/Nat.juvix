@@ -23,12 +23,9 @@ builtin string-to-nat
 axiom stringToNat : String -> Nat;
 
 module NatTraits;
-  Eq : Eq Nat;
-  Eq := Eq.mkEq (Nat.==);
+  Eq : Eq.Eq Nat := Eq.mkEq (Nat.==);
 
-  Ord : Ord Nat;
-  Ord := Ord.mkOrd Nat.compare;
+  Ord : Ord.Ord Nat := Ord.mkOrd Nat.compare;
 
-  Show : Show Nat;
-  Show := Show.mkShow natToString;
+  Show : Show.Show Nat := Show.mkShow natToString;
 end;

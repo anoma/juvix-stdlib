@@ -5,5 +5,5 @@ import Stdlib.Data.String.Base open;
 type Show (A : Type) :=
   | mkShow : (A -> String) -> Show A;
 
-show : {A : Type} -> Show A -> A -> String;
-show (mkShow f) := f;
+show : {A : Type} -> Show A -> A -> String
+  | (mkShow f) := f;

@@ -9,5 +9,5 @@ axiom printString : String → IO;
 builtin IO-readline
 axiom readLn : (String → IO) → IO;
 
-printStringLn : String → IO;
-printStringLn s := printString s >> printString "\n";
+printStringLn : String → IO
+  | s := printString s >> printString "\n";
