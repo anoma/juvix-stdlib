@@ -3,7 +3,7 @@ all: test
 
 deps/quickcheck:
 	@mkdir -p deps/
-	@git clone --branch v0.5.0 --depth 1 https://github.com/anoma/juvix-quickcheck.git deps/quickcheck
+	@git clone --branch v0.6.3 --depth 1 https://github.com/anoma/juvix-quickcheck.git deps/quickcheck
 	$(MAKE) -C deps/quickcheck deps
 
 build/Test: $(shell find ../ -name "*.juvix") $(wildcard deps/**/*.juvix) Test.juvix deps/quickcheck
