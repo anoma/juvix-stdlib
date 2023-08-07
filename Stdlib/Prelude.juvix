@@ -1,6 +1,8 @@
 --- This module reexports most of the standard library.
 module Stdlib.Prelude;
 
+import Stdlib.Data.Fixity open public;
+
 import Stdlib.Data.Bool open public;
 import Stdlib.Data.Unit open public;
 import Stdlib.Data.List open public;
