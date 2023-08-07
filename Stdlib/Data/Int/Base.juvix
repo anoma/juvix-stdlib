@@ -1,8 +1,10 @@
 module Stdlib.Data.Int.Base;
 
+import Stdlib.Data.Fixity open;
+
 import Stdlib.Data.Nat.Base as Nat;
 open Nat using {Nat; zero; suc; sub};
-import Stdlib.Data.Bool open;
+import Stdlib.Data.Bool.Base open;
 
 --- Inductive integers. I.e. whole numbers that can be positive, zero, or negative.
 builtin int
@@ -31,7 +33,7 @@ intSubNat : Nat -> Nat -> Int
       | zero := ofNat (Nat.sub m n)
       | suc k := negSuc k;
 
-syntax infixl 6 +;
+syntax operator + additive;
 
 --- Addition for ;Int;s.
 builtin int-plus
@@ -53,7 +55,7 @@ neg : Int -> Int
   | (ofNat n) := negNat n
   | (negSuc n) := ofNat (suc n);
 
-syntax infixl 7 *;
+syntax operator * multiplicative;
 
 --- Multiplication for ;Int;s.
 builtin int-mul
@@ -63,7 +65,7 @@ builtin int-mul
   | (negSuc m) (ofNat n) := negNat (suc m Nat.* n)
   | (negSuc m) (negSuc n) := ofNat (suc m Nat.* suc n);
 
-syntax infixl 6 -;
+syntax operator - additive;
 
 --- Subtraction for ;Int;s.
 builtin int-sub

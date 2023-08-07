@@ -1,9 +1,11 @@
 module Stdlib.Data.String.Ord;
 
+import Stdlib.Data.Fixity open;
+
 import Stdlib.Data.String.Base open;
 import Stdlib.Data.Bool open;
 
-syntax infix 4 ==;
+syntax operator == comparison;
 --- Equality for ;String;s.
 builtin string-eq
 axiom == : String → String → Bool;

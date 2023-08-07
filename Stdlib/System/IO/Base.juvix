@@ -1,9 +1,11 @@
 module Stdlib.System.IO.Base;
 
+import Stdlib.Data.Fixity open;
+
 builtin IO
 axiom IO : Type;
 
-syntax infixl 1 >>;
+syntax operator >> seq;
 builtin IO-sequence
 axiom >> : IO → IO → IO;
 

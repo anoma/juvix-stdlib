@@ -1,5 +1,7 @@
 module Stdlib.Data.List.Base;
 
+import Stdlib.Data.Fixity open;
+
 import Stdlib.Data.Bool.Base open;
 import Stdlib.Function open;
 import Stdlib.Data.Nat.Base open;
@@ -8,7 +10,7 @@ import Stdlib.Trait.Ord open;
 import Stdlib.Data.Product.Base open;
 import Stdlib.Trait.Ord open;
 
-syntax infixr 5 ::;
+syntax operator :: cons;
 --- Inductive list.
 builtin list
 type List (a : Type) :=
@@ -117,7 +119,7 @@ partition
     case partition f xs
       | l1, l2 := if (f x) (x :: l1, l2) (l1, x :: l2);
 
-syntax infixr 5 ++;
+syntax operator ++ cons;
 
 --- Concatenates two ;List;s.
 ++ : {A : Type} → List A → List A → List A

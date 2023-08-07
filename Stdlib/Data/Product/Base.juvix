@@ -1,10 +1,13 @@
 module Stdlib.Data.Product.Base;
 
-syntax infixr 2 ×;
-syntax infixr 4 ,;
+import Stdlib.Data.Fixity open;
+
+syntax operator × functor;
+syntax operator , pair;
+
 --- Inductive pair. I.e. a tuple with two components.
 type × (A : Type) (B : Type) :=
-  | , : A → B → A × B;
+  | , : A → B → (A × B);
 
 --- Converts a function of two arguments to a function with a product argument.
 uncurry
@@ -12,7 +15,7 @@ uncurry
     -> {B : Type}
     -> {C : Type}
     -> (A -> B -> C)
-    -> A × B
+    -> (A × B)
     -> C
   | f (a, b) := f a b;
 
@@ -21,22 +24,22 @@ curry
   : {A : Type}
     -> {B : Type}
     -> {C : Type}
-    -> (A × B -> C)
+    -> ((A × B) -> C)
     -> A
     -> B
     -> C
   | f a b := f (a, b);
 
 --- Projects the first component of a tuple.
-fst : {A : Type} → {B : Type} → A × B → A
+fst : {A : Type} → {B : Type} → (A × B) → A
   | (a, _) := a;
 
 --- Projects the second component of a tuple.
-snd : {A : Type} → {B : Type} → A × B → B
+snd : {A : Type} → {B : Type} → (A × B) → B
   | (_, b) := b;
 
 --- Swaps the components of a tuple.
-swap : {A : Type} → {B : Type} → A × B → B × A
+swap : {A : Type} → {B : Type} → (A × B) → (B × A)
   | (a, b) := b, a;
 
 --- Applies a function to the first component.
@@ -45,8 +48,8 @@ first
     → {B : Type}
     → {A' : Type}
     → (A → A')
-    → A × B
-    → A' × B
+    → (A × B)
+    → (A' × B)
   | f (a, b) := f a, b;
 
 --- Applies a function to the second component.
@@ -55,10 +58,10 @@ second
     → {B : Type}
     → {B' : Type}
     → (B → B')
-    → A × B
-    → A × B'
+    → (A × B)
+    → (A × B')
   | f (a, b) := a, f b;
 
 --- Applies a function to both components.
-both : {A : Type} → {B : Type} → (A → B) → A × A → B × B
+both : {A : Type} → {B : Type} → (A → B) → (A × A) → (B × B)
   | f (a, b) := f a, f b;

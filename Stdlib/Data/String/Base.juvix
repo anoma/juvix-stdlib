@@ -1,5 +1,7 @@
 module Stdlib.Data.String.Base;
 
+import Stdlib.Data.Fixity open;
+
 import Stdlib.Data.List.Base open;
 import Stdlib.Function open;
 
@@ -7,7 +9,7 @@ import Stdlib.Function open;
 builtin string
 axiom String : Type;
 
-syntax infixr 5 ++str;
+syntax operator ++str cons;
 --- Concatenation of two ;String;s.
 builtin string-concat
 axiom ++str : String -> String -> String;
