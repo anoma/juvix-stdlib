@@ -10,6 +10,7 @@ import Stdlib.Trait.Ord open;
 
 syntax infixr 5 ::;
 --- Inductive list.
+builtin list
 type List (a : Type) :=
   | --- The empty list
     nil : List a
