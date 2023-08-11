@@ -1,7 +1,10 @@
 module Stdlib.Data.Product.Base;
 
-syntax infixr 2 ×;
-syntax infixr 4 ,;
+import Stdlib.Data.Fixity open;
+
+syntax operator × functor;
+syntax operator , pair;
+
 --- Inductive pair. I.e. a tuple with two components.
 type × (A : Type) (B : Type) :=
   | , : A → B → A × B;

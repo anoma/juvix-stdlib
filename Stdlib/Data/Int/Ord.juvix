@@ -1,12 +1,14 @@
 module Stdlib.Data.Int.Ord;
 
+import Stdlib.Data.Fixity open;
+
 import Stdlib.Data.Int.Base open;
-import Stdlib.Data.Bool open;
+import Stdlib.Data.Bool.Base open;
 import Stdlib.Trait.Ord open;
 
 import Stdlib.Data.Nat.Ord as Nat;
 
-syntax infix 4 ==;
+syntax operator == comparison;
 
 --- Tests for equality.
 builtin int-eq
@@ -15,33 +17,33 @@ builtin int-eq
   | (negSuc m) (negSuc n) := m Nat.== n
   | _ _ := false;
 
-syntax infix 4 /=;
+syntax operator /= comparison;
 
 --- Tests for inequality.
 /= : Int -> Int -> Bool
   | m n := not (m == n);
 
-syntax infix 4 <=;
+syntax operator <= comparison;
 
 --- Returns ;true; iff the first element is less than or equal to the second.
 builtin int-le
 <= : Int -> Int -> Bool
   | m n := nonNeg (n - m);
 
-syntax infix 4 <;
+syntax operator < comparison;
 
 --- Returns ;true; iff the first element is less than the second.
 builtin int-lt
 < : Int -> Int -> Bool
   | m n := m + 1 <= n;
 
-syntax infix 4 >;
+syntax operator > comparison;
 
 --- Returns ;true; iff the first element is greater than the second.
 > : Int -> Int -> Bool
   | m n := n < m;
 
-syntax infix 4 >=;
+syntax operator >= comparison;
 
 --- Returns ;true; iff the first element is greater than or equal to the second.
 >= : Int -> Int -> Bool

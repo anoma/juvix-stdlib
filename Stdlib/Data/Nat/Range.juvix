@@ -1,7 +1,9 @@
 module Stdlib.Data.Nat.Range;
 
-import Stdlib.Data.Bool open;
-import Stdlib.Data.Nat open;
+import Stdlib.Data.Fixity open;
+
+import Stdlib.Data.Bool.Base open;
+import Stdlib.Data.Nat.Base open;
 import Stdlib.Data.Nat.Ord open;
 
 --- A range of natural numbers
@@ -19,13 +21,13 @@ for : {A : Type} → (A → Nat → A) → A → Range → A
       go acc n := if (n > high) acc (go (f acc n) (n + step));
     in go a low;
 
-syntax infix 5 to;
+syntax operator to range;
 
 --- `x to y` is the range [x..y]
 to : Nat → Nat → Range
   | l h := mkRange l h 1;
 
-syntax infix 4 step;
+syntax operator step step;
 
 --- `x to y step s` is the range [x,x+s,..,y]
 step : Range → Nat → Range

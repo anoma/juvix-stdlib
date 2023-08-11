@@ -1,5 +1,7 @@
 module Stdlib.Data.Int.Range;
 
+import Stdlib.Data.Fixity open;
+
 import Stdlib.Data.Bool open;
 import Stdlib.Data.Int open;
 import Stdlib.Data.Int.Ord open;
@@ -19,12 +21,12 @@ for : {A : Type} → (A → Int → A) → A → Range → A
       go acc n := if (n > high) acc (go (f acc n) (n + step));
     in go a low;
 
-syntax infix 5 to;
+syntax operator to range;
 
 to : Int → Int → Range
   | l h := mkRange l h 1;
 
-syntax infix 4 step;
+syntax operator step step;
 
 step : Range → Int → Range
   | (mkRange l h _) s := mkRange l h s;

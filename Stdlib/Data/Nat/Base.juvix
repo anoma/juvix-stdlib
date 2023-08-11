@@ -1,12 +1,14 @@
 module Stdlib.Data.Nat.Base;
 
+import Stdlib.Data.Fixity open;
+
 --- Inductive natural numbers. I.e. whole non-negative numbers.
 builtin nat
 type Nat :=
   | zero : Nat
   | suc : Nat → Nat;
 
-syntax infixl 6 +;
+syntax operator + additive;
 
 --- Addition for ;Nat;s.
 builtin nat-plus
@@ -14,7 +16,7 @@ builtin nat-plus
   | zero b := b
   | (suc a) b := suc (a + b);
 
-syntax infixl 7 *;
+syntax operator * multiplicative;
 
 --- Multiplication for ;Nat;s.
 builtin nat-mul
