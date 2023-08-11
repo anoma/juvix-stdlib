@@ -10,9 +10,9 @@ import Stdlib.Data.Bool.Base open;
 builtin int
 type Int :=
   | --- ofNat n represents the integer n
-    ofNat : Nat -> Int
+    ofNat Nat
   | --- negSuc n represents the integer -(n + 1)
-    negSuc : Nat -> Int;
+    negSuc Nat;
 
 --- Converts an ;Int; to a ;Nat;. If the ;Int; is negative, it returns ;zero;.
 toNat : Int -> Nat

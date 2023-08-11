@@ -8,13 +8,17 @@ import Stdlib.Data.Int.Ord open;
 
 --- A range of integers
 type Range :=
-  | mkRange : Int → Int → Int → Range;
+  | mkRange {
+      low : Int;
+      high : Int;
+      step : Int
+    };
 
 syntax iterator for {init: 1, range: 1};
 
 {-# specialize: [1, 3] #-}
 for : {A : Type} → (A → Int → A) → A → Range → A
-  | {A} f a (mkRange low high step) :=
+  | {A} f a mkRange@{low; high; step} :=
     let
       terminating
       go : A → Int → A;
@@ -29,4 +33,4 @@ to : Int → Int → Range
 syntax operator step step;
 
 step : Range → Int → Range
-  | (mkRange l h _) s := mkRange l h s;
+  | r s := r @Range{step := s};

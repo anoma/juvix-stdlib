@@ -5,8 +5,8 @@ import Stdlib.Data.Fixity open;
 --- Inductive definition of booleans.
 builtin bool
 type Bool :=
-  | true : Bool
-  | false : Bool;
+  | true
+  | false;
 
 --- Logical negation.
 not : Bool → Bool
