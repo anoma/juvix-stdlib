@@ -5,8 +5,8 @@ import Stdlib.Data.Fixity open;
 --- Inductive natural numbers. I.e. whole non-negative numbers.
 builtin nat
 type Nat :=
-  | zero : Nat
-  | suc : Nat → Nat;
+  | zero
+  | suc Nat;
 
 syntax operator + additive;
 

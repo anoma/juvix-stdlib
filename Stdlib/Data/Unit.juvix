@@ -14,7 +14,7 @@ open Show using {Show};
 
 type Unit :=
   | --- The only constructor of ;Unit;.
-    unit : Unit;
+    unit;
 
 module UnitTraits;
   Eq : Eq.Eq Unit := Eq.mkEq λ {unit unit := true};

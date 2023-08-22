@@ -15,9 +15,9 @@ syntax operator :: cons;
 builtin list
 type List (a : Type) :=
   | --- The empty list
-    nil : List a
+    nil
   | --- An element followed by a list
-    :: : a → List a → List a;
+    :: a (List a);
 
 --- 𝒪(𝓃). Returns ;true; if the given
 --- object is in the ;List;.
