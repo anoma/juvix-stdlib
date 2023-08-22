@@ -8,62 +8,35 @@ syntax operator ∘ composition;
 
 --- Function composition.
 {-# inline: 2 #-}
-∘
-  : {A : Type}
-    → {B : Type}
-    → {C : Type}
-    → (B → C)
-    → (A → B)
-    → A
-    → C
-  | f g x := f (g x);
+∘ {A B C} (f : B → C) (g : A → B) (x : A) : C := f (g x);
 
 --- Always returns the first argument.
 {-# inline: 1 #-}
-const : {A : Type} → {B : Type} → A → B → A
-  | a _ := a;
+const {A B} (a : A) (_ : B) : A := a;
 
 --- The identity function.
-id : {A : Type} → A → A
-  | a := a;
+id {A} (a : A) : A := a;
 
 --- Swaps the order of the arguments of the given function.
 {-# inline: 1 #-}
-flip
-  : {A : Type}
-    → {B : Type}
-    → {C : Type}
-    → (A → B → C)
-    → B
-    → A
-    → C
-  | f b a := f a b;
+flip {A B C} (f : A → B → C) (b : B) (a : A) : C := f a b;
 
 syntax operator $ rapp;
 
 --- Application operator with right associativity. Usually used as a syntactical
 --- facility.
-$ : {A : Type} → {B : Type} → (A → B) → A → B
-  | f x := f x;
+$ {A B} (f : A → B) (x : A) : B := f x;
 
 --- Applies a function n times.
-iterate : {A : Type} -> Nat -> (A -> A) -> A -> A
+iterate {A} : Nat -> (A -> A) -> A -> A
   | zero _ a := a
   | (suc n) f a := iterate n f (f a);
 
 syntax operator on lapp;
 
 {-# inline: 2 #-}
-on
-  : {A : Type}
-    → {B : Type}
-    → {C : Type}
-    → (B → B → C)
-    → (A → B)
-    → A
-    → A
-    → C
-  | f g a b := f (g a) (g b);
+on {A B C} (f : B → B → C) (g : A → B) (a b : A) : C :=
+  f (g a) (g b);
 
 syntax operator >>> seq;
 

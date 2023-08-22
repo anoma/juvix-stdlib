@@ -23,33 +23,33 @@ module ListTraits;
   Eq : {A : Type} -> Eq.Eq A -> Eq.Eq (List A)
     | {A} (Eq.mkEq eq-a) :=
       let
-        go : List A -> List A -> Bool;
-        go nil nil := true;
-        go nil _ := false;
-        go _ nil := false;
-        go (x :: xs) (y :: ys) := if (eq-a x y) (go xs ys) false;
+        go : List A -> List A -> Bool
+          | nil nil := true
+          | nil _ := false
+          | _ nil := false
+          | (x :: xs) (y :: ys) := if (eq-a x y) (go xs ys) false;
       in Eq.mkEq go;
 
   Ord : {A : Type} -> Ord.Ord A -> Ord.Ord (List A)
     | {A} (Ord.mkOrd cmp-a) :=
       let
-        go : List A -> List A -> Ord.Ordering;
-        go nil nil := Ord.EQ;
-        go nil _ := Ord.LT;
-        go _ nil := Ord.GT;
-        go (x :: xs) (y :: ys) :=
-          case cmp-a x y
-            | Ord.LT := Ord.LT
-            | Ord.GT := Ord.GT
-            | Ord.EQ := go xs ys;
+        go : List A -> List A -> Ord.Ordering
+          | nil nil := Ord.EQ
+          | nil _ := Ord.LT
+          | _ nil := Ord.GT
+          | (x :: xs) (y :: ys) :=
+            case cmp-a x y
+              | Ord.LT := Ord.LT
+              | Ord.GT := Ord.GT
+              | Ord.EQ := go xs ys;
       in Ord.mkOrd go;
 
   Show : {A : Type} -> Show.Show A -> Show.Show (List A)
     | {A} (Show.mkShow to-str) :=
       let
-        go : List A -> String;
-        go nil := "nil";
-        go (x :: xs) := to-str x ++str " :: " ++str go xs;
+        go : List A -> String
+          | nil := "nil"
+          | (x :: xs) := to-str x ++str " :: " ++str go xs;
       in Show.mkShow
         λ {
           | nil := "nil"

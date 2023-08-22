@@ -11,13 +11,12 @@ open Show using {Show};
 import Stdlib.Data.String.Ord as String;
 
 module StringTraits;
-  
+
   Eq : Eq.Eq String := Eq.mkEq (String.==);
 
   Show : Show.Show String :=
     let
-      go : String -> String;
-      go s := "\"" ++str s ++str "\"";
+      go (s : String) : String := "\"" ++str s ++str "\"";
     in Show.mkShow go;
 
 end;

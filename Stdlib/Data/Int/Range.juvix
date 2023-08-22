@@ -17,18 +17,16 @@ type Range :=
 syntax iterator for {init: 1, range: 1};
 
 {-# specialize: [1, 3] #-}
-for : {A : Type} → (A → Int → A) → A → Range → A
-  | {A} f a mkRange@{low; high; step} :=
+for {A} (f : A → Int → A) (a : A) : Range → A
+  | mkRange@{low; high; step} :=
     let
       terminating
-      go : A → Int → A;
-      go acc n := if (n > high) acc (go (f acc n) (n + step));
+      go (acc : A) (n : Int) : A := if (n > high) acc (go (f acc n) (n + step));
     in go a low;
 
 syntax operator to range;
 
-to : Int → Int → Range
-  | l h := mkRange l h 1;
+to (l h : Int) : Range := mkRange l h 1;
 
 syntax operator step step;
 

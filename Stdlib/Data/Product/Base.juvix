@@ -6,62 +6,37 @@ syntax operator × functor;
 syntax operator , pair;
 
 --- Inductive pair. I.e. a tuple with two components.
-type × (A : Type) (B : Type) :=
-  | , A B;
+type × (A B : Type) :=
+  | , : A → B → A × B;
 
 --- Converts a function of two arguments to a function with a product argument.
-uncurry
-  : {A : Type}
-    -> {B : Type}
-    -> {C : Type}
-    -> (A -> B -> C)
-    -> A × B
-    -> C
-  | f (a, b) := f a b;
+uncurry {A B C} (f : A -> B -> C) : A × B -> C
+  | (a, b) := f a b;
 
 --- Converts a function with a product argument to a function of two arguments.
-curry
-  : {A : Type}
-    -> {B : Type}
-    -> {C : Type}
-    -> (A × B -> C)
-    -> A
-    -> B
-    -> C
-  | f a b := f (a, b);
+curry {A B C} (f : A × B -> C) (a : A) (b : B) : C :=
+  f (a, b);
 
 --- Projects the first component of a tuple.
-fst : {A : Type} → {B : Type} → A × B → A
+fst {A B} : A × B → A
   | (a, _) := a;
 
 --- Projects the second component of a tuple.
-snd : {A : Type} → {B : Type} → A × B → B
+snd {A B} : A × B → B
   | (_, b) := b;
 
 --- Swaps the components of a tuple.
-swap : {A : Type} → {B : Type} → A × B → B × A
+swap {A B} : A × B → B × A
   | (a, b) := b, a;
 
 --- Applies a function to the first component.
-first
-  : {A : Type}
-    → {B : Type}
-    → {A' : Type}
-    → (A → A')
-    → A × B
-    → A' × B
-  | f (a, b) := f a, b;
+first {A B A'} (f : A → A') : A × B → A' × B
+  | (a, b) := f a, b;
 
 --- Applies a function to the second component.
-second
-  : {A : Type}
-    → {B : Type}
-    → {B' : Type}
-    → (B → B')
-    → A × B
-    → A × B'
-  | f (a, b) := a, f b;
+second {A B B'} (f : B → B') : A × B → A × B'
+  | (a, b) := a, f b;
 
 --- Applies a function to both components.
-both : {A : Type} → {B : Type} → (A → B) → A × A → B × B
-  | f (a, b) := f a, f b;
+both {A B} (f : A → B) : A × A → B × B
+  | (a, b) := f a, f b;

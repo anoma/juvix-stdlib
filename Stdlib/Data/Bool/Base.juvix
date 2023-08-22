@@ -36,9 +36,7 @@ if : {A : Type} → Bool → A → A → A
   | false _ b := b;
 
 --- Logical disjunction.
-or : Bool → Bool → Bool
-  | a b := a || b;
+or (a b : Bool) : Bool := a || b;
 
 --- Logical conjunction.
-and : Bool → Bool → Bool
-  | a b := a && b;
+and (a b : Bool) : Bool := a && b;
