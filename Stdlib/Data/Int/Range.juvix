@@ -30,5 +30,4 @@ to (l h : Int) : Range := mkRange l h 1;
 
 syntax operator step step;
 
-step : Range → Int → Range
-  | r s := r @Range{step := s};
+step (r : Range) (s : Int) : Range := r @Range{step := s};

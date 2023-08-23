@@ -23,5 +23,5 @@ isGT : Ordering → Bool
 type Ord (A : Type) :=
   | mkOrd : (A -> A -> Ordering) -> Ord A;
 
-cmp : {A : Type} -> Ord A -> A -> A -> Ordering
+cmp {A} : Ord A -> A -> A -> Ordering
   | (mkOrd f) := f;

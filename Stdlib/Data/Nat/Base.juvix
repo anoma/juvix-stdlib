@@ -40,10 +40,8 @@ udiv : Nat → Nat → Nat
 
 --- Division for ;Nat;s.
 builtin nat-div
-div : Nat → Nat → Nat
-  | n m := udiv (sub (suc n) m) m;
+div (n m : Nat) : Nat := udiv (sub (suc n) m) m;
 
 --- Modulo for ;Nat;s.
 builtin nat-mod
-mod : Nat → Nat → Nat
-  | n m := sub n (div n m * m);
+mod (n m : Nat) : Nat := sub n (div n m * m);

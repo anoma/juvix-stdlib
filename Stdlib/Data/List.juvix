@@ -15,13 +15,13 @@ import Stdlib.Trait.Show as Show;
 open Show using {Show};
 
 --- 𝒪(1). Partial function that returns the first element of a ;List;.
-head : {A : Type} → List A → A
+head {A} : List A → A
   | (x :: _) := x
   | nil := fail "head: empty list";
 
 module ListTraits;
-  Eq : {A : Type} -> Eq.Eq A -> Eq.Eq (List A)
-    | {A} (Eq.mkEq eq-a) :=
+  Eq {A} : Eq.Eq A -> Eq.Eq (List A)
+    | (Eq.mkEq eq-a) :=
       let
         go : List A -> List A -> Bool
           | nil nil := true
@@ -30,8 +30,8 @@ module ListTraits;
           | (x :: xs) (y :: ys) := if (eq-a x y) (go xs ys) false;
       in Eq.mkEq go;
 
-  Ord : {A : Type} -> Ord.Ord A -> Ord.Ord (List A)
-    | {A} (Ord.mkOrd cmp-a) :=
+  Ord {A} : Ord.Ord A -> Ord.Ord (List A)
+    | (Ord.mkOrd cmp-a) :=
       let
         go : List A -> List A -> Ord.Ordering
           | nil nil := Ord.EQ
@@ -44,8 +44,8 @@ module ListTraits;
               | Ord.EQ := go xs ys;
       in Ord.mkOrd go;
 
-  Show : {A : Type} -> Show.Show A -> Show.Show (List A)
-    | {A} (Show.mkShow to-str) :=
+  Show {A} : Show.Show A -> Show.Show (List A)
+    | (Show.mkShow to-str) :=
       let
         go : List A -> String
           | nil := "nil"

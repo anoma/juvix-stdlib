@@ -33,5 +33,4 @@ to (l h : Nat) : Range := mkRange l h 1;
 syntax operator step step;
 
 --- `x to y step s` is the range [x,x+s,..,y]
-step : Range → Nat → Range
-  | r s := r @Range{step := s};
+step (r : Range) (s : Nat) : Range := r @Range{step := s};

@@ -27,11 +27,10 @@ nonNeg : Int -> Bool
 
 --- Subtraction for ;Nat;s.
 builtin int-sub-nat
-intSubNat : Nat -> Nat -> Int
-  | m n :=
-    case sub n m
-      | zero := ofNat (Nat.sub m n)
-      | suc k := negSuc k;
+intSubNat (n m : Nat) : Int :=
+  case sub n m
+    | zero := ofNat (Nat.sub m n)
+    | suc k := negSuc k;
 
 syntax operator + additive;
 
@@ -69,8 +68,7 @@ syntax operator - additive;
 
 --- Subtraction for ;Int;s.
 builtin int-sub
-- : Int -> Int -> Int
-  | m n := m + neg n;
+- (n m : Int) : Int := m + neg n;
 
 --- Division for ;Int;s.
 builtin int-div
