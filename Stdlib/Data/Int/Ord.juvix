@@ -45,7 +45,8 @@ syntax operator >= comparison;
 >= (m n : Int) : Bool := n <= m;
 
 --- Tests for ;Ordering;.
-compare (m n : Int) : Ordering := if (m == n) EQ (if (m < n) LT GT);
+compare (m n : Int) : Ordering :=
+  if (m == n) EQ (if (m < n) LT GT);
 
 --- Returns the smallest ;Int;.
 min (x y : Int) : Int := if (x < y) x y;

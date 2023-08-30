@@ -21,7 +21,8 @@ for {A} (f : A → Int → A) (a : A) : Range → A
   | mkRange@{low; high; step} :=
     let
       terminating
-      go (acc : A) (n : Int) : A := if (n > high) acc (go (f acc n) (n + step));
+      go (acc : A) (n : Int) : A :=
+        if (n > high) acc (go (f acc n) (n + step));
     in go a low;
 
 syntax operator to range;
@@ -30,4 +31,4 @@ to (l h : Int) : Range := mkRange l h 1;
 
 syntax operator step step;
 
-step (r : Range) (s : Int) : Range := r @Range{step := s};
+step (r : Range) (s : Int) : Range := r@Range{step := s};

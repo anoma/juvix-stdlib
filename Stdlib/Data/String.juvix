@@ -11,7 +11,7 @@ open Show using {Show};
 import Stdlib.Data.String.Ord as String;
 
 module StringTraits;
-
+  
   Eq : Eq.Eq String := Eq.mkEq (String.==);
 
   Show : Show.Show String :=

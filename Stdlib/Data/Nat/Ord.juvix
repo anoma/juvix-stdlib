@@ -47,7 +47,8 @@ syntax operator >= comparison;
 >= (n m : Nat) : Bool := m <= n;
 
 --- Tests for ;Ordering;.
-compare (n m : Nat) : Ordering := if (n == m) EQ (if (n < m) LT GT);
+compare (n m : Nat) : Ordering :=
+  if (n == m) EQ (if (n < m) LT GT);
 
 --- Returns the smallest ;Nat;.
 min (x y : Nat) : Nat := if (x < y) x y;
