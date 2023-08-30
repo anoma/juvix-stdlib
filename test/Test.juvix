@@ -15,142 +15,136 @@ import Data.Int open;
 import Test.QuickCheckTest as QC;
 import Test.Arb as QC;
 
-prop-reverseDoesNotChangeLength : List Int -> Bool;
-prop-reverseDoesNotChangeLength xs :=
-  length (reverse xs) Nat.== length xs;
+prop-reverseDoesNotChangeLength : List Int -> Bool
+  | xs := length (reverse xs) Nat.== length xs;
 
-prop-reverseReverseIsIdentity : List Int -> Bool;
-prop-reverseReverseIsIdentity xs :=
-  eqListInt xs (reverse (reverse xs));
+prop-reverseReverseIsIdentity : List Int -> Bool
+  | xs := eqListInt xs (reverse (reverse xs));
 
-prop-tailLengthOneLess : List Int -> Bool;
-prop-tailLengthOneLess xs :=
-  null xs
-    || ofNat (length (tail xs)) == intSubNat (length xs) 1;
+prop-tailLengthOneLess : List Int -> Bool
+  | xs :=
+    null xs
+      || ofNat (length (tail xs)) == intSubNat (length xs) 1;
 
-prop-splitAtRecombine : Nat -> List Int -> Bool;
-prop-splitAtRecombine n xs :=
-  case splitAt n xs
-    | lhs, rhs := eqListInt xs (lhs ++ rhs);
+prop-splitAtRecombine : Nat -> List Int -> Bool
+  | n xs :=
+    case splitAt n xs
+      | lhs, rhs := eqListInt xs (lhs ++ rhs);
 
-prop-splitAtLength : Nat -> List Int -> Bool;
-prop-splitAtLength n xs :=
-  case splitAt
-    n
-    (xs ++ replicate (sub n (length xs)) (ofNat 0))
-    | lhs, rhs :=
-      length lhs Nat.== n
-        && length rhs Nat.== sub (length xs) n;
+prop-splitAtLength : Nat -> List Int -> Bool
+  | n xs :=
+    case splitAt
+      n
+      (xs ++ replicate (sub n (length xs)) (ofNat 0))
+      | lhs, rhs :=
+        length lhs Nat.== n
+          && length rhs Nat.== sub (length xs) n;
 -- Make sure the list has length at least n
 
-prop-mergeSumLengths : List Int -> List Int -> Bool;
-prop-mergeSumLengths xs ys :=
-  length xs Nat.+ length ys
-    Nat.== length (merge (IntTraits.Ord) xs ys);
+prop-mergeSumLengths : List Int -> List Int -> Bool
+  | xs ys :=
+    length xs Nat.+ length ys
+      Nat.== length (merge (IntTraits.Ord) xs ys);
 
-prop-partition : List Int -> (Int -> Bool) -> Bool;
-prop-partition xs p :=
-  case partition p xs
-    | lhs, rhs :=
-      all p lhs
-        && not (any p rhs)
-        && eqListInt (sortInt xs) (sortInt (lhs ++ rhs));
+prop-partition : List Int -> (Int -> Bool) -> Bool
+  | xs p :=
+    case partition p xs
+      | lhs, rhs :=
+        all p lhs
+          && not (any p rhs)
+          && eqListInt (sortInt xs) (sortInt (lhs ++ rhs));
 
-prop-distributive : Int -> Int -> (Int -> Int) -> Bool;
-prop-distributive a b f := f (a + b) == f a + f b;
+prop-distributive : Int -> Int -> (Int -> Int) -> Bool
+  | a b f := f (a + b) == f a + f b;
 
-prop-add-sub : Int -> Int -> Bool;
-prop-add-sub a b := a == a + b - b;
+prop-add-sub : Int -> Int -> Bool
+  | a b := a == a + b - b;
 
-prop-add-sub-bad : Int -> Int -> Bool;
-prop-add-sub-bad a b := a == 2;
+prop-add-sub-bad : Int -> Int -> Bool
+  | a b := a == 2;
 
-prop-gcd-bad : Int -> Int -> Bool;
-prop-gcd-bad a b := gcd a b > 1;
+prop-gcd-bad : Int -> Int -> Bool
+  | a b := gcd a b > 1;
 
-prop-equal-compare-to-eq : Nat -> Bool;
-prop-equal-compare-to-eq a := Ord.isEQ (Nat.compare a a);
+prop-equal-compare-to-eq : Nat -> Bool
+  | a := Ord.isEQ (Nat.compare a a);
 
-prop-sort : (List Int -> List Int) -> List Int -> Bool;
-prop-sort sort xs :=
-  let
-    sorted : List Int := sort xs;
-    isSorted : List Int -> Bool;
-    isSorted nil := true;
-    isSorted (_ :: nil) := true;
-    isSorted (x :: y :: xs) := x <= y && isSorted (y :: xs);
-  in length sorted Nat.== length xs
-    && eqListInt sorted (sort sorted)
-    && isSorted sorted;
+prop-sort : (List Int -> List Int) -> List Int -> Bool
+  | sort xs :=
+    let
+      sorted : List Int := sort xs;
+      isSorted : List Int -> Bool
+        | nil := true
+        | (_ :: nil) := true
+        | (x :: y :: xs) := x <= y && isSorted (y :: xs);
+    in length sorted Nat.== length xs
+      && eqListInt sorted (sort sorted)
+      && isSorted sorted;
 
-prop-zip : List Int -> List Int -> Bool;
-prop-zip xs ys :=
-  let
-    zs : List (Int × Int) := zip xs ys;
-    expectedLen : Nat := Nat.min (length xs) (length ys);
-  in length zs Nat.== expectedLen
-    && eqListInt (take expectedLen xs) (map fst zs)
-    && eqListInt (take expectedLen ys) (map snd zs);
+prop-zip : List Int -> List Int -> Bool
+  | xs ys :=
+    let
+      zs : List (Int × Int) := zip xs ys;
+      expectedLen : Nat := Nat.min (length xs) (length ys);
+    in length zs Nat.== expectedLen
+      && eqListInt (take expectedLen xs) (map fst zs)
+      && eqListInt (take expectedLen ys) (map snd zs);
 
-prop-zipWith :
-  (Int -> Int -> Int) -> List Int -> List Int -> Bool;
-prop-zipWith f xs ys :=
-  let
-    zs : List Int := zipWith f xs ys;
-    zsFlip : List Int := zipWith (flip f) ys xs;
-    expectedLen : Nat := Nat.min (length xs) (length ys);
-  in length zs Nat.== expectedLen
-    && eqListInt zs zsFlip
-    && eqListInt (map λ {x := f x x} xs) (zipWith f xs xs);
+prop-zipWith
+  : (Int -> Int -> Int) -> List Int -> List Int -> Bool
+  | f xs ys :=
+    let
+      zs : List Int := zipWith f xs ys;
+      zsFlip : List Int := zipWith (flip f) ys xs;
+      expectedLen : Nat := Nat.min (length xs) (length ys);
+    in length zs Nat.== expectedLen
+      && eqListInt zs zsFlip
+      && eqListInt (map λ {x := f x x} xs) (zipWith f xs xs);
 
-prop-snoc : List Int -> Int -> Bool;
-prop-snoc xs x :=
-  let
-    snoc-x : List Int := snoc xs x;
-  in eqListInt snoc-x (reverse (x :: reverse xs));
+prop-snoc : List Int -> Int -> Bool
+  | xs x :=
+    let
+      snoc-x : List Int := snoc xs x;
+    in eqListInt snoc-x (reverse (x :: reverse xs));
 
-prop-drop : Nat -> List Int -> Bool;
-prop-drop n xs :=
-  let
-    drop-n : List Int;
-    drop-n := drop n xs;
-  in length drop-n Nat.<= length xs
-    && eqListInt (drop n (drop n xs)) (drop (2 Nat.* n) xs);
-
--- Assumption: The input list represents a rectangular matrix
-prop-transposeMatrixId : List (List Int) -> Bool;
-prop-transposeMatrixId xs :=
-  eq
-    (ListTraits.Eq (ListTraits.Eq (IntTraits.Eq)))
-    xs
-    (transpose (transpose xs));
+prop-drop : Nat -> List Int -> Bool
+  | n xs :=
+    let
+      drop-n : List Int := drop n xs;
+    in length drop-n Nat.<= length xs
+      && eqListInt (drop n (drop n xs)) (drop (2 Nat.* n) xs);
 
 -- Assumption: The input list represents a rectangular matrix
-prop-transposeMatrixDimensions : List (List Int) -> Bool;
-prop-transposeMatrixDimensions xs :=
-  let
-    txs : List (List Int) := transpose xs;
-    checkTxsRowXsCol :
-      Bool :=
+prop-transposeMatrixId : List (List Int) -> Bool
+  | xs :=
+    eq
+      (ListTraits.Eq (ListTraits.Eq (IntTraits.Eq)))
+      xs
+      (transpose (transpose xs));
+
+-- Assumption: The input list represents a rectangular matrix
+prop-transposeMatrixDimensions : List (List Int) -> Bool
+  | xs :=
+    let
+      txs : List (List Int) := transpose xs;
+      checkTxsRowXsCol : Bool :=
         case xs
           | x :: _ := length txs Nat.== length x
           | _ := null txs;
-    checkXsRowTxsCol :
-      Bool :=
+      checkXsRowTxsCol : Bool :=
         case txs
           | tx :: _ := length xs Nat.== length tx
           | _ := null xs;
-  in checkTxsRowXsCol && checkXsRowTxsCol;
+    in checkTxsRowXsCol && checkXsRowTxsCol;
 
-sortTest : String -> (List Int -> List Int) -> QC.Test;
-sortTest sortName sort :=
-  QC.mkTest
-    (QC.testableFunction QC.argumentListInt QC.testableBool)
-    ("sort properties: " ++str sortName)
-    (prop-sort sort);
+sortTest : String -> (List Int -> List Int) -> QC.Test
+  | sortName sort :=
+    QC.mkTest
+      (QC.testableFunction QC.argumentListInt QC.testableBool)
+      ("sort properties: " ++str sortName)
+      (prop-sort sort);
 
-dropTest : QC.Test;
-dropTest :=
+dropTest : QC.Test :=
   QC.mkTest
     (QC.testableFunction
       QC.argumentNat
@@ -158,8 +152,7 @@ dropTest :=
     "drop properties"
     prop-drop;
 
-snocTest : QC.Test;
-snocTest :=
+snocTest : QC.Test :=
   QC.mkTest
     (QC.testableFunction
       QC.argumentListInt
@@ -167,106 +160,91 @@ snocTest :=
     "snoc properties"
     prop-snoc;
 
-zipTest : QC.Test;
-zipTest :=
+zipTest : QC.Test :=
   QC.mkTest
     QC.testableListIntListInt
     "zip properties"
     prop-zip;
 
-zipWithTest : QC.Test;
-zipWithTest :=
+zipWithTest : QC.Test :=
   QC.mkTest
     QC.testableHofIntIntListIntListInt
     "zipWith properties"
     prop-zipWith;
 
-equalCompareToEqTest : QC.Test;
-equalCompareToEqTest :=
+equalCompareToEqTest : QC.Test :=
   QC.mkTest
     (QC.testableFunction QC.argumentNat QC.testableBool)
     "equal Nats compare to EQ"
     prop-equal-compare-to-eq;
 
-gcdNoCoprimeTest : QC.Test;
-gcdNoCoprimeTest :=
+gcdNoCoprimeTest : QC.Test :=
   QC.mkTest
     QC.testableBinaryInt
     "no integers are coprime"
     prop-gcd-bad;
 
-partitionTest : QC.Test;
-partitionTest :=
+partitionTest : QC.Test :=
   QC.mkTest
     QC.testableListIntHofIntBool
     "partition: recombination of the output equals the input"
     prop-partition;
 
-testDistributive : QC.Test;
-testDistributive :=
+testDistributive : QC.Test :=
   QC.mkTest
     QC.testableIntIntHofIntInt
     "all functions are distributive over +"
     prop-distributive;
 
-reverseLengthTest : QC.Test;
-reverseLengthTest :=
+reverseLengthTest : QC.Test :=
   QC.mkTest
     QC.testableListInt
     "reverse preserves length"
     prop-reverseDoesNotChangeLength;
 
-reverseReverseIdTest : QC.Test;
-reverseReverseIdTest :=
+reverseReverseIdTest : QC.Test :=
   QC.mkTest
     QC.testableListInt
     "reverse of reverse is identity"
     prop-reverseReverseIsIdentity;
 
-splitAtRecombineTest : QC.Test;
-splitAtRecombineTest :=
+splitAtRecombineTest : QC.Test :=
   QC.mkTest
     QC.testableNatListInt
     "splitAt: recombination of the output is equal to the input list"
     prop-splitAtRecombine;
 
-splitAtLengthTest : QC.Test;
-splitAtLengthTest :=
+splitAtLengthTest : QC.Test :=
   QC.mkTest
     QC.testableNatListInt
     "splitAt: Check lengths of output if the input Nat is greater than the length of the input list"
     prop-splitAtLength;
 
-mergeSumLengthsTest : QC.Test;
-mergeSumLengthsTest :=
+mergeSumLengthsTest : QC.Test :=
   QC.mkTest
     QC.testableListIntListInt
     "merge: sum of the lengths of input lists is equal to the length of output list"
     prop-mergeSumLengths;
 
-tailLengthOneLessTest : QC.Test;
-tailLengthOneLessTest :=
+tailLengthOneLessTest : QC.Test :=
   QC.mkTest
     QC.testableListInt
     "tail: length of output is one less than input unless empty"
     prop-tailLengthOneLess;
 
-transposeMatrixIdTest : QC.Test;
-transposeMatrixIdTest :=
+transposeMatrixIdTest : QC.Test :=
   QC.mkTest
     (QC.testableFunction QC.argumentMatrixInt QC.testableBool)
     "transpose: recrangular matrix has property transpose . transpose = id"
     prop-transposeMatrixId;
 
-transposeMatrixDimentionsTest : QC.Test;
-transposeMatrixDimentionsTest :=
+transposeMatrixDimentionsTest : QC.Test :=
   QC.mkTest
     (QC.testableFunction QC.argumentMatrixInt QC.testableBool)
     "transpose: transpose swaps dimensions"
     prop-transposeMatrixDimensions;
 
-main : IO;
-main :=
+main : IO :=
   readLn
     \ {seed :=
       QC.runTestsIO
