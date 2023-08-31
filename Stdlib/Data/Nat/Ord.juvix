@@ -19,8 +19,7 @@ builtin nat-eq
 syntax operator /= comparison;
 
 --- Tests for inequality.
-/= : Nat → Nat → Bool
-  | x y := not (x == y);
+/= (x y : Nat) : Bool := not (x == y);
 
 syntax operator <= comparison;
 
@@ -35,29 +34,24 @@ syntax operator < comparison;
 
 --- Returns ;true; iff the first element is less than the second.
 builtin nat-lt
-< : Nat → Nat → Bool
-  | n m := suc n <= m;
+< (n m : Nat) : Bool := suc n <= m;
 
 syntax operator > comparison;
 
 --- Returns ;true; iff the first element is greater than the second.
-> : Nat → Nat → Bool
-  | n m := m < n;
+> (n m : Nat) : Bool := m < n;
 
 syntax operator >= comparison;
 
 --- Returns ;true; iff the first element is greater than or equal to the second.
->= : Nat → Nat → Bool
-  | n m := m <= n;
+>= (n m : Nat) : Bool := m <= n;
 
 --- Tests for ;Ordering;.
-compare : Nat → Nat → Ordering
-  | n m := if (n == m) EQ (if (n < m) LT GT);
+compare (n m : Nat) : Ordering :=
+  if (n == m) EQ (if (n < m) LT GT);
 
 --- Returns the smallest ;Nat;.
-min : Nat → Nat → Nat
-  | x y := if (x < y) x y;
+min (x y : Nat) : Nat := if (x < y) x y;
 
 --- Returns the biggest ;Nat;.
-max : Nat → Nat → Nat
-  | x y := if (x > y) x y;
+max (x y : Nat) : Nat := if (x > y) x y;

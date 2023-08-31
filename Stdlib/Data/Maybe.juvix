@@ -15,7 +15,7 @@ import Stdlib.Data.Bool.Base open;
 import Stdlib.Data.String.Base open;
 
 module MaybeTraits;
-  Eq : {A : Type} -> Eq.Eq A -> Eq.Eq (Maybe A)
+  Eq {A} : Eq.Eq A -> Eq.Eq (Maybe A)
     | (Eq.mkEq eq) :=
       Eq.mkEq
         λ {
@@ -24,7 +24,7 @@ module MaybeTraits;
           | _ _ := false
         };
 
-  Show : {A : Type} -> Show.Show A -> Show.Show (Maybe A)
+  Show {A} : Show.Show A -> Show.Show (Maybe A)
     | (Show.mkShow show) :=
       Show.mkShow
         λ {
@@ -32,7 +32,7 @@ module MaybeTraits;
           | (just a) := "just " ++str show a
         };
 
-  Ord : {A : Type} -> Ord.Ord A -> Ord.Ord (Maybe A)
+  Ord {A} : Ord.Ord A -> Ord.Ord (Maybe A)
     | (Ord.mkOrd cmp) :=
       Ord.mkOrd
         λ {

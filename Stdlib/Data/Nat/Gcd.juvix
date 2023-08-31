@@ -4,12 +4,11 @@ import Stdlib.Data.Nat open;
 import Stdlib.Data.Bool open;
 import Stdlib.Data.Nat.Ord open;
 
---- Internal helper for computing the greatest common divisor. The first element
---- should be smaller than the second.
-terminating
-gcd' : Nat → Nat → Nat
-  | a b := if (a == 0) b (gcd' (mod b a) a);
-
 --- Computes the greatest common divisor.
-gcd : Nat → Nat → Nat
-  | a b := if (a > b) (gcd' b a) (gcd' a b);
+gcd (a b : Nat) : Nat :=
+  let
+    -- Internal helper for computing the greatest common divisor. The first element
+    -- should be smaller than the second.
+    terminating
+    gcd' (a b : Nat) : Nat := if (a == 0) b (gcd' (mod b a) a);
+  in if (a > b) (gcd' b a) (gcd' a b);

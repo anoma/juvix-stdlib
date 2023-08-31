@@ -2,19 +2,19 @@ module Stdlib.Data.Maybe.Base;
 
 --- Represents an optional value that may or may not be present. Provides a way
 --- to handle null or missing values in a type-safe manner.
-type Maybe (A : Type) :=
+type Maybe A :=
   | nothing
   | just A;
 
 --- Extracts the value from a ;Maybe; if present, else returns the given value.
 {-# inline: true #-}
-fromMaybe : {A : Type} → A → Maybe A → A
-  | a nothing := a
-  | _ (just a) := a;
+fromMaybe {A} (a : A) : Maybe A → A
+  | nothing := a
+  | (just a) := a;
 
 --- Applies a function to the value from a ;Maybe; if present, else returns the
 --- given value.
 {-# inline: true #-}
-maybe : {A : Type} → {B : Type} → B → (A → B) → Maybe A → B
-  | b _ nothing := b
-  | _ f (just a) := f a;
+maybe {A B} (b : B) (f : A → B) : Maybe A → B
+  | nothing := b
+  | (just a) := f a;

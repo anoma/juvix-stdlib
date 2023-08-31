@@ -20,43 +20,36 @@ builtin int-eq
 syntax operator /= comparison;
 
 --- Tests for inequality.
-/= : Int -> Int -> Bool
-  | m n := not (m == n);
+/= (m n : Int) : Bool := not (m == n);
 
 syntax operator <= comparison;
 
 --- Returns ;true; iff the first element is less than or equal to the second.
 builtin int-le
-<= : Int -> Int -> Bool
-  | m n := nonNeg (n - m);
+<= (m n : Int) : Bool := nonNeg (n - m);
 
 syntax operator < comparison;
 
 --- Returns ;true; iff the first element is less than the second.
 builtin int-lt
-< : Int -> Int -> Bool
-  | m n := m + 1 <= n;
+< (m n : Int) : Bool := m + 1 <= n;
 
 syntax operator > comparison;
 
 --- Returns ;true; iff the first element is greater than the second.
-> : Int -> Int -> Bool
-  | m n := n < m;
+> (m n : Int) : Bool := n < m;
 
 syntax operator >= comparison;
 
 --- Returns ;true; iff the first element is greater than or equal to the second.
->= : Int -> Int -> Bool
-  | m n := n <= m;
+>= (m n : Int) : Bool := n <= m;
 
 --- Tests for ;Ordering;.
-compare : Int -> Int -> Ordering
-  | m n := if (m == n) EQ (if (m < n) LT GT);
+compare (m n : Int) : Ordering :=
+  if (m == n) EQ (if (m < n) LT GT);
 
 --- Returns the smallest ;Int;.
-min : Int → Int → Int
-  | x y := if (x < y) x y;
+min (x y : Int) : Int := if (x < y) x y;
 
 --- Returns the biggest ;Int;.
-max : Int → Int → Int
-  | x y := if (x > y) x y;
+max (x y : Int) : Int := if (x > y) x y;

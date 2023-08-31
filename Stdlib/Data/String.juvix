@@ -16,8 +16,7 @@ module StringTraits;
 
   Show : Show.Show String :=
     let
-      go : String -> String;
-      go s := "\"" ++str s ++str "\"";
+      go (s : String) : String := "\"" ++str s ++str "\"";
     in Show.mkShow go;
 
 end;
