@@ -7,14 +7,9 @@ open Nat using {Nat; suc; zero; sub};
 import Stdlib.Data.String open;
 import Stdlib.Data.Bool open;
 
-import Stdlib.Trait.Eq as Eq;
-open Eq using {Eq};
-
-import Stdlib.Trait.Ord as Ord;
-open Ord using {Ord};
-
-import Stdlib.Trait.Show as Show;
-open Show using {Show};
+import Stdlib.Trait.Eq open;
+import Stdlib.Trait.Ord open;
+import Stdlib.Trait.Show open;
 
 import Stdlib.Data.Int.Ord as Int;
 
@@ -22,10 +17,11 @@ import Stdlib.Data.Int.Ord as Int;
 builtin int-to-string
 axiom intToString : Int -> String;
 
-module IntTraits;
-  Eq : Eq.Eq Int := Eq.mkEq (Int.==);
+instance
+eqIntI : Eq Int := mkEq (Int.==);
 
-  Ord : Ord.Ord Int := Ord.mkOrd Int.compare;
+instance
+ordIntI : Ord Int := mkOrd Int.compare;
 
-  Show : Show.Show Int := Show.mkShow intToString;
-end;
+instance
+showIntI : Show Int := mkShow intToString;

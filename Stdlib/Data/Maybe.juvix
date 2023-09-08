@@ -2,43 +2,36 @@ module Stdlib.Data.Maybe;
 
 import Stdlib.Data.Maybe.Base open public;
 
-import Stdlib.Trait.Eq as Eq;
-open Eq using {Eq};
-
-import Stdlib.Trait.Ord as Ord;
-open Ord using {Ord};
-
-import Stdlib.Trait.Show as Show;
-open Show using {Show};
+import Stdlib.Trait.Eq open;
+import Stdlib.Trait.Ord open;
+import Stdlib.Trait.Show open;
 
 import Stdlib.Data.Bool.Base open;
 import Stdlib.Data.String.Base open;
 
-module MaybeTraits;
-  Eq {A} : Eq.Eq A -> Eq.Eq (Maybe A)
-    | (Eq.mkEq eq) :=
-      Eq.mkEq
-        λ {
-          | nothing nothing := true
-          | (just a1) (just a2) := eq a1 a2
-          | _ _ := false
-        };
+instance
+eqMaybeI {A} {{Eq A}} : Eq (Maybe A) :=
+  mkEq
+    λ {
+      | nothing nothing := true
+      | (just a1) (just a2) := Eq.eq a1 a2
+      | _ _ := false
+    };
 
-  Show {A} : Show.Show A -> Show.Show (Maybe A)
-    | (Show.mkShow show) :=
-      Show.mkShow
-        λ {
-          | nothing := "nothing"
-          | (just a) := "just " ++str show a
-        };
+instance
+showMaybeI {A} {{Show A}} : Show (Maybe A) :=
+  mkShow
+    λ {
+      | nothing := "nothing"
+      | (just a) := "just " ++str Show.show a
+    };
 
-  Ord {A} : Ord.Ord A -> Ord.Ord (Maybe A)
-    | (Ord.mkOrd cmp) :=
-      Ord.mkOrd
-        λ {
-          | nothing nothing := Ord.EQ
-          | (just a1) (just a2) := cmp a1 a2
-          | nothing (just _) := Ord.LT
-          | (just _) nothing := Ord.GT
-        };
-end;
+instance
+ordMaybeI {A} {{Ord A}} : Ord (Maybe A) :=
+  mkOrd
+    λ {
+      | nothing nothing := EQ
+      | (just a1) (just a2) := Ord.cmp a1 a2
+      | nothing (just _) := LT
+      | (just _) nothing := GT
+    };

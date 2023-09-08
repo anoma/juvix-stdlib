@@ -1,38 +1,33 @@
 module Stdlib.Data.Bool;
 
 import Stdlib.Data.Bool.Base open public;
+import Stdlib.Trait.Eq open;
+import Stdlib.Trait.Ord open;
+import Stdlib.Trait.Show open;
 
-import Stdlib.Trait.Eq as Eq;
-open Eq using {Eq};
+instance
+boolEqI : Eq Bool :=
+  mkEq
+    λ {
+      | true true := true
+      | false false := true
+      | _ _ := false
+    };
 
-import Stdlib.Trait.Ord as Ord;
-open Ord using {Ord};
+instance
+boolOrdI : Ord Bool :=
+  mkOrd
+    λ {
+      | false false := EQ
+      | false true := LT
+      | true false := GT
+      | true true := EQ
+    };
 
-import Stdlib.Trait.Show as Show;
-open Show using {Show};
-
-module BoolTraits;
-  Eq : Eq.Eq Bool :=
-    Eq.mkEq
-      λ {
-        | true true := true
-        | false false := true
-        | _ _ := false
-      };
-
-  Ord : Ord.Ord Bool :=
-    Ord.mkOrd
-      λ {
-        | false false := Ord.EQ
-        | false true := Ord.LT
-        | true false := Ord.GT
-        | true true := Ord.EQ
-      };
-
-  Show : Show.Show Bool :=
-    Show.mkShow
-      λ {
-        | true := "true"
-        | false := "false"
-      };
-end;
+instance
+showBoolI : Show Bool :=
+  mkShow
+    λ {
+      | true := "true"
+      | false := "false"
+    };

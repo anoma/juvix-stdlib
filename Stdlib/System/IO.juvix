@@ -5,3 +5,11 @@ import Stdlib.System.IO.Bool open public;
 import Stdlib.System.IO.Nat open public;
 import Stdlib.System.IO.Int open public;
 import Stdlib.System.IO.String open public;
+
+import Stdlib.Trait.Show open;
+
+print {A} {{Show A}} (a : A) : IO :=
+  printString (Show.show a);
+
+printLn {A} {{Show A}} (a : A) : IO :=
+  printStringLn (Show.show a);

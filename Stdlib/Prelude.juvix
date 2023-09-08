@@ -14,6 +14,4 @@ import Stdlib.Data.String open public;
 import Stdlib.Function open public;
 import Stdlib.System.IO open public;
 
-import Stdlib.Trait.Ord open public;
-import Stdlib.Trait.Eq open public;
-import Stdlib.Trait.Show open public;
+import Stdlib.Trait open public;

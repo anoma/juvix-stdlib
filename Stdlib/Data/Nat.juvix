@@ -3,14 +3,9 @@ module Stdlib.Data.Nat;
 import Stdlib.Data.Nat.Base open public;
 import Stdlib.Data.String.Base open;
 
-import Stdlib.Trait.Eq as Eq;
-open Eq using {Eq};
-
-import Stdlib.Trait.Ord as Ord;
-open Ord using {Ord};
-
-import Stdlib.Trait.Show as Show;
-open Show using {Show};
+import Stdlib.Trait.Eq open public;
+import Stdlib.Trait.Ord open public;
+import Stdlib.Trait.Show open public;
 
 import Stdlib.Data.Nat.Ord as Nat;
 
@@ -22,10 +17,11 @@ axiom natToString : Nat -> String;
 builtin string-to-nat
 axiom stringToNat : String -> Nat;
 
-module NatTraits;
-  Eq : Eq.Eq Nat := Eq.mkEq (Nat.==);
+instance
+eqNatI : Eq Nat := mkEq (Nat.==);
 
-  Ord : Ord.Ord Nat := Ord.mkOrd Nat.compare;
+instance
+ordNatI : Ord Nat := mkOrd Nat.compare;
 
-  Show : Show.Show Nat := Show.mkShow natToString;
-end;
+instance
+showNatI : Show Nat := mkShow natToString;
