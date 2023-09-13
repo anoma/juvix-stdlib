@@ -1,5 +1,8 @@
 dependencies:
 - ../
-- deps/quickcheck
+- git:
+    url: https://github.com/anoma/juvix-quickcheck.git
+    ref: update-for-0.5.0
+    name: quickcheck
 name: stdlib-test
 version: 0.0.0

@@ -6,8 +6,7 @@ syntax operator × functor;
 syntax operator , pair;
 
 --- Inductive pair. I.e. a tuple with two components.
-type × (A B : Type) :=
-  | , : A → B → A × B;
+type × (A B : Type) := , : A → B → A × B;
 
 --- Converts a function of two arguments to a function with a product argument.
 uncurry {A B C} (f : A -> B -> C) : A × B -> C

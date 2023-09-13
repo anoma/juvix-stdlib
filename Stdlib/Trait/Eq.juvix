@@ -3,8 +3,5 @@ module Stdlib.Trait.Eq;
 import Stdlib.Data.Bool.Base open;
 
 --- A trait defining equality
-type Eq (A : Type) :=
-  | mkEq : (A -> A -> Bool) -> Eq A;
-
-eq {A} : Eq A -> A -> A -> Bool
-  | (mkEq f) := f;
+trait
+type Eq A := mkEq {eq : A -> A -> Bool};

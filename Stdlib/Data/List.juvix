@@ -5,54 +5,48 @@ import Stdlib.Data.Bool.Base open;
 import Stdlib.Data.String.Base open;
 import Stdlib.Debug.Fail open;
 
-import Stdlib.Trait.Eq as Eq;
-open Eq using {Eq};
-
-import Stdlib.Trait.Ord as Ord;
-open Ord using {Ord};
-
-import Stdlib.Trait.Show as Show;
-open Show using {Show};
+import Stdlib.Trait.Eq open;
+import Stdlib.Trait.Ord open;
+import Stdlib.Trait.Show open;
 
 --- 𝒪(1). Partial function that returns the first element of a ;List;.
-head {A} : List A → A
+head {A} : List A -> A
   | (x :: _) := x
   | nil := fail "head: empty list";
 
-module ListTraits;
-  Eq {A} : Eq.Eq A -> Eq.Eq (List A)
-    | (Eq.mkEq eq-a) :=
-      let
-        go : List A -> List A -> Bool
-          | nil nil := true
-          | nil _ := false
-          | _ nil := false
-          | (x :: xs) (y :: ys) := if (eq-a x y) (go xs ys) false;
-      in Eq.mkEq go;
+instance
+eqListI {A} {{Eq A}} : Eq (List A) :=
+  let
+    go : List A -> List A -> Bool
+      | nil nil := true
+      | nil _ := false
+      | _ nil := false
+      | (x :: xs) (y :: ys) := if (Eq.eq x y) (go xs ys) false;
+  in mkEq go;
 
-  Ord {A} : Ord.Ord A -> Ord.Ord (List A)
-    | (Ord.mkOrd cmp-a) :=
-      let
-        go : List A -> List A -> Ord.Ordering
-          | nil nil := Ord.EQ
-          | nil _ := Ord.LT
-          | _ nil := Ord.GT
-          | (x :: xs) (y :: ys) :=
-            case cmp-a x y
-              | Ord.LT := Ord.LT
-              | Ord.GT := Ord.GT
-              | Ord.EQ := go xs ys;
-      in Ord.mkOrd go;
-
-  Show {A} : Show.Show A -> Show.Show (List A)
-    | (Show.mkShow to-str) :=
-      let
-        go : List A -> String
-          | nil := "nil"
-          | (x :: xs) := to-str x ++str " :: " ++str go xs;
-      in Show.mkShow
-        λ {
-          | nil := "nil"
-          | s := "(" ++str go s ++str ")"
+instance
+ordListI {A} {{Ord A}} : Ord (List A) :=
+  let
+    go : List A -> List A -> Ordering
+      | nil nil := EQ
+      | nil _ := LT
+      | _ nil := GT
+      | (x :: xs) (y :: ys) :=
+        case Ord.cmp x y of {
+          | LT := LT
+          | GT := GT
+          | EQ := go xs ys
         };
-end;
+  in mkOrd go;
+
+instance
+showListI {A} {{Show A}} : Show (List A) :=
+  let
+    go : List A -> String
+      | nil := "nil"
+      | (x :: xs) := Show.show x ++str " :: " ++str go xs;
+  in mkShow
+    λ {
+      | nil := "nil"
+      | s := "(" ++str go s ++str ")"
+    };

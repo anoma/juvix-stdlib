@@ -20,8 +20,5 @@ isGT : Ordering → Bool
   | _ := false;
 
 --- A trait for defining a total order
-type Ord (A : Type) :=
-  | mkOrd : (A -> A -> Ordering) -> Ord A;
-
-cmp {A} : Ord A -> A -> A -> Ordering
-  | (mkOrd f) := f;
+trait
+type Ord A := mkOrd {cmp : A -> A -> Ordering};

@@ -8,11 +8,11 @@ import Stdlib.Data.Int.Ord open;
 
 --- A range of integers
 type Range :=
-  | mkRange {
-      low : Int;
-      high : Int;
-      step : Int
-    };
+  mkRange {
+    low : Int;
+    high : Int;
+    step : Int
+  };
 
 syntax iterator for {init: 1, range: 1};
 

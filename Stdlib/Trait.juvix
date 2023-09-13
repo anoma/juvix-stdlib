@@ -1,5 +1,5 @@
 module Stdlib.Trait;
 
-import Stdlib.Trait.Eq open public;
-import Stdlib.Trait.Show open public;
-import Stdlib.Trait.Ord open public;
+import Stdlib.Trait.Eq as Eq open using {Eq; module Eq} public;
+import Stdlib.Trait.Show as Show open using {Show; module Show} public;
+import Stdlib.Trait.Ord as Ord open using {Ord; module Ord} public;

@@ -3,23 +3,19 @@ module Stdlib.Data.Unit;
 
 import Stdlib.Data.Bool.Base open;
 
-import Stdlib.Trait.Eq as Eq;
-open Eq using {Eq};
-
-import Stdlib.Trait.Ord as Ord;
-open Ord using {Ord};
-
-import Stdlib.Trait.Show as Show;
-open Show using {Show};
+import Stdlib.Trait.Eq open;
+import Stdlib.Trait.Ord open;
+import Stdlib.Trait.Show open;
 
 type Unit :=
-  | --- The only constructor of ;Unit;.
-    unit;
+  --- The only constructor of ;Unit;.
+  unit;
 
-module UnitTraits;
-  Eq : Eq.Eq Unit := Eq.mkEq λ {unit unit := true};
+instance
+eqUnitI : Eq Unit := mkEq λ {unit unit := true};
 
-  Ord : Ord.Ord Unit := Ord.mkOrd λ {unit unit := Ord.EQ};
+instance
+ordUnitI : Ord Unit := mkOrd λ {unit unit := EQ};
 
-  Show : Show.Show Unit := Show.mkShow λ {unit := "unit"};
-end;
+instance
+showUnitI : Show Unit := mkShow λ {unit := "unit"};
