@@ -39,6 +39,4 @@ arbitraryMatrix
           in runArb (arbitraryList arbRow) rand2});
 
 argumentMatrixInt : Argument (List (List Int)) :=
-  argument
-    showListI
-    (arbitraryMatrix arbitraryInt);
+  argument showListI (arbitraryMatrix arbitraryInt);
