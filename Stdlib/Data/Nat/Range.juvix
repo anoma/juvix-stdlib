@@ -8,11 +8,11 @@ import Stdlib.Data.Nat.Ord open;
 
 --- A range of natural numbers
 type Range :=
-  | mkRange {
-      low : Nat;
-      high : Nat;
-      step : Nat
-    };
+  mkRange {
+    low : Nat;
+    high : Nat;
+    step : Nat
+  };
 
 syntax iterator for {init: 1, range: 1};
 

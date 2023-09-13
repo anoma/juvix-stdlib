@@ -18,10 +18,11 @@ ordProductI {A B} : {{Ord A}} -> {{Ord B}} -> Ord (A × B)
   | {{mkOrd cmp-a}} {{mkOrd cmp-b}} :=
     mkOrd
       λ {(a1, b1) (a2, b2) :=
-        case cmp-a a1 a2
+        case cmp-a a1 a2 of {
           | LT := LT
           | GT := GT
-          | EQ := cmp-b b1 b2};
+          | EQ := cmp-b b1 b2
+        }};
 
 instance
 showProductI {A B}
