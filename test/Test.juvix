@@ -44,7 +44,7 @@ prop-splitAtLength : Nat -> List Int -> Bool
 prop-mergeSumLengths : List Int -> List Int -> Bool
   | xs ys :=
     length xs Nat.+ length ys
-      Nat.== length (merge (IntTraits.Ord) xs ys);
+      Nat.== length (merge ordIntI xs ys);
 
 prop-partition : List Int -> (Int -> Bool) -> Bool
   | xs p :=
@@ -117,8 +117,7 @@ prop-drop : Nat -> List Int -> Bool
 -- Assumption: The input list represents a rectangular matrix
 prop-transposeMatrixId : List (List Int) -> Bool
   | xs :=
-    eq
-      (ListTraits.Eq (ListTraits.Eq (IntTraits.Eq)))
+    Eq.eq
       xs
       (transpose (transpose xs));
 
@@ -262,8 +261,8 @@ main : IO :=
           :: zipWithTest
           :: snocTest
           :: dropTest
-          :: sortTest "mergeSort" (mergeSort IntTraits.Ord)
-          :: sortTest "quickSort" (quickSort IntTraits.Ord)
+          :: sortTest "mergeSort" (mergeSort ordIntI)
+          :: sortTest "quickSort" (quickSort ordIntI)
           :: transposeMatrixIdTest
           :: transposeMatrixDimentionsTest
           :: nil)};

@@ -40,5 +40,5 @@ arbitraryMatrix
 
 argumentMatrixInt : Argument (List (List Int)) :=
   argument
-    (ListTraits.Show (ListTraits.Show IntTraits.Show))
+    showListI
     (arbitraryMatrix arbitraryInt);

@@ -1,12 +1,7 @@
 
 all: test
 
-deps/quickcheck:
-	@mkdir -p deps/
-	@git clone --branch update-for-0.5.0 --depth 1 https://github.com/anoma/juvix-quickcheck.git deps/quickcheck
-	$(MAKE) -C deps/quickcheck deps
-
-build/Test: $(shell find ../ -name "*.juvix") $(wildcard deps/**/*.juvix) Test.juvix deps/quickcheck
+build/Test: $(shell find ../ -name "*.juvix") $(wildcard deps/**/*.juvix) Test.juvix
 	@mkdir -p build
 	juvix compile -o build/Test Test.juvix
 
@@ -16,7 +11,7 @@ test: build/Test
 
 .PHONY: clean-deps
 clean-deps:
-	@rm -rf deps/
+	juvix clean
 
 .PHONY: clean-build
 clean-build:
