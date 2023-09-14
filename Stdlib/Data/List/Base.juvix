@@ -32,7 +32,7 @@ foldr {A B} (f : A → B → B) (z : B) : List A → B
   | nil := z
   | (h :: hs) := f h (foldr f z hs);
 
-syntax iterator rfor {init: 1, range: 1};
+syntax iterator rfor {init := 1; range := 1};
 
 {-# specialize: [1] #-}
 rfor {A B} (f : B → A → B) (acc : B) : List A → B
@@ -45,12 +45,12 @@ foldl {A B} (f : B → A → B) (z : B) : List A → B
   | nil := z
   | (h :: hs) := foldl f (f z h) hs;
 
-syntax iterator for {init: 1, range: 1};
+syntax iterator for {init := 1; range := 1};
 
 {-# inline: 0 #-}
 for : {A B : Type} → (B → A → B) → B → List A → B := foldl;
 
-syntax iterator map {init: 0, range: 1};
+syntax iterator map {init := 0; range := 1};
 
 --- 𝒪(𝓃). Maps a function over each element of a ;List;.
 {-# specialize: [1] #-}
@@ -58,7 +58,7 @@ map {A B} (f : A → B) : List A → List B
   | nil := nil
   | (h :: hs) := f h :: map f hs;
 
-syntax iterator filter {init: 0, range: 1};
+syntax iterator filter {init := 0; range := 1};
 
 --- 𝒪(𝓃). Filters a ;List; according to a given predicate, i.e.,
 --- keeps the elements for which the given predicate returns ;true;.
@@ -146,7 +146,7 @@ tail {A} : List A → List A
   | (_ :: xs) := xs
   | nil := nil;
 
-syntax iterator any {init: 0, range: 1};
+syntax iterator any {init := 0; range := 1};
 
 --- 𝒪(𝓃). Returns ;true; if at least one element of the ;List; satisfies the predicate.
 {-# specialize: [1] #-}
@@ -154,7 +154,7 @@ any {A} (f : A → Bool) : List A → Bool
   | nil := false
   | (x :: xs) := if (f x) true (any f xs);
 
-syntax iterator all {init: 0, range: 1};
+syntax iterator all {init := 0; range := 1};
 
 --- 𝒪(𝓃). Returns ;true; if all elements of the ;List; satisfy the predicate.
 {-# specialize: [1] #-}
@@ -220,7 +220,7 @@ catMaybes {A} : List (Maybe A) -> List A
   | (just h :: hs) := h :: catMaybes hs
   | (nothing :: hs) := catMaybes hs;
 
-syntax iterator concatMap {init: 0, range: 1};
+syntax iterator concatMap {init := 0; range := 1};
 
 --- Applies a function to every item on a ;List; and concatenates the result.
 --- 𝒪(𝓃), where 𝓃 is the number of items in the resulting list.

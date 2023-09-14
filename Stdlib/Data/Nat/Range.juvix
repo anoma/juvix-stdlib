@@ -14,7 +14,7 @@ type Range :=
     step : Nat
   };
 
-syntax iterator for {init: 1, range: 1};
+syntax iterator for {init := 1; range := 1};
 
 {-# specialize: [1, 3] #-}
 for {A} (f : A → Nat → A) (a : A) : Range → A
