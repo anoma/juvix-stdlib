@@ -43,8 +43,7 @@ prop-splitAtLength : Nat -> List Int -> Bool
 
 prop-mergeSumLengths : List Int -> List Int -> Bool
   | xs ys :=
-    length xs Nat.+ length ys
-      Nat.== length (merge xs ys);
+    length xs Nat.+ length ys Nat.== length (merge xs ys);
 
 prop-partition : List Int -> (Int -> Bool) -> Bool
   | xs p :=
@@ -143,22 +142,28 @@ sortTest : String -> (List Int -> List Int) -> QC.Test
 dropTest : QC.Test :=
   QC.mkTest
     "drop properties"
-    (QC.mkFun \ { a := QC.mkFun \ { b := prop-drop a b }});
+    (QC.mkFun \ {a := QC.mkFun \ {b := prop-drop a b}});
 
 snocTest : QC.Test :=
   QC.mkTest
     "snoc properties"
-    (QC.mkFun \ { a := QC.mkFun \ { b := prop-snoc a b }});
+    (QC.mkFun \ {a := QC.mkFun \ {b := prop-snoc a b}});
 
 zipTest : QC.Test :=
   QC.mkTest
     "zip properties"
-    (QC.mkFun \ { a := QC.mkFun \ { b := prop-zip a b }});
+    (QC.mkFun \ {a := QC.mkFun \ {b := prop-zip a b}});
 
 zipWithTest : QC.Test :=
   QC.mkTest
     "zipWith properties"
-    (QC.mkFun \ { a := QC.mkFun \ { b := QC.mkFun \ { c := prop-zipWith (\ {x := QC.Fun.fun (QC.Fun.fun a x)}) b c }}});
+    (QC.mkFun
+      \ {a :=
+        QC.mkFun
+          \ {b :=
+            QC.mkFun
+              \ {c :=
+                prop-zipWith \ {x := QC.Fun.fun (QC.Fun.fun a x)} b c}}});
 
 equalCompareToEqTest : QC.Test :=
   QC.mkTest
@@ -168,17 +173,22 @@ equalCompareToEqTest : QC.Test :=
 gcdNoCoprimeTest : QC.Test :=
   QC.mkTest
     "no integers are coprime"
-    (QC.mkFun \ { a := QC.mkFun \ { b := prop-gcd-bad a b }});
+    (QC.mkFun \ {a := QC.mkFun \ {b := prop-gcd-bad a b}});
 
 partitionTest : QC.Test :=
   QC.mkTest
     "partition: recombination of the output equals the input"
-    (QC.mkFun \ { a := QC.mkFun \ { b := prop-partition a (QC.Fun.fun b)}});
+    (QC.mkFun
+      \ {a := QC.mkFun \ {b := prop-partition a (QC.Fun.fun b)}});
 
 testDistributive : QC.Test :=
   QC.mkTest
     "all functions are distributive over +"
-    (QC.mkFun \ { a := QC.mkFun \ { b := QC.mkFun \ { c := prop-distributive a b (QC.Fun.fun c) }}});
+    (QC.mkFun
+      \ {a :=
+        QC.mkFun
+          \ {b :=
+            QC.mkFun \ {c := prop-distributive a b (QC.Fun.fun c)}}});
 
 reverseLengthTest : QC.Test :=
   QC.mkTest
@@ -193,17 +203,20 @@ reverseReverseIdTest : QC.Test :=
 splitAtRecombineTest : QC.Test :=
   QC.mkTest
     "splitAt: recombination of the output is equal to the input list"
-    (QC.mkFun \ { a := QC.mkFun \ { b := prop-splitAtRecombine a b }});
+    (QC.mkFun
+      \ {a := QC.mkFun \ {b := prop-splitAtRecombine a b}});
 
 splitAtLengthTest : QC.Test :=
   QC.mkTest
     "splitAt: Check lengths of output if the input Nat is greater than the length of the input list"
-    (QC.mkFun \ { a := QC.mkFun \ { b := prop-splitAtLength a b }});
+    (QC.mkFun
+      \ {a := QC.mkFun \ {b := prop-splitAtLength a b}});
 
 mergeSumLengthsTest : QC.Test :=
   QC.mkTest
     "merge: sum of the lengths of input lists is equal to the length of output list"
-    (QC.mkFun \ { a := QC.mkFun \ { b := prop-mergeSumLengths a b }});
+    (QC.mkFun
+      \ {a := QC.mkFun \ {b := prop-mergeSumLengths a b}});
 
 tailLengthOneLessTest : QC.Test :=
   QC.mkTest
