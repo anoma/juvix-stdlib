@@ -21,18 +21,3 @@ arbitrarySizedList {A} (size : Nat) : Arbitrary A -> Arbitrary (List A)
                   r2 : StdGen := snd rSplit;
                 in Gen.run g r1 :: randList r2 n;
           in randList rand size});
-
---- Generate an arbitrary rectangular matrix
-arbitraryMatrix {A} (arbA : Arbitrary A) : Arbitrary (List (List A)) :=
-    mkArbitrary
-      (mkGen
-        \ {rand :=
-          let
-            randSplit : StdGen × StdGen := stdSplit rand;
-            rand1 : StdGen := fst randSplit;
-            rand2 : StdGen := snd randSplit;
-            cols : Nat := fst (randNat rand1 1 10);
-          in runArb rand2});
-
---argumentMatrixInt : Argument (List (List Int)) :=
---  argument showListI (arbitraryMatrix arbitraryInt);

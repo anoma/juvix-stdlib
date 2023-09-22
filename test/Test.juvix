@@ -44,7 +44,7 @@ prop-splitAtLength : Nat -> List Int -> Bool
 prop-mergeSumLengths : List Int -> List Int -> Bool
   | xs ys :=
     length xs Nat.+ length ys
-      Nat.== length (merge ordIntI xs ys);
+      Nat.== length (merge xs ys);
 
 prop-partition : List Int -> (Int -> Bool) -> Bool
   | xs p :=
