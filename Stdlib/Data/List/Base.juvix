@@ -101,11 +101,11 @@ splitAt {A} : Nat → List A → List A × List A
 --- 𝒪(𝓃 + 𝓂). Merges two lists according the given ordering.
 terminating
 merge {A} {{Ord A}} : List A → List A → List A
-  | (x :: xs) (y :: ys) :=
+  | xs@(x :: xs') ys@(y :: ys') :=
     if
       (isLT (Ord.cmp x y))
-      (x :: merge xs (y :: ys))
-      (y :: merge (x :: xs) ys)
+      (x :: merge xs' ys)
+      (y :: merge xs ys')
   | nil ys := ys
   | xs nil := xs;
 
