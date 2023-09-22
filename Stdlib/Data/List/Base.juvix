@@ -203,15 +203,15 @@ mergeSort {A} {{Ord A}} (l : List A) : List A :=
 --- ascending order using the QuickSort algorithm.
 terminating
 quickSort {A} {{Ord A}} : List A → List A :=
-    let
-      terminating
-      go : List A → List A
-        | nil := nil
-        | xs@(_ :: nil) := xs
-        | (x :: xs) :=
-          case partition (isGT ∘ Ord.cmp x) xs of {l1, l2 :=
-            go l1 ++ x :: go l2};
-    in go;
+  let
+    terminating
+    go : List A → List A
+      | nil := nil
+      | xs@(_ :: nil) := xs
+      | (x :: xs) :=
+        case partition (isGT ∘ Ord.cmp x) xs of {l1, l2 :=
+          go l1 ++ x :: go l2};
+  in go;
 
 --- 𝒪(𝓃) Filters out every ;nothing; from a ;List;.
 catMaybes {A} : List (Maybe A) -> List A
