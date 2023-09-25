@@ -2,7 +2,7 @@ dependencies:
 - ../
 - git:
     url: https://github.com/anoma/juvix-quickcheck.git
-    ref: 23c12c794bb425bd475a372ac0350feaf74eaf34
+    ref: v0.7.1
     name: quickcheck
 name: stdlib-test
 version: 0.0.0
