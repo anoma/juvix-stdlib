@@ -8,7 +8,6 @@ import Stdlib.Data.Nat.Base open;
 import Stdlib.Data.Maybe.Base open;
 import Stdlib.Trait.Ord open;
 import Stdlib.Data.Product.Base open;
-import Stdlib.Trait.Ord open;
 
 syntax operator :: cons;
 --- Inductive list.
@@ -100,14 +99,15 @@ splitAt {A} : Nat → List A → List A × List A
     case splitAt m xs of {l1, l2 := x :: l1, l2};
 
 --- 𝒪(𝓃 + 𝓂). Merges two lists according the given ordering.
-merge {A} : Ord A → List A → List A → List A
-  | o@(mkOrd cmp) (x :: xs) (y :: ys) :=
+terminating
+merge {A} {{Ord A}} : List A → List A → List A
+  | xs@(x :: xs') ys@(y :: ys') :=
     if
-      (isLT (cmp x y))
-      (x :: merge o xs (y :: ys))
-      (y :: merge o (x :: xs) ys)
-  | _ nil ys := ys
-  | _ xs nil := xs;
+      (isLT (Ord.cmp x y))
+      (x :: merge xs' ys)
+      (y :: merge xs ys')
+  | nil ys := ys
+  | xs nil := xs;
 
 --- 𝒪(𝓃). Returns a tuple where the first component has the items that
 --- satisfy the predicate and the second component has the elements that don't.
@@ -184,7 +184,7 @@ zip {A B} : List A -> List B -> List (A × B)
 
 --- 𝒪(𝓃 log 𝓃). Sorts a list of elements in ascending order using the MergeSort
 --- algorithm.
-mergeSort {A} (o : Ord A) (l : List A) : List A :=
+mergeSort {A} {{Ord A}} (l : List A) : List A :=
   let
     terminating
     go : Nat -> List A -> List A
@@ -196,23 +196,22 @@ mergeSort {A} (o : Ord A) (l : List A) : List A :=
           splitXs : List A × List A := splitAt len' xs;
           left : List A := fst splitXs;
           right : List A := snd splitXs;
-        in merge o (go len' left) (go (sub len len') right);
+        in merge (go len' left) (go (sub len len') right);
   in go (length l) l;
 
 --- On average 𝒪(𝓃 log 𝓃), worst case 𝒪(𝓃²). Sorts a list of elements in
 --- ascending order using the QuickSort algorithm.
 terminating
-quickSort {A} : Ord A → List A → List A
-  | (mkOrd cmp) :=
-    let
-      terminating
-      go : List A → List A
-        | nil := nil
-        | xs@(_ :: nil) := xs
-        | (x :: xs) :=
-          case partition (isGT ∘ cmp x) xs of {l1, l2 :=
-            go l1 ++ x :: go l2};
-    in go;
+quickSort {A} {{Ord A}} : List A → List A :=
+  let
+    terminating
+    go : List A → List A
+      | nil := nil
+      | xs@(_ :: nil) := xs
+      | (x :: xs) :=
+        case partition (isGT ∘ Ord.cmp x) xs of {l1, l2 :=
+          go l1 ++ x :: go l2};
+  in go;
 
 --- 𝒪(𝓃) Filters out every ;nothing; from a ;List;.
 catMaybes {A} : List (Maybe A) -> List A

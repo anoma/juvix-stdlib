@@ -43,8 +43,7 @@ prop-splitAtLength : Nat -> List Int -> Bool
 
 prop-mergeSumLengths : List Int -> List Int -> Bool
   | xs ys :=
-    length xs Nat.+ length ys
-      Nat.== length (merge ordIntI xs ys);
+    length xs Nat.+ length ys Nat.== length (merge xs ys);
 
 prop-partition : List Int -> (Int -> Bool) -> Bool
   | xs p :=
@@ -137,109 +136,104 @@ prop-transposeMatrixDimensions : List (List Int) -> Bool
 sortTest : String -> (List Int -> List Int) -> QC.Test
   | sortName sort :=
     QC.mkTest
-      (QC.testableFunction QC.argumentListInt QC.testableBool)
       ("sort properties: " ++str sortName)
-      (prop-sort sort);
+      (QC.mkFun (prop-sort sort));
 
 dropTest : QC.Test :=
   QC.mkTest
-    (QC.testableFunction
-      QC.argumentNat
-      (QC.testableFunction QC.argumentListInt QC.testableBool))
     "drop properties"
-    prop-drop;
+    (QC.mkFun \ {a := QC.mkFun \ {b := prop-drop a b}});
 
 snocTest : QC.Test :=
   QC.mkTest
-    (QC.testableFunction
-      QC.argumentListInt
-      (QC.testableFunction QC.argumentInt QC.testableBool))
     "snoc properties"
-    prop-snoc;
+    (QC.mkFun \ {a := QC.mkFun \ {b := prop-snoc a b}});
 
 zipTest : QC.Test :=
   QC.mkTest
-    QC.testableListIntListInt
     "zip properties"
-    prop-zip;
+    (QC.mkFun \ {a := QC.mkFun \ {b := prop-zip a b}});
 
 zipWithTest : QC.Test :=
   QC.mkTest
-    QC.testableHofIntIntListIntListInt
     "zipWith properties"
-    prop-zipWith;
+    (QC.mkFun
+      \ {a :=
+        QC.mkFun
+          \ {b :=
+            QC.mkFun
+              \ {c :=
+                prop-zipWith \ {x := QC.Fun.fun (QC.Fun.fun a x)} b c}}});
 
 equalCompareToEqTest : QC.Test :=
   QC.mkTest
-    (QC.testableFunction QC.argumentNat QC.testableBool)
     "equal Nats compare to EQ"
-    prop-equal-compare-to-eq;
+    (QC.mkFun prop-equal-compare-to-eq);
 
 gcdNoCoprimeTest : QC.Test :=
   QC.mkTest
-    QC.testableBinaryInt
     "no integers are coprime"
-    prop-gcd-bad;
+    (QC.mkFun \ {a := QC.mkFun \ {b := prop-gcd-bad a b}});
 
 partitionTest : QC.Test :=
   QC.mkTest
-    QC.testableListIntHofIntBool
     "partition: recombination of the output equals the input"
-    prop-partition;
+    (QC.mkFun
+      \ {a := QC.mkFun \ {b := prop-partition a (QC.Fun.fun b)}});
 
 testDistributive : QC.Test :=
   QC.mkTest
-    QC.testableIntIntHofIntInt
     "all functions are distributive over +"
-    prop-distributive;
+    (QC.mkFun
+      \ {a :=
+        QC.mkFun
+          \ {b :=
+            QC.mkFun \ {c := prop-distributive a b (QC.Fun.fun c)}}});
 
 reverseLengthTest : QC.Test :=
   QC.mkTest
-    QC.testableListInt
     "reverse preserves length"
-    prop-reverseDoesNotChangeLength;
+    (QC.mkFun prop-reverseDoesNotChangeLength);
 
 reverseReverseIdTest : QC.Test :=
   QC.mkTest
-    QC.testableListInt
     "reverse of reverse is identity"
-    prop-reverseReverseIsIdentity;
+    (QC.mkFun prop-reverseReverseIsIdentity);
 
 splitAtRecombineTest : QC.Test :=
   QC.mkTest
-    QC.testableNatListInt
     "splitAt: recombination of the output is equal to the input list"
-    prop-splitAtRecombine;
+    (QC.mkFun
+      \ {a := QC.mkFun \ {b := prop-splitAtRecombine a b}});
 
 splitAtLengthTest : QC.Test :=
   QC.mkTest
-    QC.testableNatListInt
     "splitAt: Check lengths of output if the input Nat is greater than the length of the input list"
-    prop-splitAtLength;
+    (QC.mkFun
+      \ {a := QC.mkFun \ {b := prop-splitAtLength a b}});
 
 mergeSumLengthsTest : QC.Test :=
   QC.mkTest
-    QC.testableListIntListInt
     "merge: sum of the lengths of input lists is equal to the length of output list"
-    prop-mergeSumLengths;
+    (QC.mkFun
+      \ {a := QC.mkFun \ {b := prop-mergeSumLengths a b}});
 
 tailLengthOneLessTest : QC.Test :=
   QC.mkTest
-    QC.testableListInt
     "tail: length of output is one less than input unless empty"
-    prop-tailLengthOneLess;
+    (QC.mkFun prop-tailLengthOneLess);
 
 transposeMatrixIdTest : QC.Test :=
   QC.mkTest
-    (QC.testableFunction QC.argumentMatrixInt QC.testableBool)
+    {{QC.testableFunction {{showListI}} {{QC.arbitraryMatrix}}}}
     "transpose: recrangular matrix has property transpose . transpose = id"
-    prop-transposeMatrixId;
+    (QC.mkFun prop-transposeMatrixId);
 
 transposeMatrixDimentionsTest : QC.Test :=
   QC.mkTest
-    (QC.testableFunction QC.argumentMatrixInt QC.testableBool)
+    {{QC.testableFunction {{showListI}} {{QC.arbitraryMatrix}}}}
     "transpose: transpose swaps dimensions"
-    prop-transposeMatrixDimensions;
+    (QC.mkFun prop-transposeMatrixDimensions);
 
 main : IO :=
   readLn
@@ -259,8 +253,8 @@ main : IO :=
           :: zipWithTest
           :: snocTest
           :: dropTest
-          :: sortTest "mergeSort" (mergeSort ordIntI)
-          :: sortTest "quickSort" (quickSort ordIntI)
+          :: sortTest "mergeSort" mergeSort
+          :: sortTest "quickSort" quickSort
           :: transposeMatrixIdTest
           :: transposeMatrixDimentionsTest
           :: nil)};
