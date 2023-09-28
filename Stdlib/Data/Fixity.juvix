@@ -1,5 +1,7 @@
 module Stdlib.Data.Fixity;
 
+syntax fixity none := none;
+
 syntax fixity rapp := binary {assoc := right};
 syntax fixity lapp := binary {assoc := left; same := rapp};
 syntax fixity seq := binary {assoc := left; above := [lapp]};
