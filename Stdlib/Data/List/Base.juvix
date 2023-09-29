@@ -147,6 +147,10 @@ tail {A} : List A → List A
   | (_ :: xs) := xs
   | nil := nil;
 
+head {A} (a : A) : List A -> A
+  | (x :: _) := x
+  | nil := a;
+
 syntax iterator any {init := 0; range := 1};
 
 --- 𝒪(𝓃). Returns ;true; if at least one element of the ;List; satisfies the predicate.

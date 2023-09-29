@@ -10,7 +10,7 @@ import Stdlib.Trait.Show open;
 import Stdlib.Trait.Partial open;
 
 --- 𝒪(1). Partial function that returns the first element of a ;List;.
-head {A} {{Partial}}: List A -> A
+phead {A} {{Partial}} : List A -> A
   | (x :: _) := x
   | nil := fail "head: empty list";
 
