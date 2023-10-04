@@ -7,7 +7,7 @@
 <span class="ju-keyword">import</span> <span class="annot"><a href="Stdlib.Trait.Show-src.html#73"><span class="ju-var">Stdlib<span class="ju-delimiter">.</span>Trait<span class="ju-delimiter">.</span>Show</span></a></span> <span class="ju-keyword">open</span><span class="ju-delimiter">;</span>
 
 <span class="ju-keyword">instance</span>
-<span id="410"><span class="annot"><a href="Stdlib.Data.Bool-src.html#410"><span class="annot"><a href="Stdlib.Data.Bool-src.html#410"><span class="ju-function">boolEqI</span></a></span></a></span></span> <span class="ju-keyword">:</span> <span class="annot"><a href="Stdlib.Trait.Eq-src.html#52"><span class="ju-inductive">Eq</span></a></span> <span class="annot"><a href="Stdlib.Data.Bool.Base-src.html#32"><span class="ju-inductive">Bool</span></a></span> <span class="ju-keyword">:=</span>
+<span id="414"><span class="annot"><a href="Stdlib.Data.Bool-src.html#414"><span class="annot"><a href="Stdlib.Data.Bool-src.html#414"><span class="ju-function">boolEqI</span></a></span></a></span></span> <span class="ju-keyword">:</span> <span class="annot"><a href="Stdlib.Trait.Eq-src.html#52"><span class="ju-inductive">Eq</span></a></span> <span class="annot"><a href="Stdlib.Data.Bool.Base-src.html#32"><span class="ju-inductive">Bool</span></a></span> <span class="ju-keyword">:=</span>
   <span class="annot"><a href="Stdlib.Trait.Eq-src.html#53"><span class="ju-constructor">mkEq</span></a></span>
     <span class="ju-keyword">λ</span> <span class="ju-delimiter">{</span>
       <span class="ju-keyword">|</span> <span class="annot"><a href="Stdlib.Data.Bool.Base-src.html#33"><span class="ju-constructor">true</span></a></span> <span class="annot"><a href="Stdlib.Data.Bool.Base-src.html#33"><span class="ju-constructor">true</span></a></span> <span class="ju-keyword">:=</span> <span class="annot"><a href="Stdlib.Data.Bool.Base-src.html#33"><span class="ju-constructor">true</span></a></span>
@@ -16,7 +16,7 @@
     <span class="ju-delimiter">}</span><span class="ju-delimiter">;</span>
 
 <span class="ju-keyword">instance</span>
-<span id="411"><span class="annot"><a href="Stdlib.Data.Bool-src.html#411"><span class="annot"><a href="Stdlib.Data.Bool-src.html#411"><span class="ju-function">boolOrdI</span></a></span></a></span></span> <span class="ju-keyword">:</span> <span class="annot"><a href="Stdlib.Trait.Ord-src.html#67"><span class="ju-inductive">Ord</span></a></span> <span class="annot"><a href="Stdlib.Data.Bool.Base-src.html#32"><span class="ju-inductive">Bool</span></a></span> <span class="ju-keyword">:=</span>
+<span id="415"><span class="annot"><a href="Stdlib.Data.Bool-src.html#415"><span class="annot"><a href="Stdlib.Data.Bool-src.html#415"><span class="ju-function">boolOrdI</span></a></span></a></span></span> <span class="ju-keyword">:</span> <span class="annot"><a href="Stdlib.Trait.Ord-src.html#67"><span class="ju-inductive">Ord</span></a></span> <span class="annot"><a href="Stdlib.Data.Bool.Base-src.html#32"><span class="ju-inductive">Bool</span></a></span> <span class="ju-keyword">:=</span>
   <span class="annot"><a href="Stdlib.Trait.Ord-src.html#68"><span class="ju-constructor">mkOrd</span></a></span>
     <span class="ju-keyword">λ</span> <span class="ju-delimiter">{</span>
       <span class="ju-keyword">|</span> <span class="annot"><a href="Stdlib.Data.Bool.Base-src.html#34"><span class="ju-constructor">false</span></a></span> <span class="annot"><a href="Stdlib.Data.Bool.Base-src.html#34"><span class="ju-constructor">false</span></a></span> <span class="ju-keyword">:=</span> <span class="annot"><a href="Stdlib.Trait.Ord-src.html#61"><span class="ju-constructor">EQ</span></a></span>
@@ -26,10 +26,10 @@
     <span class="ju-delimiter">}</span><span class="ju-delimiter">;</span>
 
 <span class="ju-keyword">instance</span>
-<span id="412"><span class="annot"><a href="Stdlib.Data.Bool-src.html#412"><span class="annot"><a href="Stdlib.Data.Bool-src.html#412"><span class="ju-function">showBoolI</span></a></span></a></span></span> <span class="ju-keyword">:</span> <span class="annot"><a href="Stdlib.Trait.Show-src.html#404"><span class="ju-inductive">Show</span></a></span> <span class="annot"><a href="Stdlib.Data.Bool.Base-src.html#32"><span class="ju-inductive">Bool</span></a></span> <span class="ju-keyword">:=</span>
-  <span class="annot"><a href="Stdlib.Trait.Show-src.html#405"><span class="ju-constructor">mkShow</span></a></span>
+<span id="416"><span class="annot"><a href="Stdlib.Data.Bool-src.html#416"><span class="annot"><a href="Stdlib.Data.Bool-src.html#416"><span class="ju-function">showBoolI</span></a></span></a></span></span> <span class="ju-keyword">:</span> <span class="annot"><a href="Stdlib.Trait.Show-src.html#408"><span class="ju-inductive">Show</span></a></span> <span class="annot"><a href="Stdlib.Data.Bool.Base-src.html#32"><span class="ju-inductive">Bool</span></a></span> <span class="ju-keyword">:=</span>
+  <span class="annot"><a href="Stdlib.Trait.Show-src.html#409"><span class="ju-constructor">mkShow</span></a></span>
     <span class="ju-keyword">λ</span> <span class="ju-delimiter">{</span>
       <span class="ju-keyword">|</span> <span class="annot"><a href="Stdlib.Data.Bool.Base-src.html#33"><span class="ju-constructor">true</span></a></span> <span class="ju-keyword">:=</span> <span class="ju-string">&quot;true&quot;</span>
       <span class="ju-keyword">|</span> <span class="annot"><a href="Stdlib.Data.Bool.Base-src.html#34"><span class="ju-constructor">false</span></a></span> <span class="ju-keyword">:=</span> <span class="ju-string">&quot;false&quot;</span>
     <span class="ju-delimiter">}</span><span class="ju-delimiter">;</span>
-</pre><footer><pre>Powered by <a href="https://juvix.org">Juvix </a><a href="https://github.com/anoma/juvix/commit/ac1faa6">0.5.1-ac1faa6</a></pre></footer><span>Last modified on 2023-10-02 3:13 UTC</span></html>
+</pre><footer><pre>Powered by <a href="https://juvix.org">Juvix </a><a href="https://github.com/anoma/juvix/commit/b049f93">0.5.2-b049f93</a></pre></footer><span>Last modified on 2023-10-04 16:18 UTC</span></html>
