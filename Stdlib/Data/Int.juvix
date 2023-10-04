@@ -4,6 +4,7 @@ import Stdlib.Data.Int.Base open public;
 
 import Stdlib.Data.Nat as Nat;
 open Nat using {Nat; suc; zero; sub};
+
 import Stdlib.Data.String open;
 import Stdlib.Data.Bool open;
 
