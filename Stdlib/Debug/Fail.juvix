@@ -4,4 +4,4 @@ import Stdlib.Data.String.Base open;
 
 --- Primitive that exits the program with an error message.
 builtin fail
-axiom fail : {A : Type} → String → A;
+axiom failwith : {A : Type} → String → A;

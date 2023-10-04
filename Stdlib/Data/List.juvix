@@ -3,14 +3,14 @@ module Stdlib.Data.List;
 import Stdlib.Data.List.Base open public;
 import Stdlib.Data.Bool.Base open;
 import Stdlib.Data.String.Base open;
-import Stdlib.Debug.Fail open;
 
 import Stdlib.Trait.Eq open;
 import Stdlib.Trait.Ord open;
 import Stdlib.Trait.Show open;
+import Stdlib.Trait.Partial open;
 
 --- 𝒪(1). Partial function that returns the first element of a ;List;.
-head {A} : List A -> A
+phead {A} {{Partial}} : List A -> A
   | (x :: _) := x
   | nil := fail "head: empty list";
 
