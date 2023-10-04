@@ -3,7 +3,7 @@ module Stdlib.Data.Nat.Ord;
 import Stdlib.Data.Fixity open;
 
 import Stdlib.Data.Nat.Base open;
-import Stdlib.Trait.Ord open;
+import Stdlib.Trait.Ord open using {EQ; LT; GT; Ordering};
 import Stdlib.Data.Bool.Base open;
 
 syntax operator == comparison;
@@ -50,8 +50,8 @@ syntax operator >= comparison;
 compare (n m : Nat) : Ordering :=
   if (n == m) EQ (if (n < m) LT GT);
 
---- Returns the smallest ;Nat;.
+--- Returns the smaller ;Nat;.
 min (x y : Nat) : Nat := if (x < y) x y;
 
---- Returns the biggest ;Nat;.
+--- Returns the larger ;Nat;.
 max (x y : Nat) : Nat := if (x > y) x y;

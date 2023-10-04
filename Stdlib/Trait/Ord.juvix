@@ -1,5 +1,7 @@
 module Stdlib.Trait.Ord;
 
+import Stdlib.Data.Fixity open;
+
 import Stdlib.Data.Bool.Base open;
 
 type Ordering :=
@@ -22,3 +24,39 @@ isGT : Ordering → Bool
 --- A trait for defining a total order
 trait
 type Ord A := mkOrd {cmp : A -> A -> Ordering};
+
+syntax operator <= comparison;
+
+--- Returns ;true; iff the first element is less than or equal to the second.
+<= {A} {{Ord A}} (x y : A) : Bool :=
+  case Ord.cmp x y of {
+    | EQ := true
+    | LT := true
+    | GT := false
+  };
+
+syntax operator < comparison;
+
+--- Returns ;true; iff the first element is less than the second.
+< {A} {{Ord A}} (x y : A) : Bool :=
+  case Ord.cmp x y of {
+    | EQ := true
+    | LT := true
+    | GT := false
+  };
+
+syntax operator > comparison;
+
+--- Returns ;true; iff the first element is greater than the second.
+> {A} {{Ord A}} (x y : A) : Bool := y < x;
+
+syntax operator >= comparison;
+
+--- Returns ;true; iff the first element is greater than or equal to the second.
+>= {A} {{Ord A}} (x y : A) : Bool := y <= x;
+
+--- Returns the smaller element.
+min {A} {{Ord A}} (x y : A) : A := if (x < y) x y;
+
+--- Returns the larger element.
+max {A} {{Ord A}} (x y : A) : A := if (x > y) x y;

@@ -1,0 +1,22 @@
+module Stdlib.Trait.Ord.Eq;
+
+import Stdlib.Data.Fixity open;
+import Stdlib.Data.Bool.Base open;
+import Stdlib.Trait.Ord open;
+import Stdlib.Trait.Eq as Eq;
+
+fromOrdToEq {A} {{Ord A}} : Eq.Eq A := Eq.mkEq (==);
+
+syntax operator == comparison;
+
+== {A} {{Ord A}} (x y : A) : Bool :=
+  case Ord.cmp x y of {
+    | EQ := true
+    | _ := false
+  };
+
+syntax operator /= comparison;
+
+--- Tests for inequality.
+{-# inline: true #-}
+/= {A} {{Ord A}} (x y : A) : Bool := not (x == y);
