@@ -40,8 +40,8 @@ syntax operator < comparison;
 --- Returns ;true; iff the first element is less than the second.
 < {A} {{Ord A}} (x y : A) : Bool :=
   case Ord.cmp x y of {
-    | EQ := true
-    | LT := false
+    | EQ := false
+    | LT := true
     | GT := false
   };
 

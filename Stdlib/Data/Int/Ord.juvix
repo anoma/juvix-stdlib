@@ -45,6 +45,7 @@ syntax operator >= comparison;
 >= (m n : Int) : Bool := n <= m;
 
 --- Tests for ;Ordering;.
+{-# inline: true #-}
 compare (m n : Int) : Ordering :=
   if (m == n) EQ (if (m < n) LT GT);
 
