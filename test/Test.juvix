@@ -16,7 +16,7 @@ import Test.QuickCheckTest as QC;
 import Test.Arb as QC;
 
 prop-reverseDoesNotChangeLength : List Int -> Bool
-  | xs := length (reverse xs) Nat.== length xs;
+  | xs := length (reverse xs) == length xs;
 
 prop-reverseReverseIsIdentity : List Int -> Bool
   | xs := eqListInt xs (reverse (reverse xs));
