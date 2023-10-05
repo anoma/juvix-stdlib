@@ -1,0 +1,18 @@
+module Stdlib.Trait.Integral;
+
+import Stdlib.Data.Int.Base open using {Int};
+import Stdlib.Data.Fixity open;
+import Stdlib.Trait.Natural open;
+
+trait
+type Integral A :=
+  mkIntegral {
+    naturalI : Natural A;
+    - : A -> A -> A;
+    fromInt : Int -> A;
+  };
+
+-- TODO: we need to define this separately because it's currently not possible
+-- to declare record fields as operators
+syntax operator - additive;
+- {A} {{Integral A}} : A -> A -> A := Integral.-;

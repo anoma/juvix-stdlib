@@ -1,12 +1,16 @@
 module Stdlib.Data.Nat;
 
-import Stdlib.Data.Nat.Base open public;
+import Stdlib.Data.Nat.Base open hiding {+; *; div; mod} public;
+-- should be re-exported qualified
+import Stdlib.Data.Nat.Base as Nat;
 import Stdlib.Data.String.Base open;
 
 import Stdlib.Trait.Eq open public;
 import Stdlib.Trait.Ord open public;
 import Stdlib.Trait.Show open public;
+import Stdlib.Trait.Natural open public;
 
+-- should be re-exported qualified
 import Stdlib.Data.Nat.Ord as Nat;
 
 --- Converts a ;Nat; into a ;String;.
@@ -25,3 +29,13 @@ ordNatI : Ord Nat := mkOrd Nat.compare;
 
 instance
 showNatI : Show Nat := mkShow natToString;
+
+instance
+naturalNatI : Natural Nat :=
+  mkNatural@{
+    + := (Nat.+);
+    * := (Nat.*);
+    div := Nat.div;
+    mod := Nat.mod;
+    fromNat (x : Nat) : Nat := x;
+  };

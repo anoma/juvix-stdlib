@@ -1,0 +1,24 @@
+module Stdlib.Trait.Natural;
+
+import Stdlib.Data.Nat.Base open using {Nat};
+import Stdlib.Data.Fixity open;
+
+trait
+type Natural A :=
+  mkNatural {
+    + : A -> A -> A;
+    * : A -> A -> A;
+    div : A -> A -> A;
+    mod : A -> A -> A;
+    fromNat : Nat -> A;
+  };
+
+open Natural using {div; mod} public;
+
+-- TODO: we need to define those separately because it's currently not possible
+-- to declare record fields as operators
+syntax operator + additive;
++ {A} {{Natural A}} : A -> A -> A := Natural.+;
+
+syntax operator * multiplicative;
+* {A} {{Natural A}} : A -> A -> A := Natural.*;
