@@ -30,6 +30,7 @@ ordNatI : Ord Nat := mkOrd Nat.compare;
 instance
 showNatI : Show Nat := mkShow natToString;
 
+{-# specialize: true #-}
 instance
 naturalNatI : Natural Nat :=
   mkNatural@{

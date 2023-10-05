@@ -29,6 +29,7 @@ ordIntI : Ord Int := mkOrd Int.compare;
 instance
 showIntI : Show Int := mkShow intToString;
 
+{-# specialize: true #-}
 instance
 naturalIntI : Natural Int :=
   mkNatural@{
@@ -39,6 +40,7 @@ naturalIntI : Natural Int :=
     fromNat := ofNat;
   };
 
+{-# specialize: true #-}
 instance
 integralIntI : Integral Int :=
   mkIntegral@{
