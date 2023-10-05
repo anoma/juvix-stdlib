@@ -41,7 +41,7 @@ syntax operator < comparison;
 < {A} {{Ord A}} (x y : A) : Bool :=
   case Ord.cmp x y of {
     | EQ := true
-    | LT := true
+    | LT := false
     | GT := false
   };
 
