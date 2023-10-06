@@ -21,9 +21,11 @@ axiom natToString : Nat -> String;
 builtin string-to-nat
 axiom stringToNat : String -> Nat;
 
+{-# inline: true #-}
 instance
 eqNatI : Eq Nat := mkEq (Nat.==);
 
+{-# inline: true #-}
 instance
 ordNatI : Ord Nat := mkOrd Nat.compare;
 

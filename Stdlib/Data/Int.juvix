@@ -20,9 +20,11 @@ import Stdlib.Data.Int.Ord as Int;
 builtin int-to-string
 axiom intToString : Int -> String;
 
+{-# inline: true #-}
 instance
 eqIntI : Eq Int := mkEq (Int.==);
 
+{-# inline: true #-}
 instance
 ordIntI : Ord Int := mkOrd Int.compare;
 
