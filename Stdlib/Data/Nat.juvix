@@ -21,18 +21,18 @@ axiom natToString : Nat -> String;
 builtin string-to-nat
 axiom stringToNat : String -> Nat;
 
-{-# inline: true #-}
+{-# specialize: true, inline: always #-}
 instance
 eqNatI : Eq Nat := mkEq (Nat.==);
 
-{-# inline: true #-}
+{-# specialize: true, inline: always #-}
 instance
 ordNatI : Ord Nat := mkOrd Nat.compare;
 
 instance
 showNatI : Show Nat := mkShow natToString;
 
-{-# specialize: true, inline: true #-}
+{-# specialize: true, inline: always #-}
 instance
 naturalNatI : Natural Nat :=
   mkNatural@{

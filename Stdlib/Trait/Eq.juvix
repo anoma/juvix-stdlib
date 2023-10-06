@@ -8,11 +8,11 @@ trait
 type Eq A := mkEq {eq : A -> A -> Bool};
 
 syntax operator == comparison;
-
-== {A} {{Eq A}} : A -> A -> Bool := Eq.eq;
-
 syntax operator /= comparison;
 
+{-# inline: always #-}
+== {A} {{Eq A}} : A -> A -> Bool := Eq.eq;
+
 --- Tests for inequality.
-{-# inline: true #-}
+{-# inline: always #-}
 /= {A} {{Eq A}} (x y : A) : Bool := not (x == y);

@@ -15,10 +15,13 @@ type Natural A :=
 
 open Natural using {div; mod} public;
 
+syntax operator + additive;
+syntax operator * multiplicative;
+
 -- TODO: we need to define those separately because it's currently not possible
 -- to declare record fields as operators
-syntax operator + additive;
+{-# inline: always #-}
 + {A} {{Natural A}} : A -> A -> A := Natural.+;
 
-syntax operator * multiplicative;
+{-# inline: always #-}
 * {A} {{Natural A}} : A -> A -> A := Natural.*;
