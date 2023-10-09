@@ -1,8 +1,8 @@
 module Stdlib.Trait.Ord;
 
 import Stdlib.Data.Fixity open;
-
 import Stdlib.Data.Bool.Base open;
+import Stdlib.Trait.Eq open;
 
 type Ordering :=
   | LT : Ordering
@@ -20,6 +20,15 @@ isEQ : Ordering → Bool
 isGT : Ordering → Bool
   | GT := true
   | _ := false;
+
+instance
+orderingEqI : Eq Ordering :=
+  mkEq@{
+    eq (x : Ordering) : Ordering -> Bool
+      | LT := isLT x
+      | EQ := isEQ x
+      | GT := isGT x
+  };
 
 --- A trait for defining a total order
 trait
