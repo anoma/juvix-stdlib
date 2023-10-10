@@ -20,18 +20,18 @@ import Stdlib.Data.Int.Ord as Int;
 builtin int-to-string
 axiom intToString : Int -> String;
 
-{-# specialize: true, inline: always #-}
+{-# specialize: true #-}
 instance
 eqIntI : Eq Int := mkEq (Int.==);
 
-{-# specialize: true, inline: always #-}
+{-# specialize: true #-}
 instance
 ordIntI : Ord Int := mkOrd Int.compare;
 
 instance
 showIntI : Show Int := mkShow intToString;
 
-{-# specialize: true, inline: always #-}
+{-# specialize: true #-}
 instance
 naturalIntI : Natural Int :=
   mkNatural@{
@@ -42,7 +42,7 @@ naturalIntI : Natural Int :=
     fromNat := ofNat
   };
 
-{-# specialize: true, inline: always #-}
+{-# specialize: true #-}
 instance
 integralIntI : Integral Int :=
   mkIntegral@{
