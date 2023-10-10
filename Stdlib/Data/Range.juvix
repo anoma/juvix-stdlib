@@ -17,7 +17,8 @@ type Range N :=
 syntax iterator for {init := 1; range := 1};
 
 {-# specialize: [1, 2, 3, 5] #-}
-for {A N} {{Ord N}} {{Natural N}} (f : A → N → A) (a : A) : Range N → A
+for {A N} {{Ord N}} {{Natural N}} (f : A → N → A) (a : A)
+  : Range N → A
   | mkRange@{low; high; step} :=
     let
       {-# specialize-by: [f] #-}
@@ -29,9 +30,11 @@ for {A N} {{Ord N}} {{Natural N}} (f : A → N → A) (a : A) : Range N → A
 syntax operator to range;
 
 --- `x to y` is the range [x..y]
-to {N} {{Natural N}} (l h : N) : Range N := mkRange l h (fromNat 1);
+to {N} {{Natural N}} (l h : N) : Range N :=
+  mkRange l h (fromNat 1);
 
 syntax operator step step;
 
 --- `x to y step s` is the range [x,x+s,..,y]
-step {N} (r : Range N) (s : N) : Range N := r@Range{step := s};
+step {N} (r : Range N) (s : N) : Range N :=
+  r@Range{step := s};
