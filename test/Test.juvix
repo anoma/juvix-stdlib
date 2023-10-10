@@ -39,8 +39,7 @@ prop-splitAtLength : Nat -> List Int -> Bool
 -- Make sure the list has length at least n
 
 prop-mergeSumLengths : List Int -> List Int -> Bool
-  | xs ys :=
-    length xs + length ys == length (merge xs ys);
+  | xs ys := length xs + length ys == length (merge xs ys);
 
 prop-partition : List Int -> (Int -> Bool) -> Bool
   | xs p :=
