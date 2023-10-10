@@ -10,7 +10,7 @@ type Natural A :=
     * : A -> A -> A;
     div : A -> A -> A;
     mod : A -> A -> A;
-    fromNat : Nat -> A;
+    fromNat : Nat -> A
   };
 
 open Natural using {div; mod; fromNat} public;

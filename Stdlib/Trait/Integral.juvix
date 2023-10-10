@@ -9,7 +9,7 @@ type Integral A :=
   mkIntegral {
     naturalI : Natural A;
     - : A -> A -> A;
-    fromInt : Int -> A;
+    fromInt : Int -> A
   };
 
 -- TODO: we need to define this separately because it's currently not possible
