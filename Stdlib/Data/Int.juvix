@@ -39,7 +39,7 @@ naturalIntI : Natural Int :=
     * := (Int.*);
     div := Int.div;
     mod := Int.mod;
-    fromNat := ofNat;
+    fromNat := ofNat
   };
 
 {-# specialize: true, inline: always #-}
@@ -48,5 +48,5 @@ integralIntI : Integral Int :=
   mkIntegral@{
     naturalI := naturalIntI;
     - := (Int.-);
-    fromInt (x : Int) : Int := x;
+    fromInt (x : Int) : Int := x
   };
