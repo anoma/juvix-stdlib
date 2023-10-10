@@ -13,7 +13,7 @@ type Natural A :=
     fromNat : Nat -> A;
   };
 
-open Natural using {div; mod} public;
+open Natural using {div; mod; fromNat} public;
 
 syntax operator + additive;
 syntax operator * multiplicative;
