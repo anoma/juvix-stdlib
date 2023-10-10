@@ -40,5 +40,5 @@ naturalNatI : Natural Nat :=
     * := (Nat.*);
     div := Nat.div;
     mod := Nat.mod;
-    fromNat (x : Nat) : Nat := x;
+    fromNat (x : Nat) : Nat := x
   };
