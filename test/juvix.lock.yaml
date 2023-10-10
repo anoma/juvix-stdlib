@@ -6,11 +6,11 @@ dependencies:
   dependencies: []
 - git:
     name: quickcheck
-    ref: 760e80205ffa5b5c363a2aa56c583bdfd31fe252
+    ref: 45981b666b67f8ceb7e01ff2b518165efc08f70c
     url: https://github.com/anoma/juvix-quickcheck.git
   dependencies:
   - git:
       name: stdlib
-      ref: 86f9e82c34395f3e0447c58566bc92347603ebd3
+      ref: 9a091c5453594ac66b3b25cde0c11a54a255a9c9
       url: https://github.com/anoma/juvix-stdlib
     dependencies: []

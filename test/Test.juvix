@@ -1,13 +1,9 @@
 module Test;
 
-import Stdlib.Prelude open hiding {+};
+import Stdlib.Prelude open;
 
-import Stdlib.Data.Nat.Ord as Nat;
-import Stdlib.Data.Nat as Nat;
 import Stdlib.Trait.Ord as Ord;
 
-import Stdlib.Data.Int.Ord open;
-import Stdlib.Data.Int open;
 import Data.List open;
 import Data.String open;
 import Data.Int open;
@@ -38,13 +34,13 @@ prop-splitAtLength : Nat -> List Int -> Bool
       splitAt n (xs ++ replicate (sub n (length xs)) (ofNat 0))
     of {
       lhs, rhs :=
-        length lhs Nat.== n && length rhs Nat.== sub (length xs) n
+        length lhs == n && length rhs == sub (length xs) n
     };
 -- Make sure the list has length at least n
 
 prop-mergeSumLengths : List Int -> List Int -> Bool
   | xs ys :=
-    length xs Nat.+ length ys Nat.== length (merge xs ys);
+    length xs + length ys == length (merge xs ys);
 
 prop-partition : List Int -> (Int -> Bool) -> Bool
   | xs p :=
@@ -62,13 +58,13 @@ prop-add-sub : Int -> Int -> Bool
   | a b := a == a + b - b;
 
 prop-add-sub-bad : Int -> Int -> Bool
-  | a b := a == 2;
+  | a b := a == ofNat 2;
 
 prop-gcd-bad : Int -> Int -> Bool
-  | a b := gcd a b > 1;
+  | a b := gcd a b > ofNat 1;
 
 prop-equal-compare-to-eq : Nat -> Bool
-  | a := Ord.isEQ (Nat.compare a a);
+  | a := Ord.isEQ (Ord.cmp a a);
 
 prop-sort : (List Int -> List Int) -> List Int -> Bool
   | sort xs :=
@@ -78,7 +74,7 @@ prop-sort : (List Int -> List Int) -> List Int -> Bool
         | nil := true
         | (_ :: nil) := true
         | (x :: y :: xs) := x <= y && isSorted (y :: xs);
-    in length sorted Nat.== length xs
+    in length sorted == length xs
       && eqListInt sorted (sort sorted)
       && isSorted sorted;
 
@@ -86,8 +82,8 @@ prop-zip : List Int -> List Int -> Bool
   | xs ys :=
     let
       zs : List (Int × Int) := zip xs ys;
-      expectedLen : Nat := Nat.min (length xs) (length ys);
-    in length zs Nat.== expectedLen
+      expectedLen : Nat := min (length xs) (length ys);
+    in length zs == expectedLen
       && eqListInt (take expectedLen xs) (map fst zs)
       && eqListInt (take expectedLen ys) (map snd zs);
 
@@ -97,8 +93,8 @@ prop-zipWith
     let
       zs : List Int := zipWith f xs ys;
       zsFlip : List Int := zipWith (flip f) ys xs;
-      expectedLen : Nat := Nat.min (length xs) (length ys);
-    in length zs Nat.== expectedLen
+      expectedLen : Nat := min (length xs) (length ys);
+    in length zs == expectedLen
       && eqListInt zs zsFlip
       && eqListInt (map λ {x := f x x} xs) (zipWith f xs xs);
 
@@ -112,8 +108,8 @@ prop-drop : Nat -> List Int -> Bool
   | n xs :=
     let
       drop-n : List Int := drop n xs;
-    in length drop-n Nat.<= length xs
-      && eqListInt (drop n (drop n xs)) (drop (2 Nat.* n) xs);
+    in length drop-n <= length xs
+      && eqListInt (drop n (drop n xs)) (drop (2 * n) xs);
 
 -- Assumption: The input list represents a rectangular matrix
 prop-transposeMatrixId : List (List Int) -> Bool
@@ -126,12 +122,12 @@ prop-transposeMatrixDimensions : List (List Int) -> Bool
       txs : List (List Int) := transpose xs;
       checkTxsRowXsCol : Bool :=
         case xs of {
-          | x :: _ := length txs Nat.== length x
+          | x :: _ := length txs == length x
           | _ := null txs
         };
       checkXsRowTxsCol : Bool :=
         case txs of {
-          | tx :: _ := length xs Nat.== length tx
+          | tx :: _ := length xs == length tx
           | _ := null xs
         };
     in checkTxsRowXsCol && checkXsRowTxsCol;
