@@ -30,11 +30,13 @@ for {A N} {{Ord N}} {{Natural N}} (f : A → N → A) (a : A)
 syntax operator to range;
 
 --- `x to y` is the range [x..y]
+{-# inline: always #-}
 to {N} {{Natural N}} (l h : N) : Range N :=
   mkRange l h (fromNat 1);
 
 syntax operator step step;
 
 --- `x to y step s` is the range [x,x+s,..,y]
+{-# inline: always #-}
 step {N} (r : Range N) (s : N) : Range N :=
   r@Range{step := s};
