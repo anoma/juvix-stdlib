@@ -6,22 +6,13 @@ import Stdlib.Data.Fixity open;
 trait
 type Natural A :=
   mkNatural {
+    syntax operator + additive;
     + : A -> A -> A;
+    syntax operator * multiplicative;
     * : A -> A -> A;
     div : A -> A -> A;
     mod : A -> A -> A;
     fromNat : Nat -> A
   };
 
-open Natural using {div; mod; fromNat} public;
-
-syntax operator + additive;
-syntax operator * multiplicative;
-
--- TODO: we need to define those separately because it's currently not possible
--- to declare record fields as operators
-{-# inline: always #-}
-+ {A} {{Natural A}} : A -> A -> A := Natural.+;
-
-{-# inline: always #-}
-* {A} {{Natural A}} : A -> A -> A := Natural.*;
+open Natural public;
