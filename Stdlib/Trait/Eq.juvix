@@ -1,7 +1,18 @@
 module Stdlib.Trait.Eq;
 
 import Stdlib.Data.Bool.Base open;
+import Stdlib.Data.Fixity open;
 
 --- A trait defining equality
 trait
 type Eq A := mkEq {eq : A -> A -> Bool};
+
+syntax operator == comparison;
+syntax operator /= comparison;
+
+{-# inline: always #-}
+== {A} {{Eq A}} : A -> A -> Bool := Eq.eq;
+
+--- Tests for inequality.
+{-# inline: always #-}
+/= {A} {{Eq A}} (x y : A) : Bool := not (x == y);

@@ -1,0 +1,16 @@
+module Stdlib.Trait.Integral;
+
+import Stdlib.Data.Int.Base open using {Int};
+import Stdlib.Data.Fixity open;
+import Stdlib.Trait.Natural open;
+
+trait
+type Integral A :=
+  mkIntegral {
+    naturalI : Natural A;
+    syntax operator - additive;
+    - : A -> A -> A;
+    fromInt : Int -> A
+  };
+
+open Integral using {fromInt; -} public;

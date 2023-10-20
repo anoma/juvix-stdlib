@@ -4,7 +4,7 @@ import Stdlib.Data.Fixity open;
 
 import Stdlib.Data.Int.Base open;
 import Stdlib.Data.Bool.Base open;
-import Stdlib.Trait.Ord open;
+import Stdlib.Trait.Ord open using {EQ; LT; GT; Ordering};
 
 import Stdlib.Data.Nat.Ord as Nat;
 
@@ -45,6 +45,7 @@ syntax operator >= comparison;
 >= (m n : Int) : Bool := n <= m;
 
 --- Tests for ;Ordering;.
+{-# inline: true #-}
 compare (m n : Int) : Ordering :=
   if (m == n) EQ (if (m < n) LT GT);
 

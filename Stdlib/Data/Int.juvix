@@ -1,9 +1,8 @@
 module Stdlib.Data.Int;
 
-import Stdlib.Data.Int.Base open public;
-
-import Stdlib.Data.Nat as Nat;
-open Nat using {Nat; suc; zero; sub};
+import Stdlib.Data.Int.Base open hiding {+; -; *; div; mod} public;
+-- should be re-exported qualified
+import Stdlib.Data.Int.Base as Int;
 
 import Stdlib.Data.String open;
 import Stdlib.Data.Bool open;
@@ -11,18 +10,43 @@ import Stdlib.Data.Bool open;
 import Stdlib.Trait.Eq open;
 import Stdlib.Trait.Ord open;
 import Stdlib.Trait.Show open;
+import Stdlib.Trait.Natural open;
+import Stdlib.Trait.Integral open;
 
+-- should be re-exported qualified
 import Stdlib.Data.Int.Ord as Int;
 
 --- Converts an ;Int; into ;String;.
 builtin int-to-string
 axiom intToString : Int -> String;
 
+{-# specialize: true, inline: case #-}
 instance
 eqIntI : Eq Int := mkEq (Int.==);
 
+{-# specialize: true, inline: case #-}
 instance
 ordIntI : Ord Int := mkOrd Int.compare;
 
 instance
 showIntI : Show Int := mkShow intToString;
+
+{-# specialize: true, inline: case #-}
+instance
+naturalIntI : Natural Int :=
+  mkNatural@{
+    + := (Int.+);
+    * := (Int.*);
+    div := Int.div;
+    mod := Int.mod;
+    fromNat := ofNat
+  };
+
+{-# specialize: true, inline: case #-}
+instance
+integralIntI : Integral Int :=
+  mkIntegral@{
+    naturalI := naturalIntI;
+    - := (Int.-);
+    fromInt (x : Int) : Int := x
+  };
