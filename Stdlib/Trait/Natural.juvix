@@ -12,6 +12,7 @@ type Natural A :=
     * : A -> A -> A;
     div : A -> A -> A;
     mod : A -> A -> A;
+    builtin from-nat
     fromNat : Nat -> A
   };
 

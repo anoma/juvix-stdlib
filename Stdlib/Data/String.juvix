@@ -1,11 +1,20 @@
 module Stdlib.Data.String;
 
 import Stdlib.Data.String.Base open public;
+import Stdlib.Data.List.Base open;
+import Stdlib.Function open;
 
 import Stdlib.Trait.Eq open;
 import Stdlib.Trait.Show open;
 
 import Stdlib.Data.String.Ord as String;
+
+--- Concatenates a ;List; of ;String;s.
+concatStr : List String -> String := foldl (++str) "";
+
+--- Joins a ;List; of ;String;s with "\n".
+unlines : List String -> String :=
+  concatStr ∘ intersperse "\n";
 
 instance
 eqStringI : Eq String := mkEq (String.==);

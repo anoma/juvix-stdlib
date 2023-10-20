@@ -68,7 +68,7 @@ filter {A} (f : A → Bool) : List A → List A
 
 --- 𝒪(𝓃). Returns the length of the ;List;.
 length {A} (l : List A) : Nat :=
-  for (acc := 0) (_ in l) {acc + 1};
+  for (acc := zero) (_ in l) {suc acc};
 
 --- 𝒪(𝓃). Returns the given ;List; in reverse order.
 reverse {A} (l : List A) : List A :=
@@ -197,7 +197,7 @@ mergeSort {A} {{Ord A}} (l : List A) : List A :=
       | (suc zero) xs := xs
       | len xs :=
         let
-          len' : Nat := div len 2;
+          len' : Nat := div len (suc (suc zero));
           splitXs : List A × List A := splitAt len' xs;
           left : List A := fst splitXs;
           right : List A := snd splitXs;
