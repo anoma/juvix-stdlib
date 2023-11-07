@@ -1,0 +1,13 @@
+module Package;
+
+import PackageDescription.V1 open;
+
+package : Package :=
+  defaultPackage
+    {name := "stdlib-test";
+     dependencies := [ path "../"
+                     ; github
+                       "anoma"
+                       "juvix-quickcheck"
+                       "45981b666b67f8ceb7e01ff2b518165efc08f70c"
+                     ]};
