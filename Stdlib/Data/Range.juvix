@@ -32,8 +32,7 @@ syntax operator to range;
 
 --- `x to y` is the range [x..y]
 {-# inline: always #-}
-to {N} {{Natural N}} (l h : N) : Range N :=
-  mkRange l h 1;
+to {N} {{Natural N}} (l h : N) : Range N := mkRange l h 1;
 
 syntax operator step step;
 

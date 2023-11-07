@@ -212,8 +212,20 @@ main : IO :=
       QC.runTestsIO
         100
         (stringToNat seed)
-        [partitionTest; reverseLengthTest; reverseReverseIdTest; splitAtRecombineTest; splitAtLengthTest; mergeSumLengthsTest; tailLengthOneLessTest; equalCompareToEqTest; zipTest; zipWithTest; snocTest; dropTest; sortTest
-          "mergeSort"
-          mergeSort; sortTest
-          "quickSort"
-          quickSort; transposeMatrixIdTest; transposeMatrixDimentionsTest]};
+        [ partitionTest
+        ; reverseLengthTest
+        ; reverseReverseIdTest
+        ; splitAtRecombineTest
+        ; splitAtLengthTest
+        ; mergeSumLengthsTest
+        ; tailLengthOneLessTest
+        ; equalCompareToEqTest
+        ; zipTest
+        ; zipWithTest
+        ; snocTest
+        ; dropTest
+        ; sortTest "mergeSort" mergeSort
+        ; sortTest "quickSort" quickSort
+        ; transposeMatrixIdTest
+        ; transposeMatrixDimentionsTest
+        ]};
