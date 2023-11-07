@@ -15,4 +15,3 @@ showStringI : Show String :=
   let
     go (s : String) : String := "\"" ++str s ++str "\"";
   in mkShow go;
-

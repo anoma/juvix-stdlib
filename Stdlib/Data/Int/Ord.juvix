@@ -6,6 +6,7 @@ import Stdlib.Data.Int.Base open;
 import Stdlib.Data.Bool.Base open;
 import Stdlib.Trait.Ord open using {EQ; LT; GT; Ordering};
 
+import Stdlib.Data.Nat.Base as Nat;
 import Stdlib.Data.Nat.Ord as Nat;
 
 syntax operator == comparison;
@@ -32,7 +33,7 @@ syntax operator < comparison;
 
 --- Returns ;true; iff the first element is less than the second.
 builtin int-lt
-< (m n : Int) : Bool := m + 1 <= n;
+< (m n : Int) : Bool := m + ofNat (Nat.suc Nat.zero) <= n;
 
 syntax operator > comparison;
 

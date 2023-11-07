@@ -11,6 +11,5 @@ gcd {A} {{Eq A}} {{Ord A}} {{Natural A}} (a b : A) : A :=
     -- Internal helper for computing the greatest common divisor. The first element
     -- should be smaller than the second.
     terminating
-    gcd' (a b : A) : A :=
-      if (a == fromNat 0) b (gcd' (mod b a) a);
+    gcd' (a b : A) : A := if (a == 0) b (gcd' (mod b a) a);
   in if (a > b) (gcd' b a) (gcd' a b);

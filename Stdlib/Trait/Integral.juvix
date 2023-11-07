@@ -10,6 +10,7 @@ type Integral A :=
     naturalI : Natural A;
     syntax operator - additive;
     - : A -> A -> A;
+    builtin from-int
     fromInt : Int -> A
   };
 

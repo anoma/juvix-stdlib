@@ -1,9 +1,8 @@
 module Stdlib.Data.String.Base;
 
-import Stdlib.Data.Fixity open;
-
 import Stdlib.Data.List.Base open;
 import Stdlib.Function open;
+import Stdlib.Data.Fixity open;
 
 --- Primitive representation of a sequence of characters.
 builtin string
