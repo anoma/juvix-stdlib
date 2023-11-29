@@ -1,12 +1,11 @@
 module Test;
 
 import Stdlib.Prelude open;
-
+import Stdlib.Extra.Gcd open;
 import Stdlib.Trait.Ord as Ord;
 
 import Data.List open;
 import Data.String open;
-import Data.Int open;
 
 import Test.QuickCheckTest as QC;
 import Test.Arb as QC;
