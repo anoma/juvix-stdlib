@@ -1,19 +1,3 @@
 module Stdlib.Trait.Natural;
 
-import Stdlib.Data.Nat.Base open using {Nat};
-import Stdlib.Data.Fixity open;
-
-trait
-type Natural A :=
-  mkNatural {
-    syntax operator + additive;
-    + : A -> A -> A;
-    syntax operator * multiplicative;
-    * : A -> A -> A;
-    div : A -> A -> A;
-    mod : A -> A -> A;
-    builtin from-nat
-    fromNat : Nat -> A
-  };
-
-open Natural public;
+import Juvix.Builtin.V1.Trait.Natural open public;

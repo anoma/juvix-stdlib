@@ -1,17 +1,9 @@
 module Stdlib.Data.String.Base;
 
+import Juvix.Builtin.V1.String open public;
 import Stdlib.Data.List.Base open;
 import Stdlib.Function open;
 import Stdlib.Data.Fixity open;
-
---- Primitive representation of a sequence of characters.
-builtin string
-axiom String : Type;
-
-syntax operator ++str cons;
---- Concatenation of two ;String;s.
-builtin string-concat
-axiom ++str : String -> String -> String;
 
 --- Concatenates a ;List; of ;String;s.
 concatStr : List String -> String := foldl (++str) "";
