@@ -1,5 +1,6 @@
 module Stdlib.Data.Nat;
 
+import Juvix.Builtin.V1.Nat open public;
 import Stdlib.Data.Nat.Base open hiding {+; *; div; mod} public;
 -- should be re-exported qualified
 import Stdlib.Data.Nat.Base as Nat;
@@ -31,14 +32,3 @@ ordNatI : Ord Nat := mkOrd Nat.compare;
 
 instance
 showNatI : Show Nat := mkShow natToString;
-
-{-# specialize: true, inline: case #-}
-instance
-naturalNatI : Natural Nat :=
-  mkNatural@{
-    + := (Nat.+);
-    * := (Nat.*);
-    div := Nat.div;
-    mod := Nat.mod;
-    fromNat (x : Nat) : Nat := x
-  };
