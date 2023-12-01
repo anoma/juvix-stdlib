@@ -5,7 +5,7 @@ import Stdlib.Data.Functor open;
 
 trait
 type Applicative (f : Type -> Type) :=
-  mApplicative {
+  mkApplicative {
     functor : Functor f;
     pure : {A : Type} -> A -> f A;
     syntax operator <*> lapp;

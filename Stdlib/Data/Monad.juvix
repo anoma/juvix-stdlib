@@ -6,7 +6,7 @@ import Stdlib.Data.Applicative open;
 
 trait
 type Monad (f : Type -> Type) :=
-  mMonad {
+  mkMonad {
     applicative : Applicative f;
     syntax operator >>= seq;
     >>= : {A B : Type} -> f A -> (A -> f B) -> f B;
