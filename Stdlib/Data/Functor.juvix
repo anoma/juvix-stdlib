@@ -1,0 +1,22 @@
+module Stdlib.Data.Functor;
+
+import Stdlib.Data.Fixity open;
+import Stdlib.Data.Unit open;
+
+trait
+type Functor (f : Type -> Type) :=
+  mkFunctor {
+  -- TODO what about calling it map? (like in Lean)
+    fmap : {A B : Type} -> (A -> B) -> f A -> f B
+  };
+
+open Functor public;
+
+syntax operator <$> lapp;
+syntax alias <$> := fmap;
+
+syntax operator $> lapp;
+$> {f : Type → Type} {A B : Type} {{Functor f}} (fa : f A) (b : B) : f B :=
+  λ {_ := b} <$> fa;
+
+void {f : Type → Type} {A : Type} {{Functor f}} (fa : f A) : f Unit := fa $> unit;

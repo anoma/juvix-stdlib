@@ -1,0 +1,19 @@
+module Stdlib.Data.Applicative;
+
+import Stdlib.Data.Fixity open;
+import Stdlib.Data.Functor open;
+
+trait
+type Applicative (f : Type -> Type) :=
+  mApplicative {
+    functor : Functor f;
+    pure : {A : Type} -> A -> f A;
+    syntax operator <*> lapp;
+    <*> : {A B : Type} -> f (A -> B) -> f A -> f B;
+  };
+
+open Applicative public;
+
+syntax operator >> seq;
+>> {f : Type -> Type} {{I : Applicative f}} {A B : Type} (fa : f A) (fb : f B) : f B :=
+   (fmap {{functor}} λ {_ b := b} fa) <*> fb;
