@@ -9,7 +9,9 @@ type Applicative (f : Type -> Type) :=
     functor : Functor f;
     pure : {A : Type} -> A -> f A;
     syntax operator <*> lapp;
+    -- use apply and define <*>
     <*> : {A B : Type} -> f (A -> B) -> f A -> f B;
+    -- app
   };
 
 open Applicative public;

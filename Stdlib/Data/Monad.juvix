@@ -9,6 +9,7 @@ type Monad (f : Type -> Type) :=
   mkMonad {
     applicative : Applicative f;
     syntax operator >>= seq;
+    -- bind
     >>= : {A B : Type} -> f A -> (A -> f B) -> f B;
   };
 
