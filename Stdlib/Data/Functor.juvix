@@ -8,13 +8,13 @@ type Functor (f : Type -> Type) :=
   mkFunctor {
   -- TODO what about calling it map? (like in Lean)
   -- YES
-    fmap : {A B : Type} -> (A -> B) -> f A -> f B
+    map : {A B : Type} -> (A -> B) -> f A -> f B
   };
 
 open Functor public;
 
 syntax operator <$> lapp;
-syntax alias <$> := fmap;
+syntax alias <$> := map;
 
 syntax operator $> lapp;
 $> {f : Type → Type} {A B : Type} {{Functor f}} (fa : f A) (b : B) : f B :=
