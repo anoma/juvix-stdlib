@@ -1,0 +1,17 @@
+module Stdlib.Data.Monad;
+
+import Stdlib.Data.Fixity open;
+import Stdlib.Data.Functor open;
+import Stdlib.Data.Applicative open;
+
+trait
+type Monad (f : Type -> Type) :=
+  mkMonad {
+    applicative : Applicative f;
+    bind : {A B : Type} -> f A -> (A -> f B) -> f B;
+  };
+
+open Monad public;
+
+syntax operator >>= seq;
+syntax alias >>= := bind;
