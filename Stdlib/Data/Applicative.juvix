@@ -8,14 +8,15 @@ type Applicative (f : Type -> Type) :=
   mkApplicative {
     functor : Functor f;
     pure : {A : Type} -> A -> f A;
-    syntax operator <*> lapp;
-    -- use apply and define <*>
-    <*> : {A B : Type} -> f (A -> B) -> f A -> f B;
-    -- app
+    apply : {A B : Type} -> f (A -> B) -> f A -> f B
   };
 
 open Applicative public;
 
+syntax operator <*> lapp;
+syntax alias <*> := apply;
+
 syntax operator >> seq;
->> {f : Type -> Type} {{I : Applicative f}} {A B : Type} (fa : f A) (fb : f B) : f B :=
-   (fmap {{functor}} λ {_ b := b} fa) <*> fb;
+>> {f : Type -> Type} {{I : Applicative
+  f}} {A B : Type} (fa : f A) (fb : f B) : f B :=
+  map {{functor}} λ {_ b := b} fa <*> fb;
