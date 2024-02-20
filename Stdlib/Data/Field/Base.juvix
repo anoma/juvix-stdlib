@@ -1,0 +1,33 @@
+module Stdlib.Data.Field.Base;
+
+import Stdlib.Data.Fixity open;
+import Stdlib.Data.Int.Base open;
+
+builtin field
+axiom Field : Type;
+
+syntax operator + additive;
+
+builtin field-add
+axiom + : Field -> Field -> Field;
+
+syntax operator - additive;
+
+builtin field-sub
+axiom - : Field -> Field -> Field;
+
+syntax operator * multiplicative;
+
+builtin field-mul
+axiom * : Field -> Field -> Field;
+
+syntax operator / multiplicative;
+
+builtin field-div
+axiom / : Field -> Field -> Field;
+
+builtin field-from-int
+axiom fromInt : Int -> Field;
+
+builtin field-to-int
+axiom toInt : Field -> Int;
