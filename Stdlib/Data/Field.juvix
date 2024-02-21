@@ -1,0 +1,19 @@
+module Stdlib.Data.Field;
+
+import Stdlib.Data.Field.Base open using {Field} public;
+import Stdlib.Data.Field.Base as Field;
+import Stdlib.Data.String.Base open;
+import Stdlib.Data.Nat;
+
+import Stdlib.Trait.Eq open public;
+import Stdlib.Trait.Show open public;
+
+{-# specialize: true, inline: case #-}
+instance
+eqFieldI : Eq Field := mkEq (Field.==);
+
+instance
+showFieldI : Show Field :=
+  mkShow@{
+    show (f : Field) : String := Show.show (Field.toNat f)
+  };
