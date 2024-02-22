@@ -6,3 +6,5 @@ import Stdlib.Trait.Ord as Ord open using {Ord; module Ord} public;
 import Stdlib.Trait.Partial open public;
 import Stdlib.Trait.Natural open public;
 import Stdlib.Trait.Integral open public;
+import Stdlib.Trait.Numeric open public;
+import Stdlib.Trait.DivMod open public;

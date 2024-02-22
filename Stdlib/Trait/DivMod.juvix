@@ -1,0 +1,10 @@
+module Stdlib.Trait.DivMod;
+
+trait
+type DivMod A :=
+  mkDivMod {
+    div : A -> A -> A;
+    mod : A -> A -> A;
+  };
+
+open DivMod public;
