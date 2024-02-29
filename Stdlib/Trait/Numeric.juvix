@@ -1,0 +1,14 @@
+module Stdlib.Trait.Numeric;
+
+import Stdlib.Data.Fixity open;
+import Stdlib.Trait.Integral open;
+
+trait
+type Numeric A :=
+  mkNumeric {
+    integralI : Integral A;
+    syntax operator / multiplicative;
+    / : A -> A -> A
+  };
+
+open Numeric using {/} public;

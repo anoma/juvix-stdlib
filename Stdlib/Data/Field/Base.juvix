@@ -1,0 +1,44 @@
+module Stdlib.Data.Field.Base;
+
+import Stdlib.Data.Fixity open;
+import Stdlib.Data.Nat.Base open;
+import Stdlib.Data.Int.Base open hiding {toNat};
+import Stdlib.Data.Bool.Base open;
+
+builtin field
+axiom Field : Type;
+
+syntax operator + additive;
+
+builtin field-add
+axiom + : Field -> Field -> Field;
+
+syntax operator - additive;
+
+builtin field-sub
+axiom - : Field -> Field -> Field;
+
+syntax operator * multiplicative;
+
+builtin field-mul
+axiom * : Field -> Field -> Field;
+
+syntax operator / multiplicative;
+
+builtin field-div
+axiom / : Field -> Field -> Field;
+
+syntax operator == comparison;
+
+builtin field-eq
+axiom == : Field -> Field -> Bool;
+
+builtin field-from-int
+axiom fromInt : Int -> Field;
+
+builtin field-to-nat
+axiom toNat : Field -> Nat;
+
+fromNat (n : Nat) : Field := fromInt (ofNat n);
+
+toInt (f : Field) : Int := ofNat (toNat f);

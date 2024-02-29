@@ -1,12 +1,20 @@
 module Stdlib.Extra.Gcd;
 
 import Stdlib.Trait.Natural open;
+import Stdlib.Trait.DivMod open;
 import Stdlib.Trait.Eq open;
 import Stdlib.Trait.Ord open;
 import Stdlib.Data.Bool open;
 
 --- Computes the greatest common divisor.
-gcd {A} {{Eq A}} {{Ord A}} {{Natural A}} (a b : A) : A :=
+gcd
+  {A}
+  {{Eq A}}
+  {{Ord A}}
+  {{Natural A}}
+  {{DivMod A}}
+  (a b : A)
+  : A :=
   let
     -- Internal helper for computing the greatest common divisor. The first element
     -- should be smaller than the second.

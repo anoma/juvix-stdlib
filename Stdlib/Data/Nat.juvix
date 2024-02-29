@@ -10,6 +10,7 @@ import Stdlib.Trait.Eq open public;
 import Stdlib.Trait.Ord open public;
 import Stdlib.Trait.Show open public;
 import Stdlib.Trait.Natural open public;
+import Stdlib.Trait.DivMod open public;
 
 -- should be re-exported qualified
 import Stdlib.Data.Nat.Ord as Nat;
@@ -32,3 +33,11 @@ ordNatI : Ord Nat := mkOrd Nat.compare;
 
 instance
 showNatI : Show Nat := mkShow natToString;
+
+{-# specialize: true, inline: case #-}
+instance
+divModNatI : DivMod Nat :=
+  mkDivMod@{
+    div := Nat.div;
+    mod := Nat.mod
+  };
