@@ -25,8 +25,8 @@ ordProductI {A B} : {{Ord A}} -> {{Ord B}} -> Ord (A × B)
         }};
 
 instance
-showProductI {A B}
-  : {{Show A}} -> {{Show B}} -> Show (A × B)
+showProductI
+  {A B} : {{Show A}} -> {{Show B}} -> Show (A × B)
   | {{mkShow show-a}} {{mkShow show-b}} :=
     mkShow
       λ {(a, b) :=

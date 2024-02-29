@@ -39,5 +39,5 @@ instance
 divModNatI : DivMod Nat :=
   mkDivMod@{
     div := Nat.div;
-    mod := Nat.mod;
+    mod := Nat.mod
   };

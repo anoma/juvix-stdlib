@@ -55,5 +55,5 @@ instance
 divModIntI : DivMod Int :=
   mkDivMod@{
     div := Int.div;
-    mod := Int.mod;
+    mod := Int.mod
   };

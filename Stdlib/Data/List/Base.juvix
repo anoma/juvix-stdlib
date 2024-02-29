@@ -166,8 +166,8 @@ null {A} : List A → Bool
 --- 𝒪(min(𝓂, 𝓃)). Returns a list containing the results of applying a function
 --- to each pair of elements from the input lists.
 {-# specialize: [1] #-}
-zipWith {A B C} (f : A -> B -> C)
-  : List A -> List B -> List C
+zipWith
+  {A B C} (f : A -> B -> C) : List A -> List B -> List C
   | nil _ := nil
   | _ nil := nil
   | (x :: xs) (y :: ys) := f x y :: zipWith f xs ys;
