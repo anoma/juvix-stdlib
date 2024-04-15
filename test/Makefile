@@ -3,7 +3,7 @@ all: test
 
 build/Test: $(shell find ../ -name "*.juvix") $(wildcard deps/**/*.juvix) Test.juvix
 	@mkdir -p build
-	juvix compile -o build/Test Test.juvix
+	juvix compile native -o build/Test Test.juvix
 
 .PHONY: test
 test: build/Test
