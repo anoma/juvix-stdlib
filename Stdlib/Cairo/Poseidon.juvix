@@ -18,18 +18,21 @@ axiom poseidonHash : PoseidonState -> PoseidonState;
 -- https://github.com/starkware-libs/cairo-lang/blob/master/src/starkware/cairo/common/builtin_poseidon/poseidon.cairo
 
 --- Hashes one element and retrieves a single field element output.
+{-# eval: false #-}
 poseidonHash1 (x : Field) : Field :=
   case poseidonHash (mkPoseidonState x 0 1) of {
     mkPoseidonState s0 _ _ := s0
   };
 
 --- Hashes two elements and retrieves a single field element output.
+{-# eval: false #-}
 poseidonHash2 (x y : Field) : Field :=
   case poseidonHash (mkPoseidonState x y 2) of {
     mkPoseidonState s0 _ _ := s0
   };
 
 --- Hashes n elements and retrieves a single field element output.
+{-# eval: false #-}
 poseidonHashList (lst : List Field) : Field :=
   let
     go (acc : PoseidonState) : List Field -> PoseidonState
