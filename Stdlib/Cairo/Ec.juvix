@@ -103,7 +103,7 @@ addMul (p : Point) (m : Field) (q : Point) : Point :=
     (Point.y q == 0)
     p
     (let
-      s : Point := mkPoint 1 1;
+      s : Point := mkPoint 0 0;
       -- TODO: make s random
       r : Point := Internal.ecOp (add p s) m q;
     in sub r s);
