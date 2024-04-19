@@ -112,3 +112,16 @@ addMul (p : Point) (m : Field) (q : Point) : Point :=
 --- Computes m * p on the elliptic curve.
 mul (m : Field) (p : Point) : Point :=
   addMul (mkPoint 0 0) m p;
+
+module Operators;
+  import Stdlib.Data.Fixity open;
+
+  syntax operator + additive;
+  + : Point -> Point -> Point := add;
+
+  syntax operator - additive;
+  - : Point -> Point -> Point := sub;
+
+  syntax operator * multiplicative;
+  * : Field -> Point -> Point := mul;
+end;
