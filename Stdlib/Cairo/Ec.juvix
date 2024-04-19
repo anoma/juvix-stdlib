@@ -35,6 +35,9 @@ type Point :=
 module Internal;
   builtin ec_op
   axiom ecOp : Point -> Field -> Point -> Point;
+
+  builtin random_ec_point
+  axiom randomEcPoint : Point;
 end;
 
 --- Checks if an EC point is on the STARK curve.
@@ -102,8 +105,7 @@ addMul (p : Point) (m : Field) (q : Point) : Point :=
     (Point.y q == 0)
     p
     (let
-      s : Point := mkPoint 0 0;
-      -- TODO: make s random
+      s : Point := Internal.randomEcPoint;
       r : Point := Internal.ecOp (add p s) m q;
     in sub r s);
 
