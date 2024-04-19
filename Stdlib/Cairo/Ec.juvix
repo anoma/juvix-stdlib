@@ -45,8 +45,7 @@ isOnCurve : Point -> Bool
       (x == 0)
       (y * y == (x * x + StarkCurve.ALPHA) * x + StarkCurve.BETA);
 
---- Doubles a point (computes p + p) on the elliptic curve.
---- Assumes p is a valid point on the curve.
+--- Doubles a valid point p (computes p + p) on the elliptic curve.
 double : Point -> Point
   | p@(mkPoint x y) :=
     if
