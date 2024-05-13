@@ -44,39 +44,38 @@ end;
 isOnCurve : Point -> Bool
   | (mkPoint x y) :=
     if
-      (y == 0)
-      (x == 0)
-      (y * y == (x * x + StarkCurve.ALPHA) * x + StarkCurve.BETA);
+      | y == 0 := x == 0
+      | else :=
+        y * y == (x * x + StarkCurve.ALPHA) * x + StarkCurve.BETA;
 
 --- Doubles a valid point p (computes p + p) on the elliptic curve.
 double : Point -> Point
   | p@(mkPoint x y) :=
     if
-      (y == 0)
-      p
-      (let
-        slope := (3 * x * x + StarkCurve.ALPHA) / (2 * y);
-        r_x := slope * slope - x - x;
-        r_y := slope * (x - r_x) - y;
-      in mkPoint (x := r_x; y := r_y));
+      | y == 0 := p
+      | else :=
+        let
+          slope := (3 * x * x + StarkCurve.ALPHA) / (2 * y);
+          r_x := slope * slope - x - x;
+          r_y := slope * (x - r_x) - y;
+        in mkPoint (x := r_x; y := r_y);
 
 --- Adds two valid points on the EC.
 add : Point -> Point -> Point
   | p@(mkPoint x1 y1) q@(mkPoint x2 y2) :=
     if
-      (y1 == 0)
-      q
-      (if
-        (y2 == 0)
-        p
-        (if
-          (x1 == x2)
-          (if (y1 == y2) (double p) (mkPoint 0 0))
-          (let
-            slope := (y1 - y2) / (x1 - x2);
-            r_x := slope * slope - x1 - x2;
-            r_y := slope * (x1 - r_x) - y1;
-          in mkPoint r_x r_y)));
+      | y1 == 0 := q
+      | y2 == 0 := p
+      | x1 == x2 :=
+        if
+          | y1 == y2 := double p
+          | else := mkPoint 0 0
+      | else :=
+        let
+          slope := (y1 - y2) / (x1 - x2);
+          r_x := slope * slope - x1 - x2;
+          r_y := slope * (x1 - r_x) - y1;
+        in mkPoint r_x r_y;
 
 --- Subtracts a point from another on the EC.
 sub (p q : Point) : Point := add p q@Point{y := 0 - y};
@@ -102,12 +101,12 @@ sub (p q : Point) : Point := add p q@Point{y := 0 - y};
 --- p and q are valid points on the curve.
 addMul (p : Point) (m : Field) (q : Point) : Point :=
   if
-    (Point.y q == 0)
-    p
-    (let
-      s : Point := Internal.randomEcPoint;
-      r : Point := Internal.ecOp (add p s) m q;
-    in sub r s);
+    | Point.y q == 0 := p
+    | else :=
+      let
+        s : Point := Internal.randomEcPoint;
+        r : Point := Internal.ecOp (add p s) m q;
+      in sub r s;
 
 --- Computes m * p on the elliptic curve.
 mul (m : Field) (p : Point) : Point :=
