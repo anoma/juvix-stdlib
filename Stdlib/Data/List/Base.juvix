@@ -94,9 +94,8 @@ terminating
 merge {A} {{Ord A}} : List A → List A → List A
   | xs@(x :: xs') ys@(y :: ys') :=
     if
-      (isLT (Ord.cmp x y))
-      (x :: merge xs' ys)
-      (y :: merge xs ys')
+      | isLT (Ord.cmp x y) := x :: merge xs' ys
+      | else := y :: merge xs ys'
   | nil ys := ys
   | xs nil := xs;
 

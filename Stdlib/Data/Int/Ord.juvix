@@ -48,7 +48,10 @@ syntax operator >= comparison;
 --- Tests for ;Ordering;.
 {-# inline: true #-}
 compare (m n : Int) : Ordering :=
-  if (m == n) EQ (if (m < n) LT GT);
+  if
+    | m == n := EQ
+    | m < n := LT
+    | else := GT;
 
 --- Returns the smallest ;Int;.
 min (x y : Int) : Int := if (x < y) x y;

@@ -49,7 +49,10 @@ syntax operator >= comparison;
 --- Tests for ;Ordering;.
 {-# inline: true #-}
 compare (n m : Nat) : Ordering :=
-  if (n == m) EQ (if (n < m) LT GT);
+  if
+    | n == m := EQ
+    | n < m := LT
+    | else := GT;
 
 --- Returns the smaller ;Nat;.
 min (x y : Nat) : Nat := if (x < y) x y;
