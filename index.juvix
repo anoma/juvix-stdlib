@@ -13,3 +13,5 @@ import Stdlib.Prelude;
 import Stdlib.Data.Nat.Ord;
 import Stdlib.Data.Int.Ord;
 import Stdlib.Data.String.Ord;
+
+import Stdlib.Cairo.Poseidon;
