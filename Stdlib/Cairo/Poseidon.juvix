@@ -20,16 +20,12 @@ axiom poseidonHash : PoseidonState -> PoseidonState;
 --- Hashes one element and retrieves a single field element output.
 {-# eval: false #-}
 poseidonHash1 (x : Field) : Field :=
-  case poseidonHash (mkPoseidonState x 0 1) of {
-    mkPoseidonState s0 _ _ := s0
-  };
+  PoseidonState.s0 (poseidonHash (mkPoseidonState x 0 1));
 
 --- Hashes two elements and retrieves a single field element output.
 {-# eval: false #-}
 poseidonHash2 (x y : Field) : Field :=
-  case poseidonHash (mkPoseidonState x y 2) of {
-    mkPoseidonState s0 _ _ := s0
-  };
+  PoseidonState.s0 (poseidonHash (mkPoseidonState x y 2));
 
 --- Hashes n elements and retrieves a single field element output.
 {-# eval: false #-}
@@ -51,6 +47,4 @@ poseidonHashList (lst : List Field) : Field :=
               s1 := s1 + x2
             })
           xs;
-  in case go (mkPoseidonState 0 0 0) lst of {
-       mkPoseidonState s0 _ _ := s0
-     };
+  in PoseidonState.s0 (go (mkPoseidonState 0 0 0) lst);

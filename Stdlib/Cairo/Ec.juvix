@@ -1,0 +1,127 @@
+--- Functions for various actions on the STARK curve:
+--- y^2 = x^3 + alpha * x + beta
+--- where alpha = 1 and beta = 0x6f21413efbe40de150e596d72f7a8c5609ad26c15c915c1f4cdfcb99cee9e89.
+--- The point at infinity is represented as (0, 0).
+--- Implementation largely follows:
+--- https://github.com/starkware-libs/cairo-lang/blob/master/src/starkware/cairo/common/ec.cairo
+module Stdlib.Cairo.Ec;
+
+import Stdlib.Data.Field open;
+import Stdlib.Data.Bool open;
+
+module StarkCurve;
+  ALPHA : Field := 1;
+
+  BETA : Field :=
+    0x6f21413efbe40de150e596d72f7a8c5609ad26c15c915c1f4cdfcb99cee9e89;
+
+  ORDER : Field :=
+    0x800000000000010ffffffffffffffffb781126dcae7b2321e66a241adc64d2f;
+
+  GEN_X : Field :=
+    0x1ef15c18599971b7beced415a40f0c7deacfd9b0d1819e03d723d8bc943cfca;
+
+  GEN_Y : Field :=
+    0x5668060aa49730b7be4801df46ec62de53ecd11abe43a32873000c36e8dc1f;
+end;
+
+builtin ec_point
+type Point :=
+  mkPoint {
+    x : Field;
+    y : Field
+  };
+
+module Internal;
+  builtin ec_op
+  axiom ecOp : Point -> Field -> Point -> Point;
+
+  builtin random_ec_point
+  axiom randomEcPoint : Point;
+end;
+
+--- Checks if an EC point is on the STARK curve.
+isOnCurve : Point -> Bool
+  | (mkPoint x y) :=
+    if
+      (y == 0)
+      (x == 0)
+      (y * y == (x * x + StarkCurve.ALPHA) * x + StarkCurve.BETA);
+
+--- Doubles a valid point p (computes p + p) on the elliptic curve.
+double : Point -> Point
+  | p@(mkPoint x y) :=
+    if
+      (y == 0)
+      p
+      (let
+        slope := (3 * x * x + StarkCurve.ALPHA) / (2 * y);
+        r_x := slope * slope - x - x;
+        r_y := slope * (x - r_x) - y;
+      in mkPoint (x := r_x; y := r_y));
+
+--- Adds two valid points on the EC.
+add : Point -> Point -> Point
+  | p@(mkPoint x1 y1) q@(mkPoint x2 y2) :=
+    if
+      (y1 == 0)
+      q
+      (if
+        (y2 == 0)
+        p
+        (if
+          (x1 == x2)
+          (if (y1 == y2) (double p) (mkPoint 0 0))
+          (let
+            slope := (y1 - y2) / (x1 - x2);
+            r_x := slope * slope - x1 - x2;
+            r_y := slope * (x1 - r_x) - y1;
+          in mkPoint r_x r_y)));
+
+--- Subtracts a point from another on the EC.
+sub (p q : Point) : Point := add p q@Point{y := 0 - y};
+
+--- Computes p + m * q on the elliptic curve.
+--- Because the EC operation builtin cannot handle inputs where additions of points with the same x
+--- coordinate arise during the computation, this function adds and subtracts a nondeterministic
+--- point s to the computation, so that regardless of input, the probability that such additions
+--- arise will become negligibly small.
+--- The precise computation is therefore:
+--- ((p + s) + m * q) - s
+--- so that the inputs to the builtin itself are (p + s), m, and q.
+---
+--- Arguments:
+--- p - an EC point.
+--- m - the multiplication coefficient of q (a field element).
+--- q - an EC point.
+---
+--- Returns:
+--- p + m * q.
+---
+--- Assumptions:
+--- p and q are valid points on the curve.
+addMul (p : Point) (m : Field) (q : Point) : Point :=
+  if
+    (Point.y q == 0)
+    p
+    (let
+      s : Point := Internal.randomEcPoint;
+      r : Point := Internal.ecOp (add p s) m q;
+    in sub r s);
+
+--- Computes m * p on the elliptic curve.
+mul (m : Field) (p : Point) : Point :=
+  addMul (mkPoint 0 0) m p;
+
+module Operators;
+  import Stdlib.Data.Fixity open;
+
+  syntax operator + additive;
+  + : Point -> Point -> Point := add;
+
+  syntax operator - additive;
+  - : Point -> Point -> Point := sub;
+
+  syntax operator * multiplicative;
+  * : Field -> Point -> Point := mul;
+end;
