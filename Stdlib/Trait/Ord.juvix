@@ -39,22 +39,20 @@ syntax operator <= comparison;
 --- Returns ;true; iff the first element is less than or equal to the second.
 {-# inline: always #-}
 <= {A} {{Ord A}} (x y : A) : Bool :=
-  case Ord.cmp x y of {
+  case Ord.cmp x y of
     | EQ := true
     | LT := true
-    | GT := false
-  };
+    | GT := false;
 
 syntax operator < comparison;
 
 --- Returns ;true; iff the first element is less than the second.
 {-# inline: always #-}
 < {A} {{Ord A}} (x y : A) : Bool :=
-  case Ord.cmp x y of {
+  case Ord.cmp x y of
     | EQ := false
     | LT := true
-    | GT := false
-  };
+    | GT := false;
 
 syntax operator > comparison;
 

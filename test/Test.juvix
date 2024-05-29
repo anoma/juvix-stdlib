@@ -23,18 +23,16 @@ prop-tailLengthOneLess : List Int -> Bool
 
 prop-splitAtRecombine : Nat -> List Int -> Bool
   | n xs :=
-    case splitAt n xs of {
-      lhs, rhs := eqListInt xs (lhs ++ rhs)
-    };
+    case splitAt n xs of
+      lhs, rhs := eqListInt xs (lhs ++ rhs);
 
 prop-splitAtLength : Nat -> List Int -> Bool
   | n xs :=
     case
       splitAt n (xs ++ replicate (sub n (length xs)) (ofNat 0))
-    of {
+    of
       lhs, rhs :=
-        length lhs == n && length rhs == sub (length xs) n
-    };
+        length lhs == n && length rhs == sub (length xs) n;
 -- Make sure the list has length at least n
 
 prop-mergeSumLengths : List Int -> List Int -> Bool
@@ -42,12 +40,11 @@ prop-mergeSumLengths : List Int -> List Int -> Bool
 
 prop-partition : List Int -> (Int -> Bool) -> Bool
   | xs p :=
-    case partition p xs of {
+    case partition p xs of
       lhs, rhs :=
         all p lhs
           && not (any p rhs)
-          && eqListInt (sortInt xs) (sortInt (lhs ++ rhs))
-    };
+          && eqListInt (sortInt xs) (sortInt (lhs ++ rhs));
 
 prop-distributive : Int -> Int -> (Int -> Int) -> Bool
   | a b f := f (a + b) == f a + f b;
@@ -119,15 +116,13 @@ prop-transposeMatrixDimensions : List (List Int) -> Bool
     let
       txs : List (List Int) := transpose xs;
       checkTxsRowXsCol : Bool :=
-        case xs of {
+        case xs of
           | x :: _ := length txs == length x
-          | _ := null txs
-        };
+          | _ := null txs;
       checkXsRowTxsCol : Bool :=
-        case txs of {
+        case txs of
           | tx :: _ := length xs == length tx
-          | _ := null xs
-        };
+          | _ := null xs;
     in checkTxsRowXsCol && checkXsRowTxsCol;
 
 sortTest : String -> (List Int -> List Int) -> QC.Test

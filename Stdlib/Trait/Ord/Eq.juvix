@@ -10,10 +10,9 @@ fromOrdToEq {A} {{Ord A}} : Eq.Eq A := Eq.mkEq (==);
 syntax operator == comparison;
 
 == {A} {{Ord A}} (x y : A) : Bool :=
-  case Ord.cmp x y of {
+  case Ord.cmp x y of
     | EQ := true
-    | _ := false
-  };
+    | _ := false;
 
 syntax operator /= comparison;
 

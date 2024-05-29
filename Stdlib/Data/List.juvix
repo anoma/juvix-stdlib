@@ -32,11 +32,10 @@ ordListI {A} {{Ord A}} : Ord (List A) :=
       | nil _ := LT
       | _ nil := GT
       | (x :: xs) (y :: ys) :=
-        case Ord.cmp x y of {
+        case Ord.cmp x y of
           | LT := LT
           | GT := GT
-          | EQ := go xs ys
-        };
+          | EQ := go xs ys;
   in mkOrd go;
 
 instance
