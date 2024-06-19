@@ -2,7 +2,7 @@ module Stdlib.Function;
 
 import Stdlib.Data.Fixity open;
 import Stdlib.Data.Nat.Base open;
-import Stdlib.Data.Product.Base open;
+import Stdlib.Data.Pair.Base open;
 
 syntax operator ∘ composition;
 
