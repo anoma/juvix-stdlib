@@ -27,11 +27,12 @@ id {A} (a : A) : A := a;
 {-# inline: 1 #-}
 flip {A B C} (f : A → B → C) (b : B) (a : A) : C := f a b;
 
-syntax operator $ rapp;
+syntax operator <| rapp;
 
 --- Application operator with right associativity. Usually used as a syntactical
 --- facility.
-$ {A B} (f : A → B) (x : A) : B := f x;
+<| {A B} (f : A → B) (x : A) : B := f x;
+
 syntax operator |> lapp;
 
 --- Application operator with left associativity. Usually used as a syntactical
