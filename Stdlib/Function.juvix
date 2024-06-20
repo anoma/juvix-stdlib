@@ -4,11 +4,11 @@ import Stdlib.Data.Fixity open;
 import Stdlib.Data.Nat.Base open;
 import Stdlib.Data.Pair.Base open;
 
-syntax operator ∘ composition;
+syntax operator << composition;
 
 --- Function composition.
 {-# inline: 2 #-}
-∘ {A B C} (f : B → C) (g : A → B) (x : A) : C := f (g x);
+<< {A B C} (f : B → C) (g : A → B) (x : A) : C := f (g x);
 
 --- Always returns the first argument.
 {-# inline: 1 #-}
