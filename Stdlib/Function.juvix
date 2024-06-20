@@ -32,6 +32,11 @@ syntax operator $ rapp;
 --- Application operator with right associativity. Usually used as a syntactical
 --- facility.
 $ {A B} (f : A → B) (x : A) : B := f x;
+syntax operator |> lapp;
+
+--- Application operator with left associativity. Usually used as a syntactical
+--- facility.
+|> {A B} (x : A) (f : A → B) : B := f x;
 
 --- Applies a function n times.
 iterate {A} : Nat -> (A -> A) -> A -> A
