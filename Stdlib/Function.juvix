@@ -6,9 +6,15 @@ import Stdlib.Data.Pair.Base open;
 
 syntax operator << composition;
 
---- Function composition.
+--- Function composition, passing results from the second function to the first.
 {-# inline: 2 #-}
 << {A B C} (f : B → C) (g : A → B) (x : A) : C := f (g x);
+
+syntax operator >> lcomposition;
+
+--- Function composition, passing results from the first function to the second.
+{-# inline: 2 #-}
+>> {A B C} (f : A → B) (g : B → C) (x : A) : C := g (f x);
 
 --- Always returns the first argument.
 {-# inline: 1 #-}
