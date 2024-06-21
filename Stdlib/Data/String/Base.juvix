@@ -10,4 +10,4 @@ concatStr : List String -> String := foldl (++str) "";
 
 --- Joins a ;List; of ;String;s with "\n".
 unlines : List String -> String :=
-  concatStr ∘ intersperse "\n";
+  concatStr << intersperse "\n";
