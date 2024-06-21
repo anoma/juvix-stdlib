@@ -7,7 +7,7 @@ import Stdlib.Function open;
 import Stdlib.Data.Nat.Base open;
 import Stdlib.Data.Maybe.Base open;
 import Stdlib.Trait.Ord open;
-import Stdlib.Data.Product.Base open;
+import Stdlib.Data.Pair.Base open;
 
 --- 𝒪(𝓃). Returns ;true; if the given
 --- object is in the ;List;.
@@ -82,7 +82,7 @@ drop {A} : Nat → List A → List A
 
 --- 𝒪(𝓃). splitAt n xs returns a tuple where first element is xs
 --- prefix of length n and second element is the remainder of the ;List;.
-splitAt {A} : Nat → List A → List A × List A
+splitAt {A} : Nat → List A → Pair (List A) (List A)
   | _ nil := nil, nil
   | zero xs := nil, xs
   | (suc zero) (x :: xs) := x :: nil, xs
@@ -101,7 +101,8 @@ merge {A} {{Ord A}} : List A → List A → List A
 
 --- 𝒪(𝓃). Returns a tuple where the first component has the items that
 --- satisfy the predicate and the second component has the elements that don't.
-partition {A} (f : A → Bool) : List A → List A × List A
+partition
+  {A} (f : A → Bool) : List A → Pair (List A) (List A)
   | nil := nil, nil
   | (x :: xs) :=
     case partition f xs of
@@ -171,7 +172,7 @@ zipWith
   | (x :: xs) (y :: ys) := f x y :: zipWith f xs ys;
 
 --- 𝒪(min(𝓂, 𝓃)). Returns a list of pairs formed from the input lists.
-zip {A B} : List A -> List B -> List (A × B)
+zip {A B} : List A -> List B -> List (Pair A B)
   | nil _ := nil
   | _ nil := nil
   | (x :: xs) (y :: ys) := (x, y) :: zip xs ys;
@@ -187,7 +188,7 @@ mergeSort {A} {{Ord A}} (l : List A) : List A :=
       | len xs :=
         let
           len' : Nat := div len (suc (suc zero));
-          splitXs : List A × List A := splitAt len' xs;
+          splitXs : Pair (List A) (List A) := splitAt len' xs;
           left : List A := fst splitXs;
           right : List A := snd splitXs;
         in merge (go len' left) (go (sub len len') right);

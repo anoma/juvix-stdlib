@@ -17,7 +17,7 @@ arbitrarySizedList
               | _ zero := nil
               | r (suc n) :=
                 let
-                  rSplit : StdGen × StdGen := stdSplit r;
+                  rSplit : Pair StdGen StdGen := stdSplit r;
                   r1 : StdGen := fst rSplit;
                   r2 : StdGen := snd rSplit;
                 in Gen.run g r1 :: randList r2 n;
@@ -30,7 +30,7 @@ arbitraryMatrix
     (mkGen
       \ {rand :=
         let
-          randSplit : StdGen × StdGen := stdSplit rand;
+          randSplit : Pair StdGen StdGen := stdSplit rand;
           rand1 : StdGen := fst randSplit;
           rand2 : StdGen := snd randSplit;
           cols : Nat := fst (randNat rand1 1 10);

@@ -76,7 +76,7 @@ prop-sort : (List Int -> List Int) -> List Int -> Bool
 prop-zip : List Int -> List Int -> Bool
   | xs ys :=
     let
-      zs : List (Int × Int) := zip xs ys;
+      zs : List (Pair Int Int) := zip xs ys;
       expectedLen : Nat := min (length xs) (length ys);
     in length zs == expectedLen
       && eqListInt (take expectedLen xs) (map fst zs)
