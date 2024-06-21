@@ -8,4 +8,4 @@ builtin bool-print
 axiom printBool : Bool → IO;
 
 printBoolLn (b : Bool) : IO :=
-  printBool b >> printString "\n";
+  printBool b >>> printString "\n";

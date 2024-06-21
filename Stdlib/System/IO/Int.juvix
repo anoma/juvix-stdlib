@@ -7,4 +7,5 @@ import Stdlib.System.IO.String open;
 builtin int-print
 axiom printInt : Int → IO;
 
-printIntLn (i : Int) : IO := printInt i >> printString "\n";
+printIntLn (i : Int) : IO :=
+  printInt i >>> printString "\n";

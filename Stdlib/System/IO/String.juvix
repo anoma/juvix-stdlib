@@ -10,4 +10,4 @@ builtin IO-readline
 axiom readLn : (String → IO) → IO;
 
 printStringLn (s : String) : IO :=
-  printString s >> printString "\n";
+  printString s >>> printString "\n";
