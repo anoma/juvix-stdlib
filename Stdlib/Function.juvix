@@ -50,8 +50,8 @@ syntax operator on lapp;
 on {A B C} (f : B → B → C) (g : A → B) (a b : A) : C :=
   f (g a) (g b);
 
-syntax operator >>> seq;
+syntax operator >-> seq;
 
 builtin seq
->>> : {A B : Type} → A → B → B
+>-> : {A B : Type} → A → B → B
   | x y := y;
