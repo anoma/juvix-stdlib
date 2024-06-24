@@ -5,6 +5,6 @@ import Stdlib.Data.Fixity open;
 builtin IO
 axiom IO : Type;
 
-syntax operator >> seq;
+syntax operator >>> seq;
 builtin IO-sequence
-axiom >> : IO → IO → IO;
+axiom >>> : IO → IO → IO;
