@@ -204,7 +204,7 @@ quickSort {A} {{Ord A}} : List A → List A :=
       | nil := nil
       | xs@(_ :: nil) := xs
       | (x :: xs) :=
-        case partition (isGT << Ord.cmp x) xs of
+        case partition (Ord.cmp x >> isGT) xs of
           l1, l2 := go l1 ++ x :: go l2;
   in go;
 
@@ -219,7 +219,7 @@ syntax iterator concatMap {init := 0; range := 1};
 --- Applies a function to every item on a ;List; and concatenates the result.
 --- 𝒪(𝓃), where 𝓃 is the number of items in the resulting list.
 concatMap {A B} (f : A -> List B) : List A -> List B :=
-  flatten << map f;
+  map f >> flatten;
 
 --- 𝒪(𝓃 * 𝓂). Transposes a ;List; of ;List;s interpreted as a matrix.
 transpose {A} : List (List A) -> List (List A)
