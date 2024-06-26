@@ -26,7 +26,7 @@ builtin bool-and
 
 --- Returns the first argument if ;true;, otherwise it returns the second argument. Evaluated lazily. Cannot be partially applied.
 builtin bool-if
-if : {A : Type} → Bool → A → A → A
+ite : {A : Type} → Bool → A → A → A
   | true a _ := a
   | false _ b := b;
 

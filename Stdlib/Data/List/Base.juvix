@@ -55,7 +55,7 @@ syntax iterator filter {init := 0; range := 1};
 {-# specialize: [1] #-}
 filter {A} (f : A → Bool) : List A → List A
   | nil := nil
-  | (h :: hs) := if (f h) (h :: filter f hs) (filter f hs);
+  | (h :: hs) := ite (f h) (h :: filter f hs) (filter f hs);
 
 --- 𝒪(𝓃). Returns the length of the ;List;.
 length {A} (l : List A) : Nat :=
@@ -106,7 +106,7 @@ partition
   | nil := nil, nil
   | (x :: xs) :=
     case partition f xs of
-      l1, l2 := if (f x) (x :: l1, l2) (l1, x :: l2);
+      l1, l2 := ite (f x) (x :: l1, l2) (l1, x :: l2);
 
 syntax operator ++ cons;
 
@@ -147,7 +147,7 @@ syntax iterator any {init := 0; range := 1};
 {-# specialize: [1] #-}
 any {A} (f : A → Bool) : List A → Bool
   | nil := false
-  | (x :: xs) := if (f x) true (any f xs);
+  | (x :: xs) := ite (f x) true (any f xs);
 
 syntax iterator all {init := 0; range := 1};
 
@@ -155,7 +155,7 @@ syntax iterator all {init := 0; range := 1};
 {-# specialize: [1] #-}
 all {A} (f : A -> Bool) : List A -> Bool
   | nil := true
-  | (x :: xs) := if (f x) (all f xs) false;
+  | (x :: xs) := ite (f x) (all f xs) false;
 
 --- 𝒪(1). Returns ;true; if the ;List; is empty.
 null {A} : List A → Bool

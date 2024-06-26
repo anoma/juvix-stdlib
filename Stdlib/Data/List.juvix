@@ -21,7 +21,7 @@ eqListI {A} {{Eq A}} : Eq (List A) :=
       | nil nil := true
       | nil _ := false
       | _ nil := false
-      | (x :: xs) (y :: ys) := if (Eq.eq x y) (go xs ys) false;
+      | (x :: xs) (y :: ys) := ite (Eq.eq x y) (go xs ys) false;
   in mkEq go;
 
 instance
