@@ -19,5 +19,5 @@ gcd
     -- Internal helper for computing the greatest common divisor. The first element
     -- should be smaller than the second.
     terminating
-    gcd' (a b : A) : A := if (a == 0) b (gcd' (mod b a) a);
-  in if (a > b) (gcd' b a) (gcd' a b);
+    gcd' (a b : A) : A := ite (a == 0) b (gcd' (mod b a) a);
+  in ite (a > b) (gcd' b a) (gcd' a b);

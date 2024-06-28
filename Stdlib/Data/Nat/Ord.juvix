@@ -55,7 +55,7 @@ compare (n m : Nat) : Ordering :=
     | else := GT;
 
 --- Returns the smaller ;Nat;.
-min (x y : Nat) : Nat := if (x < y) x y;
+min (x y : Nat) : Nat := ite (x < y) x y;
 
 --- Returns the larger ;Nat;.
-max (x y : Nat) : Nat := if (x > y) x y;
+max (x y : Nat) : Nat := ite (x > y) x y;

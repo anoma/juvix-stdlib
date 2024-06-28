@@ -68,8 +68,8 @@ syntax operator >= comparison;
 
 --- Returns the smaller element.
 {-# inline: always #-}
-min {A} {{Ord A}} (x y : A) : A := if (x < y) x y;
+min {A} {{Ord A}} (x y : A) : A := ite (x < y) x y;
 
 --- Returns the larger element.
 {-# inline: always #-}
-max {A} {{Ord A}} (x y : A) : A := if (x > y) x y;
+max {A} {{Ord A}} (x y : A) : A := ite (x > y) x y;

@@ -54,7 +54,7 @@ compare (m n : Int) : Ordering :=
     | else := GT;
 
 --- Returns the smallest ;Int;.
-min (x y : Int) : Int := if (x < y) x y;
+min (x y : Int) : Int := ite (x < y) x y;
 
 --- Returns the biggest ;Int;.
-max (x y : Int) : Int := if (x > y) x y;
+max (x y : Int) : Int := ite (x > y) x y;

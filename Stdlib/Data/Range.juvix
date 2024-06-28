@@ -30,7 +30,7 @@ for
       {-# specialize-by: [f] #-}
       terminating
       go (acc : A) (n : N) : A :=
-        if (n > high) acc (go (f acc n) (n + step));
+        ite (n > high) acc (go (f acc n) (n + step));
     in go a low;
 
 syntax operator to range;
