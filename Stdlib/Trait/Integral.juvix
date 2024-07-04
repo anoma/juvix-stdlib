@@ -9,7 +9,7 @@ type Integral A :=
   mkIntegral {
     naturalI : Natural A;
     syntax operator - additive;
-    {-# isabelle-operator: "-" #-}
+    {-# isabelle-operator: {name: "-", prec: 10, assoc: left} #-}
     - : A -> A -> A;
     builtin from-int
     fromInt : Int -> A
