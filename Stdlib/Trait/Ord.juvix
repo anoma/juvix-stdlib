@@ -37,7 +37,7 @@ type Ord A := mkOrd {cmp : A -> A -> Ordering};
 syntax operator <= comparison;
 
 --- Returns ;true; iff the first element is less than or equal to the second.
-{-# inline: always #-}
+{-# inline: always, isabelle-operator: {name: "≤", prec: 9, assoc: none} #-}
 <= {A} {{Ord A}} (x y : A) : Bool :=
   case Ord.cmp x y of
     | EQ := true
@@ -47,7 +47,7 @@ syntax operator <= comparison;
 syntax operator < comparison;
 
 --- Returns ;true; iff the first element is less than the second.
-{-# inline: always #-}
+{-# inline: always, isabelle-operator: {name: "<", prec: 9, assoc: none} #-}
 < {A} {{Ord A}} (x y : A) : Bool :=
   case Ord.cmp x y of
     | EQ := false
@@ -57,13 +57,13 @@ syntax operator < comparison;
 syntax operator > comparison;
 
 --- Returns ;true; iff the first element is greater than the second.
-{-# inline: always #-}
+{-# inline: always, isabelle-operator: {name: ">", prec: 9, assoc: none} #-}
 > {A} {{Ord A}} (x y : A) : Bool := y < x;
 
 syntax operator >= comparison;
 
 --- Returns ;true; iff the first element is greater than or equal to the second.
-{-# inline: always #-}
+{-# inline: always, isabelle-operator: {name: "≥", prec: 9, assoc: none} #-}
 >= {A} {{Ord A}} (x y : A) : Bool := y <= x;
 
 --- Returns the smaller element.
