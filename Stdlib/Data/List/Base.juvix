@@ -16,6 +16,16 @@ elem {A} (eq : A → A → Bool) (s : A) : List A → Bool
   | nil := false
   | (x :: xs) := eq s x || elem eq s xs;
 
+--- 𝒪(𝓃). Returns the leftmost element of the list satisfying the predicate or
+--- nothing if there's no such element.
+{-# specialize: [1] #-}
+find {A} (predicate : A → Bool) : List A → Maybe A
+  | nil := nothing
+  | (x :: xs) :=
+    if
+      | predicate x := just x
+      | else := find predicate xs;
+
 --- Right-associative fold.
 {-# specialize: [1] #-}
 foldr {A B} (f : A → B → B) (z : B) : List A → B
