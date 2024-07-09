@@ -125,6 +125,49 @@ prop-transposeMatrixDimensions : List (List Int) -> Bool
           | _ := null xs;
     in checkTxsRowXsCol && checkXsRowTxsCol;
 
+prop-foundElementSatisfiesPredicate
+  (p : Int -> Bool)
+  (xs : List Int) : Bool :=
+  case find p xs of
+    | just x := p x
+    | nothing := true;
+
+prop-nonExistenceImpliesPredicateFalseForAll
+  (p : Int -> Bool)
+  (xs : List Int) : Bool :=
+  case find p xs of
+    | (just _) := true
+    | nothing := all (x in xs) not (p x);
+
+prop-findConsistentWithSplitAt
+  (n : Nat)
+  (p : Int -> Bool)
+  (xs : List Int) : Bool :=
+    let ys×zs := splitAt n xs;
+        ys := fst ys×zs;
+        zs := snd ys×zs
+    in
+      case find p xs of
+       | (just x) := if
+           | elem (==) x ys := find p ys == just x
+           | elem (==) x zs := find p zs == just x
+           | else := false
+       | nothing := true;
+
+prop-findWithEmptyList
+  (p : Int -> Bool) : Bool := find p [] == nothing;
+
+prop-findWithAlwaysTrueIsJust (xs : List Int) : Bool :=
+  if
+   | null xs := true
+   | else :=
+     case find (const true) xs of
+       | (just _) := true
+       | nothing := false;
+
+prop-findWithAlwaysFalseIsNothing (xs : List Int) : Bool :=
+  find (const false) xs == nothing;
+
 sortTest : String -> (List Int -> List Int) -> QC.Test
   | sortName sort :=
     QC.mkTest
@@ -200,6 +243,36 @@ transposeMatrixDimentionsTest : QC.Test :=
     "transpose: transpose swaps dimensions"
     prop-transposeMatrixDimensions;
 
+findFoundElementSatisfiesPredicate : QC.Test :=
+  QC.mkTest
+    "find: found element satisfies predicate"
+    prop-foundElementSatisfiesPredicate;
+
+findNonExistenceImpliesPredicateFalseForAll : QC.Test :=
+  QC.mkTest
+    "find: non existence implies predicate false for all"
+    prop-nonExistenceImpliesPredicateFalseForAll;
+
+findConsistentWithSplitAt : QC.Test :=
+  QC.mkTest
+    "find: consistent with splitAt"
+    prop-findConsistentWithSplitAt;
+
+findOnEmptyListIsNothing : QC.Test :=
+  QC.mkTest
+    "find: called with empty list is nothing"
+    prop-findWithEmptyList;
+
+findWithAlwaysTrueIsJust : QC.Test :=
+  QC.mkTest
+    "find: always true predicate returns just"
+    prop-findWithAlwaysTrueIsJust;
+
+findWithAlwaysFalseIsNothing : QC.Test :=
+  QC.mkTest
+    "find: always false predicate returns nothing"
+    prop-findWithAlwaysFalseIsNothing;
+
 main : IO :=
   readLn
     \ {seed :=
@@ -222,4 +295,10 @@ main : IO :=
         ; sortTest "quickSort" quickSort
         ; transposeMatrixIdTest
         ; transposeMatrixDimentionsTest
+        ; findFoundElementSatisfiesPredicate
+        ; findNonExistenceImpliesPredicateFalseForAll
+        ; findConsistentWithSplitAt
+        ; findOnEmptyListIsNothing
+        ; findWithAlwaysTrueIsJust
+        ; findWithAlwaysFalseIsNothing
         ]};
