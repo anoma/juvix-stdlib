@@ -18,7 +18,6 @@ elem {A} (eq : A → A → Bool) (s : A) : List A → Bool
 
 --- 𝒪(𝓃). Returns the leftmost element of the list satisfying the predicate or
 --- nothing if there's no such element.
-{-# specialize: [1] #-}
 find {A} (predicate : A → Bool) : List A → Maybe A
   | nil := nothing
   | (x :: xs) :=
