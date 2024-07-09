@@ -12,6 +12,7 @@ import Stdlib.Data.Int open public;
 import Stdlib.Data.Field open public;
 import Stdlib.Data.Pair open public;
 import Stdlib.Data.String open public;
+import Stdlib.Data.Either open public;
 import Stdlib.Function open public;
 import Stdlib.System.IO open public;
 
