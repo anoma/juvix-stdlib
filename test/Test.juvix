@@ -9,6 +9,7 @@ import Data.String open;
 
 import Test.QuickCheckTest as QC;
 import Test.Arb as QC;
+import Test.StdlibTestExtra;
 
 prop-reverseDoesNotChangeLength : List Int -> Bool
   | xs := length (reverse xs) == length xs;
@@ -126,47 +127,86 @@ prop-transposeMatrixDimensions : List (List Int) -> Bool
     in checkTxsRowXsCol && checkXsRowTxsCol;
 
 prop-foundElementSatisfiesPredicate
-  (p : Int -> Bool)
-  (xs : List Int) : Bool :=
+  (p : Int -> Bool) (xs : List Int) : Bool :=
   case find p xs of
     | just x := p x
     | nothing := true;
 
 prop-nonExistenceImpliesPredicateFalseForAll
-  (p : Int -> Bool)
-  (xs : List Int) : Bool :=
+  (p : Int -> Bool) (xs : List Int) : Bool :=
   case find p xs of
-    | (just _) := true
+    | just _ := true
     | nothing := all (x in xs) not (p x);
 
 prop-findConsistentWithSplitAt
-  (n : Nat)
-  (p : Int -> Bool)
-  (xs : List Int) : Bool :=
-    let ys×zs := splitAt n xs;
-        ys := fst ys×zs;
-        zs := snd ys×zs
-    in
-      case find p xs of
-       | (just x) := if
+  (n : Nat) (p : Int -> Bool) (xs : List Int) : Bool :=
+  let
+    ys×zs := splitAt n xs;
+    ys := fst ys×zs;
+    zs := snd ys×zs;
+  in case find p xs of
+       | just x :=
+         if
            | elem (==) x ys := find p ys == just x
            | elem (==) x zs := find p zs == just x
            | else := false
        | nothing := true;
 
-prop-findWithEmptyList
-  (p : Int -> Bool) : Bool := find p [] == nothing;
+prop-findWithEmptyList (p : Int -> Bool) : Bool :=
+  find p [] == nothing;
 
 prop-findWithAlwaysTrueIsJust (xs : List Int) : Bool :=
   if
-   | null xs := true
-   | else :=
-     case find (const true) xs of
-       | (just _) := true
-       | nothing := false;
+    | null xs := true
+    | else :=
+      case find (const true) xs of
+        | just _ := true
+        | nothing := false;
 
 prop-findWithAlwaysFalseIsNothing (xs : List Int) : Bool :=
   find (const false) xs == nothing;
+
+prop-eitherLeftApplication
+  (f : Int -> Int) (g : Int -> Int) (x : Int) : Bool :=
+  either f g (left x) == f x;
+
+prop-eitherRightApplication
+  (f : Int -> Int) (g : Int -> Int) (x : Int) : Bool :=
+  either f g (right x) == g x;
+
+prop-eitherIsLeft : Either Int Bool -> Bool
+  | x@(left _) := isLeft x
+  | x@(right _) := not (isLeft x);
+
+prop-eitherIsRight : Either Int Bool -> Bool
+  | x@(left _) := not (isRight x)
+  | x@(right _) := isRight x;
+
+prop-eitherFromLeftDefault
+  (defaultLeft : Int) : Either Int Bool -> Bool
+  | e@(left x) := fromLeft defaultLeft e == x
+  | e@(right _) := fromLeft defaultLeft e == defaultLeft;
+
+prop-eitherFromRightDefault
+  (defaultRight : Bool) : Either Int Bool -> Bool
+  | e@(left _) := fromRight defaultRight e == defaultRight
+  | e@(right x) := fromRight defaultRight e == x;
+
+prop-eitherToMaybe : Either Int Bool -> Bool
+  | e@(left _) := eitherToMaybe e == nothing
+  | e@(right x) := eitherToMaybe e == just x;
+
+prop-maybeToEither (def : Int) : Maybe Bool -> Bool
+  | m@(just x) := maybeToEither def m == right x
+  | m@nothing := maybeToEither def m == left def;
+
+prop-eitherMapLeft (f : Int -> Int) : Either Int Int -> Bool
+  | e@(left x) := mapLeft f e == left (f x)
+  | e@(right _) := mapLeft f e == e;
+
+prop-eitherMapRight (f : Int -> Int) : Either Int Int -> Bool
+  | e@(left _) := mapRight f e == e
+  | e@(right x) := mapRight f e == right (f x);
 
 sortTest : String -> (List Int -> List Int) -> QC.Test
   | sortName sort :=
@@ -273,32 +313,96 @@ findWithAlwaysFalseIsNothing : QC.Test :=
     "find: always false predicate returns nothing"
     prop-findWithAlwaysFalseIsNothing;
 
+eitherEitherLeftApplication : QC.Test :=
+  QC.mkTest
+    "either: either left application"
+    prop-eitherLeftApplication;
+
+eitherEitherRightApplication : QC.Test :=
+  QC.mkTest
+    "either: either right application"
+    prop-eitherRightApplication;
+
+eitherIsLeft : QC.Test :=
+  QC.mkTest "either: isLeft detects left" prop-eitherIsLeft;
+
+eitherIsRight : QC.Test :=
+  QC.mkTest
+    "either: isRight detects right"
+    prop-eitherIsRight;
+
+eitherFromLeft : QC.Test :=
+  QC.mkTest
+    "either: fromLeft uses default"
+    prop-eitherFromLeftDefault;
+
+eitherFromRight : QC.Test :=
+  QC.mkTest
+    "either: fromRight uses default"
+    prop-eitherFromRightDefault;
+
+eitherEitherToMaybe : QC.Test :=
+  QC.mkTest
+    "either: eitherToMaybe"
+    prop-eitherToMaybe;
+
+eitherMaybeToEither : QC.Test :=
+  QC.mkTest
+    "either: maybeToEither"
+    prop-maybeToEither;
+
+eitherMapLeft : QC.Test :=
+  QC.mkTest
+    "either: mapLeft"
+    prop-eitherMapLeft;
+
+eitherMapRight : QC.Test :=
+  QC.mkTest
+    "either: mapRight"
+    prop-eitherMapRight;
+
 main : IO :=
   readLn
     \ {seed :=
-      QC.runTestsIO
-        100
-        (stringToNat seed)
-        [ partitionTest
-        ; reverseLengthTest
-        ; reverseReverseIdTest
-        ; splitAtRecombineTest
-        ; splitAtLengthTest
-        ; mergeSumLengthsTest
-        ; tailLengthOneLessTest
-        ; equalCompareToEqTest
-        ; zipTest
-        ; zipWithTest
-        ; snocTest
-        ; dropTest
-        ; sortTest "mergeSort" mergeSort
-        ; sortTest "quickSort" quickSort
-        ; transposeMatrixIdTest
-        ; transposeMatrixDimentionsTest
-        ; findFoundElementSatisfiesPredicate
-        ; findNonExistenceImpliesPredicateFalseForAll
-        ; findConsistentWithSplitAt
-        ; findOnEmptyListIsNothing
-        ; findWithAlwaysTrueIsJust
-        ; findWithAlwaysFalseIsNothing
-        ]};
+      let
+        seedNat := stringToNat seed;
+      in QC.runTestsIO
+          100
+          seedNat
+          [ partitionTest
+          ; reverseLengthTest
+          ; reverseReverseIdTest
+          ; splitAtRecombineTest
+          ; splitAtLengthTest
+          ; mergeSumLengthsTest
+          ; tailLengthOneLessTest
+          ; equalCompareToEqTest
+          ; zipTest
+          ; zipWithTest
+          ; snocTest
+          ; dropTest
+          ; sortTest "mergeSort" mergeSort
+          ; sortTest "quickSort" quickSort
+          ; transposeMatrixIdTest
+          ; transposeMatrixDimentionsTest
+          ; findFoundElementSatisfiesPredicate
+          ; findNonExistenceImpliesPredicateFalseForAll
+          ; findConsistentWithSplitAt
+          ; findOnEmptyListIsNothing
+          ; findWithAlwaysTrueIsJust
+          ; findWithAlwaysFalseIsNothing
+          ]
+        >>> QC.runTestsIO
+          100
+          seedNat
+          [ eitherEitherLeftApplication
+          ; eitherEitherRightApplication
+          ; eitherIsLeft
+          ; eitherIsRight
+          ; eitherFromLeft
+          ; eitherFromRight
+          ; eitherEitherToMaybe
+          ; eitherMaybeToEither
+          ; eitherMapLeft
+          ; eitherMapRight
+          ]};

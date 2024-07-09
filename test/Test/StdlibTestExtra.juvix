@@ -1,0 +1,12 @@
+module Test.StdlibTestExtra;
+
+import Stdlib.Prelude open;
+
+instance
+eitherShow
+  {A B} {{Show A}} {{Show B}} : Show (Either A B) :=
+  mkShow@{
+    show : Either A B -> String
+      | (left x) := "Left (" ++str Show.show x ++str ")"
+      | (right x) := "Right (" ++str Show.show x ++str ")"
+  };

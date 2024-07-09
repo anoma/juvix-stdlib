@@ -9,5 +9,5 @@ package : Package :=
                      ; github
                        "anoma"
                        "juvix-quickcheck"
-                       "97e39ade9a20580d68d9cfe8f74d2d38773962ba"
+                       "714f0b9ff786f1582a92157da967d216e454c6a8"
                      ]};
