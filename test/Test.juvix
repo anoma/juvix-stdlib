@@ -166,47 +166,47 @@ prop-findWithAlwaysTrueIsJust (xs : List Int) : Bool :=
 prop-findWithAlwaysFalseIsNothing (xs : List Int) : Bool :=
   find (const false) xs == nothing;
 
-prop-eitherLeftApplication
+prop-resultErrorApplication
   (f : Int -> Int) (g : Int -> Int) (x : Int) : Bool :=
-  either f g (left x) == f x;
+  handleResult f g (error x) == f x;
 
-prop-eitherRightApplication
+prop-resultOkApplication
   (f : Int -> Int) (g : Int -> Int) (x : Int) : Bool :=
-  either f g (right x) == g x;
+  handleResult f g (ok x) == g x;
 
-prop-eitherIsLeft : Either Int Bool -> Bool
-  | x@(left _) := isLeft x
-  | x@(right _) := not (isLeft x);
+prop-resultIsError : Result Int Bool -> Bool
+  | x@(error _) := isError x
+  | x@(ok _) := not (isError x);
 
-prop-eitherIsRight : Either Int Bool -> Bool
-  | x@(left _) := not (isRight x)
-  | x@(right _) := isRight x;
+prop-resultIsOk : Result Int Bool -> Bool
+  | x@(error _) := not (isOk x)
+  | x@(ok _) := isOk x;
 
-prop-eitherFromLeftDefault
-  (defaultLeft : Int) : Either Int Bool -> Bool
-  | e@(left x) := fromLeft defaultLeft e == x
-  | e@(right _) := fromLeft defaultLeft e == defaultLeft;
+prop-resultFromErrorDefault
+  (defaultError : Int) : Result Int Bool -> Bool
+  | e@(error x) := fromError defaultError e == x
+  | e@(ok _) := fromError defaultError e == defaultError;
 
-prop-eitherFromRightDefault
-  (defaultRight : Bool) : Either Int Bool -> Bool
-  | e@(left _) := fromRight defaultRight e == defaultRight
-  | e@(right x) := fromRight defaultRight e == x;
+prop-resultFromOkDefault
+  (defaultOk : Bool) : Result Int Bool -> Bool
+  | e@(error _) := fromOk defaultOk e == defaultOk
+  | e@(ok x) := fromOk defaultOk e == x;
 
-prop-eitherToMaybe : Either Int Bool -> Bool
-  | e@(left _) := eitherToMaybe e == nothing
-  | e@(right x) := eitherToMaybe e == just x;
+prop-resultToMaybe : Result Int Bool -> Bool
+  | e@(error _) := resultToMaybe e == nothing
+  | e@(ok x) := resultToMaybe e == just x;
 
-prop-maybeToEither (def : Int) : Maybe Bool -> Bool
-  | m@(just x) := maybeToEither def m == right x
-  | m@nothing := maybeToEither def m == left def;
+prop-maybeToResult (def : Int) : Maybe Bool -> Bool
+  | m@(just x) := maybeToResult def m == ok x
+  | m@nothing := maybeToResult def m == error def;
 
-prop-eitherMapLeft (f : Int -> Int) : Either Int Int -> Bool
-  | e@(left x) := mapLeft f e == left (f x)
-  | e@(right _) := mapLeft f e == e;
+prop-resultMapError (f : Int -> Int) : Result Int Int -> Bool
+  | e@(error x) := mapError f e == error (f x)
+  | e@(ok _) := mapError f e == e;
 
-prop-eitherMapRight (f : Int -> Int) : Either Int Int -> Bool
-  | e@(left _) := mapRight f e == e
-  | e@(right x) := mapRight f e == right (f x);
+prop-resultMapOk (f : Int -> Int) : Result Int Int -> Bool
+  | e@(error _) := mapOk f e == e
+  | e@(ok x) := mapOk f e == ok (f x);
 
 sortTest : String -> (List Int -> List Int) -> QC.Test
   | sortName sort :=
@@ -313,53 +313,53 @@ findWithAlwaysFalseIsNothing : QC.Test :=
     "find: always false predicate returns nothing"
     prop-findWithAlwaysFalseIsNothing;
 
-eitherEitherLeftApplication : QC.Test :=
+resultResultErrorApplication : QC.Test :=
   QC.mkTest
-    "either: either left application"
-    prop-eitherLeftApplication;
+    "result: result error application"
+    prop-resultErrorApplication;
 
-eitherEitherRightApplication : QC.Test :=
+resultResultOkApplication : QC.Test :=
   QC.mkTest
-    "either: either right application"
-    prop-eitherRightApplication;
+    "result: result ok application"
+    prop-resultOkApplication;
 
-eitherIsLeft : QC.Test :=
-  QC.mkTest "either: isLeft detects left" prop-eitherIsLeft;
+resultIsError : QC.Test :=
+  QC.mkTest "result: isError detects error" prop-resultIsError;
 
-eitherIsRight : QC.Test :=
+resultIsOk : QC.Test :=
   QC.mkTest
-    "either: isRight detects right"
-    prop-eitherIsRight;
+    "result: isOk detects ok"
+    prop-resultIsOk;
 
-eitherFromLeft : QC.Test :=
+resultFromError : QC.Test :=
   QC.mkTest
-    "either: fromLeft uses default"
-    prop-eitherFromLeftDefault;
+    "result: fromError uses default"
+    prop-resultFromErrorDefault;
 
-eitherFromRight : QC.Test :=
+resultFromOk : QC.Test :=
   QC.mkTest
-    "either: fromRight uses default"
-    prop-eitherFromRightDefault;
+    "result: fromOk uses default"
+    prop-resultFromOkDefault;
 
-eitherEitherToMaybe : QC.Test :=
+resultResultToMaybe : QC.Test :=
   QC.mkTest
-    "either: eitherToMaybe"
-    prop-eitherToMaybe;
+    "result: resultToMaybe"
+    prop-resultToMaybe;
 
-eitherMaybeToEither : QC.Test :=
+resultMaybeToResult : QC.Test :=
   QC.mkTest
-    "either: maybeToEither"
-    prop-maybeToEither;
+    "result: maybeToResult"
+    prop-maybeToResult;
 
-eitherMapLeft : QC.Test :=
+resultMapError : QC.Test :=
   QC.mkTest
-    "either: mapLeft"
-    prop-eitherMapLeft;
+    "result: mapError"
+    prop-resultMapError;
 
-eitherMapRight : QC.Test :=
+resultMapOk : QC.Test :=
   QC.mkTest
-    "either: mapRight"
-    prop-eitherMapRight;
+    "result: mapOk"
+    prop-resultMapOk;
 
 main : IO :=
   readLn
@@ -395,14 +395,14 @@ main : IO :=
         >>> QC.runTestsIO
           100
           seedNat
-          [ eitherEitherLeftApplication
-          ; eitherEitherRightApplication
-          ; eitherIsLeft
-          ; eitherIsRight
-          ; eitherFromLeft
-          ; eitherFromRight
-          ; eitherEitherToMaybe
-          ; eitherMaybeToEither
-          ; eitherMapLeft
-          ; eitherMapRight
+          [ resultResultErrorApplication
+          ; resultResultOkApplication
+          ; resultIsError
+          ; resultIsOk
+          ; resultFromError
+          ; resultFromOk
+          ; resultResultToMaybe
+          ; resultMaybeToResult
+          ; resultMapError
+          ; resultMapOk
           ]};

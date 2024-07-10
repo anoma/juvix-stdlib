@@ -4,9 +4,9 @@ import Stdlib.Prelude open;
 
 instance
 eitherShow
-  {A B} {{Show A}} {{Show B}} : Show (Either A B) :=
+  {A B} {{Show A}} {{Show B}} : Show (Result A B) :=
   mkShow@{
-    show : Either A B -> String
-      | (left x) := "Left (" ++str Show.show x ++str ")"
-      | (right x) := "Right (" ++str Show.show x ++str ")"
+    show : Result A B -> String
+      | (error x) := "Error (" ++str Show.show x ++str ")"
+      | (ok x) := "Ok (" ++str Show.show x ++str ")"
   };

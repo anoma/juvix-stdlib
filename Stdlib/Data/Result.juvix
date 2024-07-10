@@ -1,0 +1,26 @@
+module Stdlib.Data.Result;
+
+import Stdlib.Data.Result.Base open public;
+import Stdlib.Data.Bool.Base open;
+
+import Stdlib.Trait.Eq open;
+import Stdlib.Trait.Ord open;
+
+instance
+ordResultI {A B} {{Ord A}} {{Ord B}} : Ord (Result A B) :=
+  mkOrd@{
+    cmp : Result A B -> Result A B -> Ordering
+      | (error a1) (error a2) := Ord.cmp a1 a2
+      | (ok b1) (ok b2) := Ord.cmp b1 b2
+      | (error _) (ok _) := LT
+      | (ok _) (error _) := GT
+  };
+
+instance
+eqResultI {A B} {{Eq A}} {{Eq B}} : Eq (Result A B) :=
+  mkEq@{
+    eq : Result A B -> Result A B -> Bool
+      | (error a1) (error a2) := a1 == a2
+      | (ok b1) (ok b2) := b1 == b2
+      | _ _ := false
+  };

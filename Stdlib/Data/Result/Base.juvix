@@ -1,0 +1,60 @@
+module Stdlib.Data.Result.Base;
+
+import Stdlib.Data.Bool.Base open;
+import Stdlib.Data.Maybe.Base open;
+import Stdlib.Function open;
+
+--- The Result type represents either a success with a value of `ok` or an error
+--- with value `error`.
+type Result E A :=
+  | error E
+  | ok A;
+
+--- Apply the onError function if the value is ;error; or apply the
+--- onOk function if the value is ;ok;.
+handleResult
+  {E A B}
+  (onError : E -> B)
+  (onOk : A -> B)
+  : Result E A -> B
+  | (error a) := onError a
+  | (ok a) := onOk a;
+
+--- Apply a function to the ;error; value of a Result.
+mapError
+  {A E1 E2} (f : E1 -> E2) : Result E1 A -> Result E2 A :=
+  handleResult (f >> error) ok;
+
+--- Apply a function to the ;ok; value of a Result.
+mapOk {E A C} (f : A -> C) : Result E A -> Result E C :=
+  handleResult error (f >> ok);
+
+--- Return ;true; if the value is an ;error;, otherwise ;false;.
+isError {E A} : Result E A -> Bool
+  | (error _) := true
+  | (ok _) := false;
+
+--- Return ;true; if the value is ;ok;, otherwise ;false;.
+isOk {E A} : Result E A -> Bool
+  | (error _) := false
+  | (ok _) := true;
+
+--- Return the contents of an ;error; value, otherwise return a default.
+fromError {E A} (default : E) : Result E A -> E
+  | (error a) := a
+  | (ok _) := default;
+
+--- Return the contents of an ;ok; value, otherwise return a default.
+fromOk {E A} (default : A) : Result E A -> A
+  | (error _) := default
+  | (ok b) := b;
+
+--- Convert a Result to a Maybe. An ;error; value becomes `nothing`.
+resultToMaybe {E A} : Result E A -> Maybe A :=
+  handleResult (const nothing) just;
+
+--- Convert a Maybe to a Result. A ;nothing; value becomes `error defaultError`.
+maybeToResult
+  {E A} (defaultError : E) : Maybe A -> Result E A
+  | nothing := error defaultError
+  | (just x) := ok x;
