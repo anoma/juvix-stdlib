@@ -58,7 +58,10 @@ double : Point -> Point
           slope := (3 * x * x + StarkCurve.ALPHA) / (2 * y);
           r_x := slope * slope - x - x;
           r_y := slope * (x - r_x) - y;
-        in mkPoint (x := r_x; y := r_y);
+        in mkPoint@?{
+          x := r_x;
+          y := r_y
+        };
 
 --- Adds two valid points on the EC.
 add : Point -> Point -> Point
