@@ -200,7 +200,8 @@ prop-maybeToResult (def : Int) : Maybe Bool -> Bool
   | m@(just x) := maybeToResult def m == ok x
   | m@nothing := maybeToResult def m == error def;
 
-prop-resultMapError (f : Int -> Int) : Result Int Int -> Bool
+prop-resultMapError
+  (f : Int -> Int) : Result Int Int -> Bool
   | e@(error x) := mapError f e == error (f x)
   | e@(ok _) := mapError f e == e;
 
@@ -324,12 +325,12 @@ resultResultOkApplication : QC.Test :=
     prop-resultOkApplication;
 
 resultIsError : QC.Test :=
-  QC.mkTest "result: isError detects error" prop-resultIsError;
+  QC.mkTest
+    "result: isError detects error"
+    prop-resultIsError;
 
 resultIsOk : QC.Test :=
-  QC.mkTest
-    "result: isOk detects ok"
-    prop-resultIsOk;
+  QC.mkTest "result: isOk detects ok" prop-resultIsOk;
 
 resultFromError : QC.Test :=
   QC.mkTest
@@ -342,24 +343,16 @@ resultFromOk : QC.Test :=
     prop-resultFromOkDefault;
 
 resultResultToMaybe : QC.Test :=
-  QC.mkTest
-    "result: resultToMaybe"
-    prop-resultToMaybe;
+  QC.mkTest "result: resultToMaybe" prop-resultToMaybe;
 
 resultMaybeToResult : QC.Test :=
-  QC.mkTest
-    "result: maybeToResult"
-    prop-maybeToResult;
+  QC.mkTest "result: maybeToResult" prop-maybeToResult;
 
 resultMapError : QC.Test :=
-  QC.mkTest
-    "result: mapError"
-    prop-resultMapError;
+  QC.mkTest "result: mapError" prop-resultMapError;
 
 resultMapOk : QC.Test :=
-  QC.mkTest
-    "result: mapOk"
-    prop-resultMapOk;
+  QC.mkTest "result: mapOk" prop-resultMapOk;
 
 main : IO :=
   readLn
