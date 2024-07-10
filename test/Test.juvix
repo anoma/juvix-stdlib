@@ -9,6 +9,7 @@ import Data.String open;
 
 import Test.QuickCheckTest as QC;
 import Test.Arb as QC;
+import Test.StdlibTestExtra;
 
 prop-reverseDoesNotChangeLength : List Int -> Bool
   | xs := length (reverse xs) == length xs;
@@ -125,6 +126,89 @@ prop-transposeMatrixDimensions : List (List Int) -> Bool
           | _ := null xs;
     in checkTxsRowXsCol && checkXsRowTxsCol;
 
+prop-foundElementSatisfiesPredicate
+  (p : Int -> Bool) (xs : List Int) : Bool :=
+  case find p xs of
+    | just x := p x
+    | nothing := true;
+
+prop-nonExistenceImpliesPredicateFalseForAll
+  (p : Int -> Bool) (xs : List Int) : Bool :=
+  case find p xs of
+    | just _ := true
+    | nothing := all (x in xs) not (p x);
+
+prop-findConsistentWithSplitAt
+  (n : Nat) (p : Int -> Bool) (xs : List Int) : Bool :=
+  let
+    ys×zs := splitAt n xs;
+    ys := fst ys×zs;
+    zs := snd ys×zs;
+  in case find p xs of
+       | just x :=
+         if
+           | elem (==) x ys := find p ys == just x
+           | elem (==) x zs := find p zs == just x
+           | else := false
+       | nothing := true;
+
+prop-findWithEmptyList (p : Int -> Bool) : Bool :=
+  find p [] == nothing;
+
+prop-findWithAlwaysTrueIsJust (xs : List Int) : Bool :=
+  if
+    | null xs := true
+    | else :=
+      case find (const true) xs of
+        | just _ := true
+        | nothing := false;
+
+prop-findWithAlwaysFalseIsNothing (xs : List Int) : Bool :=
+  find (const false) xs == nothing;
+
+prop-resultErrorApplication
+  (f : Int -> Int) (g : Int -> Int) (x : Int) : Bool :=
+  handleResult f g (error x) == f x;
+
+prop-resultOkApplication
+  (f : Int -> Int) (g : Int -> Int) (x : Int) : Bool :=
+  handleResult f g (ok x) == g x;
+
+prop-resultIsError : Result Int Bool -> Bool
+  | x@(error _) := isError x
+  | x@(ok _) := not (isError x);
+
+prop-resultIsOk : Result Int Bool -> Bool
+  | x@(error _) := not (isOk x)
+  | x@(ok _) := isOk x;
+
+prop-resultFromErrorDefault
+  (defaultError : Int) : Result Int Bool -> Bool
+  | e@(error x) := fromError defaultError e == x
+  | e@(ok _) := fromError defaultError e == defaultError;
+
+prop-resultFromOkDefault
+  (defaultOk : Bool) : Result Int Bool -> Bool
+  | e@(error _) := fromOk defaultOk e == defaultOk
+  | e@(ok x) := fromOk defaultOk e == x;
+
+prop-resultToMaybe : Result Int Bool -> Bool
+  | e@(error _) := resultToMaybe e == nothing
+  | e@(ok x) := resultToMaybe e == just x;
+
+prop-maybeToResult (def : Int) : Maybe Bool -> Bool
+  | m@(just x) := maybeToResult def m == ok x
+  | m@nothing := maybeToResult def m == error def;
+
+prop-resultMapError
+  (f : Int -> Int) : Result Int Int -> Bool
+  | e@(error x) := mapError f e == error (f x)
+  | e@(ok _) := mapError f e == e;
+
+prop-resultMapOk (f : Int -> Int) : Result Int Int -> Bool
+  | e@(error _) := mapOk f e == e
+  | e@(ok x) := mapOk f e == ok (f x);
+
 sortTest : String -> (List Int -> List Int) -> QC.Test
   | sortName sort :=
     QC.mkTest
@@ -200,26 +284,118 @@ transposeMatrixDimentionsTest : QC.Test :=
     "transpose: transpose swaps dimensions"
     prop-transposeMatrixDimensions;
 
+findFoundElementSatisfiesPredicate : QC.Test :=
+  QC.mkTest
+    "find: found element satisfies predicate"
+    prop-foundElementSatisfiesPredicate;
+
+findNonExistenceImpliesPredicateFalseForAll : QC.Test :=
+  QC.mkTest
+    "find: non existence implies predicate false for all"
+    prop-nonExistenceImpliesPredicateFalseForAll;
+
+findConsistentWithSplitAt : QC.Test :=
+  QC.mkTest
+    "find: consistent with splitAt"
+    prop-findConsistentWithSplitAt;
+
+findOnEmptyListIsNothing : QC.Test :=
+  QC.mkTest
+    "find: called with empty list is nothing"
+    prop-findWithEmptyList;
+
+findWithAlwaysTrueIsJust : QC.Test :=
+  QC.mkTest
+    "find: always true predicate returns just"
+    prop-findWithAlwaysTrueIsJust;
+
+findWithAlwaysFalseIsNothing : QC.Test :=
+  QC.mkTest
+    "find: always false predicate returns nothing"
+    prop-findWithAlwaysFalseIsNothing;
+
+resultResultErrorApplication : QC.Test :=
+  QC.mkTest
+    "result: result error application"
+    prop-resultErrorApplication;
+
+resultResultOkApplication : QC.Test :=
+  QC.mkTest
+    "result: result ok application"
+    prop-resultOkApplication;
+
+resultIsError : QC.Test :=
+  QC.mkTest
+    "result: isError detects error"
+    prop-resultIsError;
+
+resultIsOk : QC.Test :=
+  QC.mkTest "result: isOk detects ok" prop-resultIsOk;
+
+resultFromError : QC.Test :=
+  QC.mkTest
+    "result: fromError uses default"
+    prop-resultFromErrorDefault;
+
+resultFromOk : QC.Test :=
+  QC.mkTest
+    "result: fromOk uses default"
+    prop-resultFromOkDefault;
+
+resultResultToMaybe : QC.Test :=
+  QC.mkTest "result: resultToMaybe" prop-resultToMaybe;
+
+resultMaybeToResult : QC.Test :=
+  QC.mkTest "result: maybeToResult" prop-maybeToResult;
+
+resultMapError : QC.Test :=
+  QC.mkTest "result: mapError" prop-resultMapError;
+
+resultMapOk : QC.Test :=
+  QC.mkTest "result: mapOk" prop-resultMapOk;
+
 main : IO :=
   readLn
     \ {seed :=
-      QC.runTestsIO
-        100
-        (stringToNat seed)
-        [ partitionTest
-        ; reverseLengthTest
-        ; reverseReverseIdTest
-        ; splitAtRecombineTest
-        ; splitAtLengthTest
-        ; mergeSumLengthsTest
-        ; tailLengthOneLessTest
-        ; equalCompareToEqTest
-        ; zipTest
-        ; zipWithTest
-        ; snocTest
-        ; dropTest
-        ; sortTest "mergeSort" mergeSort
-        ; sortTest "quickSort" quickSort
-        ; transposeMatrixIdTest
-        ; transposeMatrixDimentionsTest
-        ]};
+      let
+        seedNat := stringToNat seed;
+      in QC.runTestsIO
+          100
+          seedNat
+          [ partitionTest
+          ; reverseLengthTest
+          ; reverseReverseIdTest
+          ; splitAtRecombineTest
+          ; splitAtLengthTest
+          ; mergeSumLengthsTest
+          ; tailLengthOneLessTest
+          ; equalCompareToEqTest
+          ; zipTest
+          ; zipWithTest
+          ; snocTest
+          ; dropTest
+          ; sortTest "mergeSort" mergeSort
+          ; sortTest "quickSort" quickSort
+          ; transposeMatrixIdTest
+          ; transposeMatrixDimentionsTest
+          ; findFoundElementSatisfiesPredicate
+          ; findNonExistenceImpliesPredicateFalseForAll
+          ; findConsistentWithSplitAt
+          ; findOnEmptyListIsNothing
+          ; findWithAlwaysTrueIsJust
+          ; findWithAlwaysFalseIsNothing
+          ]
+        >>> QC.runTestsIO
+          100
+          seedNat
+          [ resultResultErrorApplication
+          ; resultResultOkApplication
+          ; resultIsError
+          ; resultIsOk
+          ; resultFromError
+          ; resultFromOk
+          ; resultResultToMaybe
+          ; resultMaybeToResult
+          ; resultMapError
+          ; resultMapOk
+          ]};
