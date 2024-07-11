@@ -9,6 +9,7 @@ fromOrdToEq {A} {{Ord A}} : Eq.Eq A := Eq.mkEq (==);
 
 syntax operator == comparison;
 
+{-# isabelle-operator: {name: "=", prec: 50, assoc: none} #-}
 == {A} {{Ord A}} (x y : A) : Bool :=
   case Ord.cmp x y of
     | EQ := true
@@ -17,5 +18,5 @@ syntax operator == comparison;
 syntax operator /= comparison;
 
 --- Tests for inequality.
-{-# inline: true #-}
+{-# inline: true, isabelle-operator: {name: "≠", prec: 50, assoc: none} #-}
 /= {A} {{Ord A}} (x y : A) : Bool := not (x == y);
