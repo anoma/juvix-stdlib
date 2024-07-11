@@ -10,7 +10,7 @@ fromMaybe {A} (a : A) : Maybe A → A
 
 --- Applies a function to the value from a ;Maybe; if present, else returns the
 --- given value.
-{-# inline: true #-}
+{-# inline: true, isabelle-function: {name: "case_option"} #-}
 maybe {A B} (b : B) (f : A → B) : Maybe A → B
   | nothing := b
   | (just a) := f a;
