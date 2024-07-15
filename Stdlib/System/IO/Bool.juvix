@@ -7,5 +7,4 @@ import Stdlib.System.IO.String open;
 builtin bool-print
 axiom printBool : Bool → IO;
 
-printBoolLn (b : Bool) : IO :=
-  printBool b >>> printString "\n";
+printBoolLn (b : Bool) : IO := printBool b >>> printString "\n";

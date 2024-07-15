@@ -47,8 +47,7 @@ iterate {A} : Nat -> (A -> A) -> A -> A
 syntax operator on lapp;
 
 {-# inline: 2 #-}
-on {A B C} (f : B → B → C) (g : A → B) (a b : A) : C :=
-  f (g a) (g b);
+on {A B C} (f : B → B → C) (g : A → B) (a b : A) : C := f (g a) (g b);
 
 syntax operator >-> seq;
 

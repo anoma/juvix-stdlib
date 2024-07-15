@@ -8,8 +8,6 @@ import Stdlib.System.IO.String open public;
 
 import Stdlib.Trait.Show open;
 
-print {A} {{Show A}} (a : A) : IO :=
-  printString (Show.show a);
+print {A} {{Show A}} (a : A) : IO := printString (Show.show a);
 
-printLn {A} {{Show A}} (a : A) : IO :=
-  printStringLn (Show.show a);
+printLn {A} {{Show A}} (a : A) : IO := printStringLn (Show.show a);
