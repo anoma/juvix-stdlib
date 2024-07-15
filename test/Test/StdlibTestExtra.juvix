@@ -3,8 +3,7 @@ module Test.StdlibTestExtra;
 import Stdlib.Prelude open;
 
 instance
-eitherShow
-  {A B} {{Show A}} {{Show B}} : Show (Result A B) :=
+eitherShow {A B} {{Show A}} {{Show B}} : Show (Result A B) :=
   mkShow@{
     show : Result A B -> String
       | (error x) := "Error (" ++str Show.show x ++str ")"

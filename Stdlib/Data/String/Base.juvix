@@ -9,5 +9,4 @@ import Stdlib.Data.Fixity open;
 concatStr : List String -> String := foldl (++str) "";
 
 --- Joins a ;List; of ;String;s with "\n".
-unlines : List String -> String :=
-  intersperse "\n" >> concatStr;
+unlines : List String -> String := intersperse "\n" >> concatStr;

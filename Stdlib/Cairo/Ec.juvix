@@ -12,17 +12,13 @@ import Stdlib.Data.Bool open;
 module StarkCurve;
   ALPHA : Field := 1;
 
-  BETA : Field :=
-    0x6f21413efbe40de150e596d72f7a8c5609ad26c15c915c1f4cdfcb99cee9e89;
+  BETA : Field := 0x6f21413efbe40de150e596d72f7a8c5609ad26c15c915c1f4cdfcb99cee9e89;
 
-  ORDER : Field :=
-    0x800000000000010ffffffffffffffffb781126dcae7b2321e66a241adc64d2f;
+  ORDER : Field := 0x800000000000010ffffffffffffffffb781126dcae7b2321e66a241adc64d2f;
 
-  GEN_X : Field :=
-    0x1ef15c18599971b7beced415a40f0c7deacfd9b0d1819e03d723d8bc943cfca;
+  GEN_X : Field := 0x1ef15c18599971b7beced415a40f0c7deacfd9b0d1819e03d723d8bc943cfca;
 
-  GEN_Y : Field :=
-    0x5668060aa49730b7be4801df46ec62de53ecd11abe43a32873000c36e8dc1f;
+  GEN_Y : Field := 0x5668060aa49730b7be4801df46ec62de53ecd11abe43a32873000c36e8dc1f;
 end;
 
 builtin ec_point
@@ -45,8 +41,7 @@ isOnCurve : Point -> Bool
   | (mkPoint x y) :=
     if
       | y == 0 := x == 0
-      | else :=
-        y * y == (x * x + StarkCurve.ALPHA) * x + StarkCurve.BETA;
+      | else := y * y == (x * x + StarkCurve.ALPHA) * x + StarkCurve.BETA;
 
 --- Doubles a valid point p (computes p + p) on the elliptic curve.
 double : Point -> Point
@@ -58,7 +53,10 @@ double : Point -> Point
           slope := (3 * x * x + StarkCurve.ALPHA) / (2 * y);
           r_x := slope * slope - x - x;
           r_y := slope * (x - r_x) - y;
-        in mkPoint (x := r_x; y := r_y);
+        in mkPoint@?{
+          x := r_x;
+          y := r_y
+        };
 
 --- Adds two valid points on the EC.
 add : Point -> Point -> Point
@@ -109,8 +107,7 @@ addMul (p : Point) (m : Field) (q : Point) : Point :=
       in sub r s;
 
 --- Computes m * p on the elliptic curve.
-mul (m : Field) (p : Point) : Point :=
-  addMul (mkPoint 0 0) m p;
+mul (m : Field) (p : Point) : Point := addMul (mkPoint 0 0) m p;
 
 module Operators;
   import Stdlib.Data.Fixity open;

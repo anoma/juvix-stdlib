@@ -18,22 +18,15 @@ prop-reverseReverseIsIdentity : List Int -> Bool
   | xs := eqListInt xs (reverse (reverse xs));
 
 prop-tailLengthOneLess : List Int -> Bool
-  | xs :=
-    null xs
-      || ofNat (length (tail xs)) == intSubNat (length xs) 1;
+  | xs := null xs || ofNat (length (tail xs)) == intSubNat (length xs) 1;
 
 prop-splitAtRecombine : Nat -> List Int -> Bool
-  | n xs :=
-    case splitAt n xs of
-      lhs, rhs := eqListInt xs (lhs ++ rhs);
+  | n xs := case splitAt n xs of lhs, rhs := eqListInt xs (lhs ++ rhs);
 
 prop-splitAtLength : Nat -> List Int -> Bool
   | n xs :=
-    case
-      splitAt n (xs ++ replicate (sub n (length xs)) (ofNat 0))
-    of
-      lhs, rhs :=
-        length lhs == n && length rhs == sub (length xs) n;
+    case splitAt n (xs ++ replicate (sub n (length xs)) (ofNat 0)) of
+      lhs, rhs := length lhs == n && length rhs == sub (length xs) n;
 -- Make sure the list has length at least n
 
 prop-mergeSumLengths : List Int -> List Int -> Bool
@@ -42,10 +35,7 @@ prop-mergeSumLengths : List Int -> List Int -> Bool
 prop-partition : List Int -> (Int -> Bool) -> Bool
   | xs p :=
     case partition p xs of
-      lhs, rhs :=
-        all p lhs
-          && not (any p rhs)
-          && eqListInt (sortInt xs) (sortInt (lhs ++ rhs));
+      lhs, rhs := all p lhs && not (any p rhs) && eqListInt (sortInt xs) (sortInt (lhs ++ rhs));
 
 prop-distributive : Int -> Int -> (Int -> Int) -> Bool
   | a b f := f (a + b) == f a + f b;
@@ -70,9 +60,7 @@ prop-sort : (List Int -> List Int) -> List Int -> Bool
         | nil := true
         | (_ :: nil) := true
         | (x :: y :: xs) := x <= y && isSorted (y :: xs);
-    in length sorted == length xs
-      && eqListInt sorted (sort sorted)
-      && isSorted sorted;
+    in length sorted == length xs && eqListInt sorted (sort sorted) && isSorted sorted;
 
 prop-zip : List Int -> List Int -> Bool
   | xs ys :=
@@ -83,8 +71,7 @@ prop-zip : List Int -> List Int -> Bool
       && eqListInt (take expectedLen xs) (map fst zs)
       && eqListInt (take expectedLen ys) (map snd zs);
 
-prop-zipWith
-  : (Int -> Int -> Int) -> List Int -> List Int -> Bool
+prop-zipWith : (Int -> Int -> Int) -> List Int -> List Int -> Bool
   | f xs ys :=
     let
       zs : List Int := zipWith f xs ys;
@@ -104,8 +91,7 @@ prop-drop : Nat -> List Int -> Bool
   | n xs :=
     let
       drop-n : List Int := drop n xs;
-    in length drop-n <= length xs
-      && eqListInt (drop n (drop n xs)) (drop (2 * n) xs);
+    in length drop-n <= length xs && eqListInt (drop n (drop n xs)) (drop (2 * n) xs);
 
 -- Assumption: The input list represents a rectangular matrix
 prop-transposeMatrixId : List (List Int) -> Bool
@@ -126,20 +112,17 @@ prop-transposeMatrixDimensions : List (List Int) -> Bool
           | _ := null xs;
     in checkTxsRowXsCol && checkXsRowTxsCol;
 
-prop-foundElementSatisfiesPredicate
-  (p : Int -> Bool) (xs : List Int) : Bool :=
+prop-foundElementSatisfiesPredicate (p : Int -> Bool) (xs : List Int) : Bool :=
   case find p xs of
     | just x := p x
     | nothing := true;
 
-prop-nonExistenceImpliesPredicateFalseForAll
-  (p : Int -> Bool) (xs : List Int) : Bool :=
+prop-nonExistenceImpliesPredicateFalseForAll (p : Int -> Bool) (xs : List Int) : Bool :=
   case find p xs of
     | just _ := true
     | nothing := all (x in xs) not (p x);
 
-prop-findConsistentWithSplitAt
-  (n : Nat) (p : Int -> Bool) (xs : List Int) : Bool :=
+prop-findConsistentWithSplitAt (n : Nat) (p : Int -> Bool) (xs : List Int) : Bool :=
   let
     ys×zs := splitAt n xs;
     ys := fst ys×zs;
@@ -152,8 +135,7 @@ prop-findConsistentWithSplitAt
            | else := false
        | nothing := true;
 
-prop-findWithEmptyList (p : Int -> Bool) : Bool :=
-  find p [] == nothing;
+prop-findWithEmptyList (p : Int -> Bool) : Bool := find p [] == nothing;
 
 prop-findWithAlwaysTrueIsJust (xs : List Int) : Bool :=
   if
@@ -163,15 +145,12 @@ prop-findWithAlwaysTrueIsJust (xs : List Int) : Bool :=
         | just _ := true
         | nothing := false;
 
-prop-findWithAlwaysFalseIsNothing (xs : List Int) : Bool :=
-  find (const false) xs == nothing;
+prop-findWithAlwaysFalseIsNothing (xs : List Int) : Bool := find (const false) xs == nothing;
 
-prop-resultErrorApplication
-  (f : Int -> Int) (g : Int -> Int) (x : Int) : Bool :=
+prop-resultErrorApplication (f : Int -> Int) (g : Int -> Int) (x : Int) : Bool :=
   handleResult f g (error x) == f x;
 
-prop-resultOkApplication
-  (f : Int -> Int) (g : Int -> Int) (x : Int) : Bool :=
+prop-resultOkApplication (f : Int -> Int) (g : Int -> Int) (x : Int) : Bool :=
   handleResult f g (ok x) == g x;
 
 prop-resultIsError : Result Int Bool -> Bool
@@ -182,13 +161,11 @@ prop-resultIsOk : Result Int Bool -> Bool
   | x@(error _) := not (isOk x)
   | x@(ok _) := isOk x;
 
-prop-resultFromErrorDefault
-  (defaultError : Int) : Result Int Bool -> Bool
+prop-resultFromErrorDefault (defaultError : Int) : Result Int Bool -> Bool
   | e@(error x) := fromError defaultError e == x
   | e@(ok _) := fromError defaultError e == defaultError;
 
-prop-resultFromOkDefault
-  (defaultOk : Bool) : Result Int Bool -> Bool
+prop-resultFromOkDefault (defaultOk : Bool) : Result Int Bool -> Bool
   | e@(error _) := fromOk defaultOk e == defaultOk
   | e@(ok x) := fromOk defaultOk e == x;
 
@@ -200,8 +177,7 @@ prop-maybeToResult (def : Int) : Maybe Bool -> Bool
   | m@(just x) := maybeToResult def m == ok x
   | m@nothing := maybeToResult def m == error def;
 
-prop-resultMapError
-  (f : Int -> Int) : Result Int Int -> Bool
+prop-resultMapError (f : Int -> Int) : Result Int Int -> Bool
   | e@(error x) := mapError f e == error (f x)
   | e@(ok _) := mapError f e == e;
 
@@ -210,10 +186,7 @@ prop-resultMapOk (f : Int -> Int) : Result Int Int -> Bool
   | e@(ok x) := mapOk f e == ok (f x);
 
 sortTest : String -> (List Int -> List Int) -> QC.Test
-  | sortName sort :=
-    QC.mkTest
-      ("sort properties: " ++str sortName)
-      (prop-sort sort);
+  | sortName sort := QC.mkTest ("sort properties: " ++str sortName) (prop-sort sort);
 
 dropTest : QC.Test := QC.mkTest "drop properties" prop-drop;
 
@@ -221,41 +194,24 @@ snocTest : QC.Test := QC.mkTest "snoc properties" prop-snoc;
 
 zipTest : QC.Test := QC.mkTest "zip properties" prop-zip;
 
-zipWithTest : QC.Test :=
-  QC.mkTest "zipWith properties" prop-zipWith;
+zipWithTest : QC.Test := QC.mkTest "zipWith properties" prop-zipWith;
 
-equalCompareToEqTest : QC.Test :=
-  QC.mkTest
-    "equal Nats compare to EQ"
-    prop-equal-compare-to-eq;
+equalCompareToEqTest : QC.Test := QC.mkTest "equal Nats compare to EQ" prop-equal-compare-to-eq;
 
-gcdNoCoprimeTest : QC.Test :=
-  QC.mkTest "no integers are coprime" prop-gcd-bad;
+gcdNoCoprimeTest : QC.Test := QC.mkTest "no integers are coprime" prop-gcd-bad;
 
 partitionTest : QC.Test :=
-  QC.mkTest
-    "partition: recombination of the output equals the input"
-    prop-partition;
+  QC.mkTest "partition: recombination of the output equals the input" prop-partition;
 
-testDistributive : QC.Test :=
-  QC.mkTest
-    "all functions are distributive over +"
-    prop-distributive;
+testDistributive : QC.Test := QC.mkTest "all functions are distributive over +" prop-distributive;
 
-reverseLengthTest : QC.Test :=
-  QC.mkTest
-    "reverse preserves length"
-    prop-reverseDoesNotChangeLength;
+reverseLengthTest : QC.Test := QC.mkTest "reverse preserves length" prop-reverseDoesNotChangeLength;
 
 reverseReverseIdTest : QC.Test :=
-  QC.mkTest
-    "reverse of reverse is identity"
-    prop-reverseReverseIsIdentity;
+  QC.mkTest "reverse of reverse is identity" prop-reverseReverseIsIdentity;
 
 splitAtRecombineTest : QC.Test :=
-  QC.mkTest
-    "splitAt: recombination of the output is equal to the input list"
-    prop-splitAtRecombine;
+  QC.mkTest "splitAt: recombination of the output is equal to the input list" prop-splitAtRecombine;
 
 splitAtLengthTest : QC.Test :=
   QC.mkTest
@@ -268,9 +224,7 @@ mergeSumLengthsTest : QC.Test :=
     prop-mergeSumLengths;
 
 tailLengthOneLessTest : QC.Test :=
-  QC.mkTest
-    "tail: length of output is one less than input unless empty"
-    prop-tailLengthOneLess;
+  QC.mkTest "tail: length of output is one less than input unless empty" prop-tailLengthOneLess;
 
 transposeMatrixIdTest : QC.Test :=
   QC.mkTest
@@ -285,9 +239,7 @@ transposeMatrixDimentionsTest : QC.Test :=
     prop-transposeMatrixDimensions;
 
 findFoundElementSatisfiesPredicate : QC.Test :=
-  QC.mkTest
-    "find: found element satisfies predicate"
-    prop-foundElementSatisfiesPredicate;
+  QC.mkTest "find: found element satisfies predicate" prop-foundElementSatisfiesPredicate;
 
 findNonExistenceImpliesPredicateFalseForAll : QC.Test :=
   QC.mkTest
@@ -295,64 +247,38 @@ findNonExistenceImpliesPredicateFalseForAll : QC.Test :=
     prop-nonExistenceImpliesPredicateFalseForAll;
 
 findConsistentWithSplitAt : QC.Test :=
-  QC.mkTest
-    "find: consistent with splitAt"
-    prop-findConsistentWithSplitAt;
+  QC.mkTest "find: consistent with splitAt" prop-findConsistentWithSplitAt;
 
 findOnEmptyListIsNothing : QC.Test :=
-  QC.mkTest
-    "find: called with empty list is nothing"
-    prop-findWithEmptyList;
+  QC.mkTest "find: called with empty list is nothing" prop-findWithEmptyList;
 
 findWithAlwaysTrueIsJust : QC.Test :=
-  QC.mkTest
-    "find: always true predicate returns just"
-    prop-findWithAlwaysTrueIsJust;
+  QC.mkTest "find: always true predicate returns just" prop-findWithAlwaysTrueIsJust;
 
 findWithAlwaysFalseIsNothing : QC.Test :=
-  QC.mkTest
-    "find: always false predicate returns nothing"
-    prop-findWithAlwaysFalseIsNothing;
+  QC.mkTest "find: always false predicate returns nothing" prop-findWithAlwaysFalseIsNothing;
 
 resultResultErrorApplication : QC.Test :=
-  QC.mkTest
-    "result: result error application"
-    prop-resultErrorApplication;
+  QC.mkTest "result: result error application" prop-resultErrorApplication;
 
 resultResultOkApplication : QC.Test :=
-  QC.mkTest
-    "result: result ok application"
-    prop-resultOkApplication;
+  QC.mkTest "result: result ok application" prop-resultOkApplication;
 
-resultIsError : QC.Test :=
-  QC.mkTest
-    "result: isError detects error"
-    prop-resultIsError;
+resultIsError : QC.Test := QC.mkTest "result: isError detects error" prop-resultIsError;
 
-resultIsOk : QC.Test :=
-  QC.mkTest "result: isOk detects ok" prop-resultIsOk;
+resultIsOk : QC.Test := QC.mkTest "result: isOk detects ok" prop-resultIsOk;
 
-resultFromError : QC.Test :=
-  QC.mkTest
-    "result: fromError uses default"
-    prop-resultFromErrorDefault;
+resultFromError : QC.Test := QC.mkTest "result: fromError uses default" prop-resultFromErrorDefault;
 
-resultFromOk : QC.Test :=
-  QC.mkTest
-    "result: fromOk uses default"
-    prop-resultFromOkDefault;
+resultFromOk : QC.Test := QC.mkTest "result: fromOk uses default" prop-resultFromOkDefault;
 
-resultResultToMaybe : QC.Test :=
-  QC.mkTest "result: resultToMaybe" prop-resultToMaybe;
+resultResultToMaybe : QC.Test := QC.mkTest "result: resultToMaybe" prop-resultToMaybe;
 
-resultMaybeToResult : QC.Test :=
-  QC.mkTest "result: maybeToResult" prop-maybeToResult;
+resultMaybeToResult : QC.Test := QC.mkTest "result: maybeToResult" prop-maybeToResult;
 
-resultMapError : QC.Test :=
-  QC.mkTest "result: mapError" prop-resultMapError;
+resultMapError : QC.Test := QC.mkTest "result: mapError" prop-resultMapError;
 
-resultMapOk : QC.Test :=
-  QC.mkTest "result: mapOk" prop-resultMapOk;
+resultMapOk : QC.Test := QC.mkTest "result: mapOk" prop-resultMapOk;
 
 main : IO :=
   readLn
