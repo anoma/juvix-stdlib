@@ -67,12 +67,10 @@ filter {A} (f : A → Bool) : List A → List A
   | (h :: hs) := ite (f h) (h :: filter f hs) (filter f hs);
 
 --- 𝒪(𝓃). Returns the length of the ;List;.
-length {A} (l : List A) : Nat :=
-  for (acc := zero) (_ in l) {suc acc};
+length {A} (l : List A) : Nat := for (acc := zero) (_ in l) {suc acc};
 
 --- 𝒪(𝓃). Returns the given ;List; in reverse order.
-reverse {A} (l : List A) : List A :=
-  for (acc := nil) (x in l) {x :: acc};
+reverse {A} (l : List A) : List A := for (acc := nil) (x in l) {x :: acc};
 
 --- Returns a ;List; of length n where every element is the given value.
 replicate {A} : Nat → A → List A
@@ -95,8 +93,7 @@ splitAt {A} : Nat → List A → Pair (List A) (List A)
   | _ nil := nil, nil
   | zero xs := nil, xs
   | (suc zero) (x :: xs) := x :: nil, xs
-  | (suc m) (x :: xs) :=
-    case splitAt m xs of l1, l2 := x :: l1, l2;
+  | (suc m) (x :: xs) := case splitAt m xs of l1, l2 := x :: l1, l2;
 
 --- 𝒪(𝓃 + 𝓂). Merges two lists according the given ordering.
 terminating
@@ -110,12 +107,9 @@ merge {A} {{Ord A}} : List A → List A → List A
 
 --- 𝒪(𝓃). Returns a tuple where the first component has the items that
 --- satisfy the predicate and the second component has the elements that don't.
-partition
-  {A} (f : A → Bool) : List A → Pair (List A) (List A)
+partition {A} (f : A → Bool) : List A → Pair (List A) (List A)
   | nil := nil, nil
-  | (x :: xs) :=
-    case partition f xs of
-      l1, l2 := ite (f x) (x :: l1, l2) (l1, x :: l2);
+  | (x :: xs) := case partition f xs of l1, l2 := ite (f x) (x :: l1, l2) (l1, x :: l2);
 
 syntax operator ++ cons;
 
@@ -128,8 +122,7 @@ syntax operator ++ cons;
 snoc {A} (xs : List A) (x : A) : List A := xs ++ x :: nil;
 
 --- Concatenates a ;List; of ;List;s.
-flatten : {A : Type} → List (List A) → List A :=
-  foldl (++) nil;
+flatten : {A : Type} → List (List A) → List A := foldl (++) nil;
 
 --- 𝒪(𝓃). Inserts the given element before every element in the given ;List;.
 prependToAll {A} (sep : A) : List A → List A
@@ -174,8 +167,7 @@ null {A} : List A → Bool
 --- 𝒪(min(𝓂, 𝓃)). Returns a list containing the results of applying a function
 --- to each pair of elements from the input lists.
 {-# specialize: [1] #-}
-zipWith
-  {A B C} (f : A -> B -> C) : List A -> List B -> List C
+zipWith {A B C} (f : A -> B -> C) : List A -> List B -> List C
   | nil _ := nil
   | _ nil := nil
   | (x :: xs) (y :: ys) := f x y :: zipWith f xs ys;
@@ -212,9 +204,7 @@ quickSort {A} {{Ord A}} : List A → List A :=
     go : List A → List A
       | nil := nil
       | xs@(_ :: nil) := xs
-      | (x :: xs) :=
-        case partition (Ord.cmp x >> isGT) xs of
-          l1, l2 := go l1 ++ x :: go l2;
+      | (x :: xs) := case partition (Ord.cmp x >> isGT) xs of l1, l2 := go l1 ++ x :: go l2;
   in go;
 
 --- 𝒪(𝓃) Filters out every ;nothing; from a ;List;.
@@ -227,8 +217,7 @@ syntax iterator concatMap {init := 0; range := 1};
 
 --- Applies a function to every item on a ;List; and concatenates the result.
 --- 𝒪(𝓃), where 𝓃 is the number of items in the resulting list.
-concatMap {A B} (f : A -> List B) : List A -> List B :=
-  map f >> flatten;
+concatMap {A B} (f : A -> List B) : List A -> List B := map f >> flatten;
 
 --- 𝒪(𝓃 * 𝓂). Transposes a ;List; of ;List;s interpreted as a matrix.
 transpose {A} : List (List A) -> List (List A)

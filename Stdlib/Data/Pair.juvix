@@ -10,8 +10,7 @@ import Stdlib.Trait.Show open;
 
 instance
 eqProductI {A B} : {{Eq A}} -> {{Eq B}} -> Eq (Pair A B)
-  | {{mkEq eq-a}} {{mkEq eq-b}} :=
-    mkEq λ {(a1, b1) (a2, b2) := eq-a a1 a2 && eq-b b1 b2};
+  | {{mkEq eq-a}} {{mkEq eq-b}} := mkEq λ {(a1, b1) (a2, b2) := eq-a a1 a2 && eq-b b1 b2};
 
 instance
 ordProductI {A B} : {{Ord A}} -> {{Ord B}} -> Ord (Pair A B)
@@ -24,9 +23,6 @@ ordProductI {A B} : {{Ord A}} -> {{Ord B}} -> Ord (Pair A B)
           | EQ := cmp-b b1 b2};
 
 instance
-showProductI
-  {A B} : {{Show A}} -> {{Show B}} -> Show (Pair A B)
+showProductI {A B} : {{Show A}} -> {{Show B}} -> Show (Pair A B)
   | {{mkShow show-a}} {{mkShow show-b}} :=
-    mkShow
-      λ {(a, b) :=
-        "(" ++str show-a a ++str " , " ++str show-b b ++str ")"};
+    mkShow λ {(a, b) := "(" ++str show-a a ++str " , " ++str show-b b ++str ")"};

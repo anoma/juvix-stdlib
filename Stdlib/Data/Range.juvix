@@ -18,19 +18,12 @@ type Range N :=
 syntax iterator for {init := 1; range := 1};
 
 {-# specialize: [1, 2, 3, 5] #-}
-for
-  {A N}
-  {{Ord N}}
-  {{Natural N}}
-  (f : A → N → A)
-  (a : A)
-  : Range N → A
+for {A N} {{Ord N}} {{Natural N}} (f : A → N → A) (a : A) : Range N → A
   | mkRange@{low; high; step} :=
     let
       {-# specialize-by: [f] #-}
       terminating
-      go (acc : A) (n : N) : A :=
-        ite (n > high) acc (go (f acc n) (n + step));
+      go (acc : A) (n : N) : A := ite (n > high) acc (go (f acc n) (n + step));
     in go a low;
 
 syntax operator to range;
@@ -43,5 +36,4 @@ syntax operator step step;
 
 --- `x to y step s` is the range [x,x+s,..,y]
 {-# inline: always #-}
-step {N} (r : Range N) (s : N) : Range N :=
-  r@Range{step := s};
+step {N} (r : Range N) (s : N) : Range N := r@Range{step := s};

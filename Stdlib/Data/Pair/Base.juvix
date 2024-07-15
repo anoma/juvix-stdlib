@@ -12,8 +12,7 @@ uncurry {A B C} (f : A -> B -> C) : Pair A B -> C
   | (a, b) := f a b;
 
 --- Converts a function with a product argument to a function of two arguments.
-curry {A B C} (f : Pair A B -> C) (a : A) (b : B) : C :=
-  f (a, b);
+curry {A B C} (f : Pair A B -> C) (a : A) (b : B) : C := f (a, b);
 
 --- Projects the first component of a tuple.
 fst {A B} : Pair A B → A
