@@ -13,9 +13,10 @@ open Foldable;
 
 --- Make a monomorphic ;Foldable; instance from a polymorphic one.
 --- All polymorphic types that are an instance of ;Poly.Foldable; should use this function to create their monomorphic ;Foldable; instance.
-fromPolymorphicFoldable {f : Type -> Type} {{Poly.Foldable f}} {elem} : Foldable (f elem) elem :=
+fromPolymorphicFoldable
+  {f : Type -> Type} {{foldable : Poly.Foldable f}} {elem} : Foldable (f elem) elem :=
   mkFoldable@{
-    foldl : {B : Type} -> (B -> elem -> B) -> B ->  f elem -> B := Poly.foldl
+    foldl : {B : Type} -> (B -> elem -> B) -> B -> f elem -> B := Poly.foldl
   };
 
 --- Combine the elements of the type using the provided function starting with the element in the right-most position.

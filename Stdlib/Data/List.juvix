@@ -3,12 +3,14 @@ module Stdlib.Data.List;
 import Stdlib.Data.List.Base open public;
 import Stdlib.Data.Bool.Base open;
 import Stdlib.Data.String.Base open;
+import Stdlib.Function open;
 
 import Stdlib.Trait.Eq open;
 import Stdlib.Trait.Ord open;
 import Stdlib.Trait.Show open;
 import Stdlib.Trait.Functor open;
 import Stdlib.Trait.Partial open;
+import Stdlib.Trait.Foldable open using {Foldable; module Polymorphic; fromPolymorphicFoldable};
 
 --- 𝒪(1). Partial function that returns the first element of a ;List;.
 phead {A} {{Partial}} : List A -> A
@@ -59,3 +61,12 @@ functorListI : Functor List :=
 
 instance
 monomorphicFunctorListI {A} : Monomorphic.Functor (List A) A := fromPolymorphicFunctor;
+
+instance
+polymorphicFoldableListI : Polymorphic.Foldable List :=
+  Polymorphic.mkFoldable@{
+    foldl {A B} (g : B -> A -> B) : B -> List A -> B := foldr (flip g)
+  };
+
+instance
+foldableListI {A} : Foldable (List A) A := fromPolymorphicFoldable;
