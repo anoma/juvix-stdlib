@@ -3,7 +3,9 @@ module Stdlib.Trait.DivMod;
 trait
 type DivMod A :=
   mkDivMod {
+    {-# isabelle-operator: {name: "div", prec: 70, assoc: left} #-}
     div : A -> A -> A;
+    {-# isabelle-operator: {name: "mod", prec: 70, assoc: left} #-}
     mod : A -> A -> A
   };
 

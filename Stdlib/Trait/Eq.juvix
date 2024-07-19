@@ -10,9 +10,9 @@ type Eq A := mkEq {eq : A -> A -> Bool};
 syntax operator == comparison;
 syntax operator /= comparison;
 
-{-# inline: always #-}
+{-# inline: always, isabelle-operator: {name: "=", prec: 50, assoc: none} #-}
 == {A} {{Eq A}} : A -> A -> Bool := Eq.eq;
 
 --- Tests for inequality.
-{-# inline: always #-}
+{-# inline: always, isabelle-operator: {name: "≠", prec: 50, assoc: none} #-}
 /= {A} {{Eq A}} (x y : A) : Bool := not (x == y);

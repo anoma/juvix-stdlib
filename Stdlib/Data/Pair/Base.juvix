@@ -5,6 +5,7 @@ import Stdlib.Data.Fixity open;
 syntax operator , pair;
 
 --- Inductive pair. I.e. a tuple with two components.
+builtin pair
 type Pair (A B : Type) := , : A → B → Pair A B;
 
 --- Converts a function of two arguments to a function with a product argument.

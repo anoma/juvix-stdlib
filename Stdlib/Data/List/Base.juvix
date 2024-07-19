@@ -47,7 +47,7 @@ foldl {A B} (f : B → A → B) (z : B) : List A → B
 
 syntax iterator for {init := 1; range := 1};
 
-{-# inline: 0 #-}
+{-# inline: 0, isabelle-function: {name: "foldl"} #-}
 for : {A B : Type} → (B → A → B) → B → List A → B := foldl;
 
 syntax iterator map {init := 0; range := 1};
@@ -71,6 +71,7 @@ filter {A} (f : A → Bool) : List A → List A
 length {A} (l : List A) : Nat := for (acc := zero) (_ in l) {suc acc};
 
 --- 𝒪(𝓃). Returns the given ;List; in reverse order.
+{-# isabelle-function: {name: "rev"} #-}
 reverse {A} (l : List A) : List A := for (acc := nil) (x in l) {x :: acc};
 
 --- Returns a ;List; of length n where every element is the given value.
@@ -123,6 +124,7 @@ syntax operator ++ cons;
 snoc {A} (xs : List A) (x : A) : List A := xs ++ x :: nil;
 
 --- Concatenates a ;List; of ;List;s.
+{-# isabelle-function: {name: "concat"} #-}
 flatten : {A : Type} → List (List A) → List A := foldl (++) nil;
 
 --- 𝒪(𝓃). Inserts the given element before every element in the given ;List;.
@@ -136,6 +138,7 @@ intersperse {A} (sep : A) : List A → List A
   | (x :: xs) := x :: prependToAll sep xs;
 
 --- 𝒪(1). Drops the first element of a ;List;.
+{-# isabelle-function: {name: "tl"} #-}
 tail {A} : List A → List A
   | (_ :: xs) := xs
   | nil := nil;
