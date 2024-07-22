@@ -1,0 +1,4 @@
+module Stdlib.Trait.Functor;
+
+import Stdlib.Trait.Functor.Polymorphic open public;
+import Stdlib.Trait.Functor.Monomorphic as Monomorphic public;

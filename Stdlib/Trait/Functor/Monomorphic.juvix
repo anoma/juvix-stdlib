@@ -1,0 +1,17 @@
+module Stdlib.Trait.Functor.Monomorphic;
+
+import Stdlib.Data.Fixity open;
+import Stdlib.Data.Unit open;
+
+trait
+type Functor (container elem : Type) := mkFunctor {map : (elem -> elem) -> container -> container};
+
+open Functor public;
+
+open Functor public;
+
+syntax operator <$> lapp;
+syntax alias <$> := map;
+
+syntax operator $> lapp;
+$> {container elem : Type} {{Functor container elem}} (fa : container) (b : elem) : container := λ {_ := b} <$> fa;
