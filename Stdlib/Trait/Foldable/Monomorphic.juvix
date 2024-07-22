@@ -6,8 +6,16 @@ import Stdlib.Trait.Foldable.Polymorphic as Poly;
 --- A trait for combining elements into a single result, processing one element at a time.
 trait
 type Foldable (container elem : Type) :=
-  mkFoldable {-- Combine the elements of the type using the provided function starting with the element in the left-most position.
-  foldl : {B : Type} -> (B -> elem -> B) -> B -> container -> B};
+  mkFoldable {
+    -- Combine the elements of the type using the provided function starting with the element in the left-most position.
+    syntax iterator for {init := 1; range := 1};
+    {-# inline: 0 #-}
+    for : {B : Type} -> (B -> elem -> B) -> B -> container -> B;
+
+    syntax iterator rfor {init := 1; range := 1};
+    {-# inline: 0 #-}
+    rfor : {B : Type} -> (B -> elem -> B) -> B → container → B
+  };
 
 open Foldable;
 
@@ -16,8 +24,18 @@ open Foldable;
 fromPolymorphicFoldable
   {f : Type -> Type} {{foldable : Poly.Foldable f}} {elem} : Foldable (f elem) elem :=
   mkFoldable@{
-    foldl : {B : Type} -> (B -> elem -> B) -> B -> f elem -> B := Poly.foldl
+    for := Poly.for;
+    rfor := Poly.rfor
   };
+
+foldl
+  {container elem}
+  {{Foldable container elem}}
+  {B : Type}
+  (g : B -> elem -> B)
+  (ini : B)
+  (ls : container)
+  : B := for (acc := ini) (x in ls) {g acc x};
 
 --- Combine the elements of the type using the provided function starting with the element in the right-most position.
 foldr
@@ -26,19 +44,3 @@ foldr
   {B : Type}
   (g : elem -> B -> B)
   : B -> container -> B := foldl (flip g);
-
-syntax iterator for {init := 1; range := 1};
-
-{-# inline: 0 #-}
-for
-  {container elem : Type}
-  {B}
-  {{Foldable container elem}}
-  : (B -> elem -> B) -> B -> container -> B := foldl;
-
-syntax iterator rfor {init := 1; range := 1};
-
-{-# inline: 0 #-}
-rfor
-  {container elem : Type} {B} {{Foldable container elem}} (i : B → elem → B) : B → container → B :=
-  foldr (flip i);
