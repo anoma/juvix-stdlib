@@ -5,6 +5,7 @@ import Stdlib.Data.Maybe.Base open public;
 import Stdlib.Trait.Eq open;
 import Stdlib.Trait.Ord open;
 import Stdlib.Trait.Show open;
+import Stdlib.Trait.Functor open;
 
 import Stdlib.Data.Bool.Base open;
 import Stdlib.Data.String.Base open;
@@ -35,3 +36,14 @@ ordMaybeI {A} {{Ord A}} : Ord (Maybe A) :=
       | nothing (just _) := LT
       | (just _) nothing := GT
     };
+
+instance
+functorMaybeI : Functor Maybe :=
+  mkFunctor@{
+    map {A B} (f : A -> B) : Maybe A -> Maybe B
+      | nothing := nothing
+      | (just a) := just (f a)
+  };
+
+instance
+monomorphicFunctorMaybeI {A} : Monomorphic.Functor (Maybe A) A := fromPolymorphicFunctor;
