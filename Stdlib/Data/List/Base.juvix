@@ -50,13 +50,13 @@ syntax iterator for {init := 1; range := 1};
 {-# inline: 0, isabelle-function: {name: "foldl"} #-}
 for : {A B : Type} → (B → A → B) → B → List A → B := foldl;
 
-syntax iterator map {init := 0; range := 1};
+syntax iterator listMap {init := 0; range := 1};
 
 --- 𝒪(𝓃). Maps a function over each element of a ;List;.
 {-# specialize: [1] #-}
-map {A B} (f : A → B) : List A → List B
+listMap {A B} (f : A → B) : List A → List B
   | nil := nil
-  | (h :: hs) := f h :: map f hs;
+  | (h :: hs) := f h :: listMap f hs;
 
 syntax iterator filter {init := 0; range := 1};
 
@@ -221,10 +221,10 @@ syntax iterator concatMap {init := 0; range := 1};
 
 --- Applies a function to every item on a ;List; and concatenates the result.
 --- 𝒪(𝓃), where 𝓃 is the number of items in the resulting list.
-concatMap {A B} (f : A -> List B) : List A -> List B := map f >> flatten;
+concatMap {A B} (f : A -> List B) : List A -> List B := listMap f >> flatten;
 
 --- 𝒪(𝓃 * 𝓂). Transposes a ;List; of ;List;s interpreted as a matrix.
 transpose {A} : List (List A) -> List (List A)
   | nil := nil
-  | (xs :: nil) := map λ {x := x :: nil} xs
+  | (xs :: nil) := listMap λ {x := x :: nil} xs
   | (xs :: xss) := zipWith (::) xs (transpose xss);

@@ -5,7 +5,11 @@ import Stdlib.Data.Unit open;
 import Stdlib.Trait.Functor.Polymorphic as Poly;
 
 trait
-type Functor (container elem : Type) := mkFunctor {map : (elem -> elem) -> container -> container};
+type Functor (container elem : Type) :=
+  mkFunctor {
+    syntax iterator map {init := 0; range := 1};
+    map : (elem -> elem) -> container -> container
+  };
 
 open Functor public;
 
