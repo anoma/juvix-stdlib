@@ -1,0 +1,26 @@
+module Stdlib.Trait.Foldable.Polymorphic;
+
+import Stdlib.Function open;
+
+--- A trait for combining elements into a single result, processing one element at a time.
+trait
+type Foldable (f : Type -> Type) :=
+  mkFoldable {
+    syntax iterator for {init := 1; range := 1};
+    {-# inline: 0 #-}
+    for : {A B : Type} -> (B -> A -> B) -> B -> f A -> B;
+
+    syntax iterator rfor {init := 1; range := 1};
+    {-# inline: 0 #-}
+    rfor : {A B : Type} -> (B → A → B) -> B → f A → B
+  };
+
+open Foldable public;
+
+--- Combine the elements of the type using the provided function starting with the element in the left-most position.
+foldl {f : Type -> Type} {{Foldable f}} {A B : Type} (g : B -> A -> B) (ini : B) (ls : f A) : B :=
+  for (acc := ini) (x in ls) {g acc x};
+
+--- Combine the elements of the type using the provided function starting with the element in the right-most position.
+foldr {f : Type -> Type} {{Foldable f}} {A B : Type} (g : A -> B -> B) (ini : B) (ls : f A) : B :=
+  rfor (acc := ini) (x in ls) {g x acc};

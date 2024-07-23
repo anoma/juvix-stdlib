@@ -5,9 +5,10 @@ import Stdlib.Data.Fixity open;
 import Stdlib.Data.Bool.Base open;
 import Stdlib.Trait.Natural open;
 import Stdlib.Trait.Ord open;
+import Stdlib.Trait.Foldable open;
 import Stdlib.Data.Nat open;
 
---- A range of naturals
+--- An inclusive range of naturals
 type Range N :=
   mkRange {
     low : N;
@@ -34,6 +35,30 @@ to {N} {{Natural N}} (l h : N) : Range N := mkRange l h 1;
 
 syntax operator step step;
 
---- `x to y step s` is the range [x,x+s,..,y]
+--- `x to y step s` is the range [x, x + s, ..., y]
 {-# inline: always #-}
 step {N} (r : Range N) (s : N) : Range N := r@Range{step := s};
+
+-- This instance assumes that (low + step*k > high) for some k.
+instance
+foldableRangeI {N} {{Ord N}} {{Natural N}} : Foldable (Range N) N :=
+  mkFoldable@{
+    for {B : Type} (g : B -> N -> B) (ini : B) : Range N -> B
+      | (mkRange low high step) :=
+        let
+          terminating
+          go (acc : B) (next : N) : B :=
+            if
+              | next <= high := go (g acc next) (next + step)
+              | else := acc;
+        in go ini low;
+    rfor {B : Type} (g : B -> N -> B) (ini : B) : Range N -> B
+      | (mkRange low high step) :=
+        let
+          terminating
+          go (base : B) (next : N) : B :=
+            if
+              | next <= high := g (go base (next + step)) next
+              | else := base;
+        in go ini low
+  };

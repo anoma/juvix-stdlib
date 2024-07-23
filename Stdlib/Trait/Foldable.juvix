@@ -1,0 +1,4 @@
+module Stdlib.Trait.Foldable;
+
+import Stdlib.Trait.Foldable.Polymorphic as Polymorphic public;
+import Stdlib.Trait.Foldable.Monomorphic open public;
