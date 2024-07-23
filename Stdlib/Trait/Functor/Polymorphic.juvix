@@ -13,7 +13,7 @@ type Functor (f : Type -> Type) :=
 open Functor public;
 
 syntax operator <$> lapp;
-<$> {f : Type -> Type} {{Functor f}} {A B} (fun : A -> B) (l : f A) : f B := map fun l;
+<$> {f : Type -> Type} {{Functor f}} {A B} : (A -> B) -> f A -> f B := map;
 
 syntax operator $> lapp;
 $> {f : Type → Type} {A B : Type} {{Functor f}} (fa : f A) (b : B) : f B := λ {_ := b} <$> fa;

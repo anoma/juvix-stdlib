@@ -19,7 +19,7 @@ fromPolymorphicFunctor {f : Type -> Type} {{Poly.Functor f}} {elem} : Functor (f
   };
 
 syntax operator <$> lapp;
-syntax alias <$> := map;
+<$> {container elem} {{Functor container elem}} : (elem -> elem) -> container -> container := map;
 
 syntax operator $> lapp;
 $> {container elem : Type} {{Functor container elem}} (fa : container) (b : elem) : container :=
