@@ -65,7 +65,8 @@ monomorphicFunctorListI {A} : Monomorphic.Functor (List A) A := fromPolymorphicF
 instance
 polymorphicFoldableListI : Polymorphic.Foldable List :=
   Polymorphic.mkFoldable@{
-    foldl {A B} (g : B -> A -> B) : B -> List A -> B := foldr (flip g)
+    for := listFor;
+    rfor := listRfor
   };
 
 instance

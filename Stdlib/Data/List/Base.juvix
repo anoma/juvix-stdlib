@@ -32,12 +32,12 @@ foldr {A B} (f : A → B → B) (z : B) : List A → B
   | nil := z
   | (h :: hs) := f h (foldr f z hs);
 
-syntax iterator rfor {init := 1; range := 1};
+syntax iterator listRfor {init := 1; range := 1};
 
 {-# specialize: [1] #-}
-rfor {A B} (f : B → A → B) (acc : B) : List A → B
+listRfor {A B} (f : B → A → B) (acc : B) : List A → B
   | nil := acc
-  | (x :: xs) := f (rfor f acc xs) x;
+  | (x :: xs) := f (listRfor f acc xs) x;
 
 --- Left-associative and tail-recursive fold.
 {-# specialize: [1] #-}
@@ -45,10 +45,10 @@ foldl {A B} (f : B → A → B) (z : B) : List A → B
   | nil := z
   | (h :: hs) := foldl f (f z h) hs;
 
-syntax iterator for {init := 1; range := 1};
+syntax iterator listFor {init := 1; range := 1};
 
 {-# inline: 0, isabelle-function: {name: "foldl"} #-}
-for : {A B : Type} → (B → A → B) → B → List A → B := foldl;
+listFor : {A B : Type} → (B → A → B) → B → List A → B := foldl;
 
 syntax iterator listMap {init := 0; range := 1};
 
@@ -68,11 +68,11 @@ filter {A} (f : A → Bool) : List A → List A
   | (h :: hs) := ite (f h) (h :: filter f hs) (filter f hs);
 
 --- 𝒪(𝓃). Returns the length of the ;List;.
-length {A} (l : List A) : Nat := for (acc := zero) (_ in l) {suc acc};
+length {A} (l : List A) : Nat := listFor (acc := zero) (_ in l) {suc acc};
 
 --- 𝒪(𝓃). Returns the given ;List; in reverse order.
 {-# isabelle-function: {name: "rev"} #-}
-reverse {A} (l : List A) : List A := for (acc := nil) (x in l) {x :: acc};
+reverse {A} (l : List A) : List A := listFor (acc := nil) (x in l) {x :: acc};
 
 --- Returns a ;List; of length n where every element is the given value.
 replicate {A} : Nat → A → List A
