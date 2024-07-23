@@ -6,7 +6,6 @@ import Stdlib.Function open;
 trait
 type Foldable (f : Type -> Type) :=
   mkFoldable {
-    -- Combine the elements of the type using the provided function starting with the element in the left-most position.
     syntax iterator for {init := 1; range := 1};
     {-# inline: 0 #-}
     for : {A B : Type} -> (B -> A -> B) -> B -> f A -> B;
