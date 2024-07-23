@@ -5,7 +5,7 @@ all: check html
 
 PHONY: check
 check:
-	@${JUVIXBIN} typecheck index.juvix --only-errors --no-stdlib
+	@${JUVIXBIN} typecheck index.juvix --log-level error --no-stdlib
 
 PHONY: html
 html:
@@ -25,7 +25,7 @@ JUVIXFILES?=$(shell find \
 	-type f -name "*.juvix" -print)
 
 JUVIXFORMATFLAGS?=--in-place
-JUVIXTYPECHECKFLAGS?=--only-errors
+JUVIXTYPECHECKFLAGS?=--log-level error
 FORMATCHECK?=0
 
 .PHONY: format
