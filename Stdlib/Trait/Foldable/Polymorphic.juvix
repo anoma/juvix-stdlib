@@ -18,7 +18,7 @@ type Foldable (f : Type -> Type) :=
 
 open Foldable public;
 
---- Combine the elements of the type using the provided function starting with the element in the right-most position.
+--- Combine the elements of the type using the provided function starting with the element in the left-most position.
 foldl {f : Type -> Type} {{Foldable f}} {A B : Type} (g : B -> A -> B) (ini : B) (ls : f A) : B :=
   for (acc := ini) (x in ls) {g acc x};
 
