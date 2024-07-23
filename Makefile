@@ -35,12 +35,12 @@ format:
 		exit_code=$$?; \
 		if [ $$exit_code -eq 0 ]; then \
 			echo "[OK] $$file is formatted"; \
-      	elif [ $$exit_code -eq 1 ] && [ $(FORMATCHECK) -eq 0 ]; then \
+		elif [ $$exit_code -eq 1 ] && [ $(FORMATCHECK) -eq 0 ]; then \
 			echo "[OK] $$file was formatted"; \
 	  	else \
- 			echo "[FAIL] $$file formatting failed" && exit 1; \
-      	fi; \
-      	done;
+			echo "[FAIL] $$file formatting failed" && exit 1; \
+		fi; \
+		done;
 
 .PHONY: check-format
 check-format: FORMATCHECK=1
@@ -55,7 +55,7 @@ typecheck:
 		if [ $$exit_code -eq 0 ]; then \
 			echo "[OK] $$file typechecks"; \
 		else \
- 			echo "[FAIL] Typecking failed for $$file" && exit 1 ; \
-      	fi; \
+			echo "[FAIL] Typecking failed for $$file" && exit 1 ; \
+		fi; \
 	done
 
