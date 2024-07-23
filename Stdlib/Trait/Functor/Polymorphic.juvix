@@ -12,8 +12,6 @@ type Functor (f : Type -> Type) :=
 
 open Functor public;
 
-open Functor public;
-
 syntax operator <$> lapp;
 <$> {f : Type -> Type} {{Functor f}} {A B} (fun : A -> B) (l : f A) : f B := map fun l;
 
