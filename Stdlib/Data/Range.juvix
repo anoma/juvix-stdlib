@@ -35,7 +35,7 @@ to {N} {{Natural N}} (l h : N) : Range N := mkRange l h 1;
 
 syntax operator step step;
 
---- `x to y step s` is the range [x,x+s,..,y]
+--- `x to y step s` is the range [x, x + s, ..., y]
 {-# inline: always #-}
 step {N} (r : Range N) (s : N) : Range N := r@Range{step := s};
 
@@ -43,13 +43,22 @@ step {N} (r : Range N) (s : N) : Range N := r@Range{step := s};
 instance
 foldableRangeI {N} {{Ord N}} {{Natural N}} : Foldable (Range N) N :=
   mkFoldable@{
-    foldl {B : Type} (g : B -> N -> B) (ini : B) : Range N -> B
+    for {B : Type} (g : B -> N -> B) (ini : B) : Range N -> B
       | (mkRange low high step) :=
         let
           terminating
           go (acc : B) (next : N) : B :=
             if
-              | next <= high := go (g acc next) (low + step)
+              | next <= high := go (g acc next) (next + step)
               | else := acc;
+        in go ini low;
+    rfor {B : Type} (g : B -> N -> B) (ini : B) : Range N -> B
+      | (mkRange low high step) :=
+        let
+          terminating
+          go (base : B) (next : N) : B :=
+            if
+              | next <= high := g (go base (next + step)) next
+              | else := base;
         in go ini low
   };
