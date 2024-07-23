@@ -6,7 +6,7 @@ import Stdlib.Function open;
 import Stdlib.Data.Fixity open;
 
 --- Concatenates a ;List; of ;String;s.
-concatStr : List String -> String := foldl (++str) "";
+concatStr : List String -> String := listFoldl (++str) "";
 
 --- Joins a ;List; of ;String;s with "\n".
 unlines : List String -> String := intersperse "\n" >> concatStr;

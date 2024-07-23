@@ -28,9 +28,9 @@ find {A} (predicate : A → Bool) : List A → Maybe A
 
 --- Right-associative fold.
 {-# specialize: [1] #-}
-foldr {A B} (f : A → B → B) (z : B) : List A → B
+liftFoldr {A B} (f : A → B → B) (z : B) : List A → B
   | nil := z
-  | (h :: hs) := f h (foldr f z hs);
+  | (h :: hs) := f h (liftFoldr f z hs);
 
 syntax iterator listRfor {init := 1; range := 1};
 
@@ -41,14 +41,14 @@ listRfor {A B} (f : B → A → B) (acc : B) : List A → B
 
 --- Left-associative and tail-recursive fold.
 {-# specialize: [1] #-}
-foldl {A B} (f : B → A → B) (z : B) : List A → B
+listFoldl {A B} (f : B → A → B) (z : B) : List A → B
   | nil := z
-  | (h :: hs) := foldl f (f z h) hs;
+  | (h :: hs) := listFoldl f (f z h) hs;
 
 syntax iterator listFor {init := 1; range := 1};
 
 {-# inline: 0, isabelle-function: {name: "foldl"} #-}
-listFor : {A B : Type} → (B → A → B) → B → List A → B := foldl;
+listFor : {A B : Type} → (B → A → B) → B → List A → B := listFoldl;
 
 syntax iterator listMap {init := 0; range := 1};
 
@@ -125,7 +125,7 @@ snoc {A} (xs : List A) (x : A) : List A := xs ++ x :: nil;
 
 --- Concatenates a ;List; of ;List;s.
 {-# isabelle-function: {name: "concat"} #-}
-flatten : {A : Type} → List (List A) → List A := foldl (++) nil;
+flatten : {A : Type} → List (List A) → List A := listFoldl (++) nil;
 
 --- 𝒪(𝓃). Inserts the given element before every element in the given ;List;.
 prependToAll {A} (sep : A) : List A → List A
