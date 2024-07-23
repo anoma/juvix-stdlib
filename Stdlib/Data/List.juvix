@@ -7,6 +7,7 @@ import Stdlib.Data.String.Base open;
 import Stdlib.Trait.Eq open;
 import Stdlib.Trait.Ord open;
 import Stdlib.Trait.Show open;
+import Stdlib.Trait.Functor open;
 import Stdlib.Trait.Partial open;
 
 --- 𝒪(1). Partial function that returns the first element of a ;List;.
@@ -49,3 +50,12 @@ showListI {A} {{Show A}} : Show (List A) :=
       | nil := "nil"
       | s := "(" ++str go s ++str ")"
     };
+
+instance
+functorListI : Functor List :=
+  mkFunctor@{
+    map := listMap
+  };
+
+instance
+monomorphicFunctorListI {A} : Monomorphic.Functor (List A) A := fromPolymorphicFunctor;

@@ -1,0 +1,26 @@
+module Stdlib.Trait.Functor.Monomorphic;
+
+import Stdlib.Data.Fixity open;
+import Stdlib.Data.Unit open;
+import Stdlib.Trait.Functor.Polymorphic as Poly;
+
+trait
+type Functor (container elem : Type) :=
+  mkFunctor {
+    syntax iterator map {init := 0; range := 1};
+    map : (elem -> elem) -> container -> container
+  };
+
+open Functor public;
+
+fromPolymorphicFunctor {f : Type -> Type} {{Poly.Functor f}} {elem} : Functor (f elem) elem :=
+  mkFunctor@{
+    map := Poly.map
+  };
+
+syntax operator <$> lapp;
+<$> {container elem} {{Functor container elem}} : (elem -> elem) -> container -> container := map;
+
+syntax operator $> lapp;
+$> {container elem : Type} {{Functor container elem}} (fa : container) (b : elem) : container :=
+  λ {_ := b} <$> fa;

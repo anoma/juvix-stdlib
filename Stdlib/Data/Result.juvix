@@ -5,6 +5,7 @@ import Stdlib.Data.Bool.Base open;
 
 import Stdlib.Trait.Eq open;
 import Stdlib.Trait.Ord open;
+import Stdlib.Trait.Functor open;
 
 instance
 ordResultI {A B} {{Ord A}} {{Ord B}} : Ord (Result A B) :=
@@ -24,3 +25,13 @@ eqResultI {A B} {{Eq A}} {{Eq B}} : Eq (Result A B) :=
       | (ok b1) (ok b2) := b1 == b2
       | _ _ := false
   };
+
+instance
+functorResultI {err} : Functor (Result err) :=
+  mkFunctor@{
+    map := mapOk
+  };
+
+instance
+monomorphicFunctorResultI {err res} : Monomorphic.Functor (Result err res) res :=
+  fromPolymorphicFunctor;
