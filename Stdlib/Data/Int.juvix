@@ -11,6 +11,7 @@ import Stdlib.Trait.Eq open;
 import Stdlib.Trait.Ord open;
 import Stdlib.Trait.Show open;
 import Stdlib.Trait.Natural open;
+import Stdlib.Trait.FromNatural open;
 import Stdlib.Trait.Integral open;
 import Stdlib.Trait.DivMod open;
 
@@ -34,11 +35,17 @@ showIntI : Show Int := mkShow intToString;
 
 {-# specialize: true, inline: case #-}
 instance
+fromNaturalIntI : FromNatural Int :=
+  mkFromNatural@{
+    fromNat := ofNat
+  };
+
+{-# specialize: true, inline: case #-}
+instance
 naturalIntI : Natural Int :=
   mkNatural@{
     + := (Int.+);
-    * := (Int.*);
-    fromNat := ofNat
+    * := (Int.*)
   };
 
 {-# specialize: true, inline: case #-}
