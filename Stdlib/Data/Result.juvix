@@ -5,7 +5,7 @@ import Stdlib.Data.Bool.Base open;
 
 import Stdlib.Trait.Eq open;
 import Stdlib.Trait.Ord open;
-import Stdlib.Trait.Functor open;
+import Stdlib.Trait open;
 
 {-# specialize: true, inline: case #-}
 instance
@@ -39,3 +39,13 @@ functorResultI {err} : Functor (Result err) :=
 instance
 monomorphicFunctorResultI {err res} : Monomorphic.Functor (Result err res) res :=
   fromPolymorphicFunctor;
+
+instance
+applicativeResultI {err} : Applicative (Result err) :=
+  mkApplicative@{
+    pure := ok;
+    ap {A B} : Result err (A -> B) -> Result err A -> Result err B
+      | (ok f) (ok x) := ok (f x)
+      | (ok _) (error e) := error e
+      | (error e) _ := error e
+  };

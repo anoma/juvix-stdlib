@@ -8,7 +8,7 @@ import Stdlib.Function open;
 import Stdlib.Trait.Eq open;
 import Stdlib.Trait.Ord open;
 import Stdlib.Trait.Show open;
-import Stdlib.Trait.Functor open;
+import Stdlib.Trait open;
 import Stdlib.Trait.Partial open;
 import Stdlib.Trait.Foldable open using {Foldable; module Polymorphic; fromPolymorphicFoldable};
 
@@ -75,3 +75,12 @@ polymorphicFoldableListI : Polymorphic.Foldable List :=
 {-# specialize: true, inline: true #-}
 instance
 foldableListI {A} : Foldable (List A) A := fromPolymorphicFoldable;
+
+instance
+applicativeListI : Applicative List :=
+  mkApplicative@{
+    pure {A} (a : A) : List A := [a];
+    ap {A B} : List (A -> B) -> List A -> List B
+      | [] _ := []
+      | (f :: fs) l := map f l ++ ap fs l
+  };
