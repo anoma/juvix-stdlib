@@ -1,7 +1,7 @@
 --- The unit type.
 module Stdlib.Data.Unit;
 
-import Stdlib.Data.Unit.Base open;
+import Stdlib.Data.Unit.Base open public;
 import Stdlib.Data.Bool.Base open;
 
 import Stdlib.Trait.Eq open;
