@@ -59,5 +59,5 @@ applicativeMaybeI : Applicative Maybe :=
     pure := just;
     ap {A B} : Maybe (A -> B) -> Maybe A -> Maybe B
       | (just f) (just x) := just (f x)
-      | _ _ := nothing;
+      | _ _ := nothing
   };
