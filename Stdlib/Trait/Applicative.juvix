@@ -15,5 +15,5 @@ open Applicative public;
 
 --- Sequences computations.
 --- Note that this function will be renamed to >>> once IO becomses a polymorphic type and can be given an Applicative instance.
-applicativeSeq {f : Type -> Type} {{I : Applicative f}} {A B : Type} (fa : f A) (fb : f B) : f B :=
+applicativeSeq {f : Type -> Type} {{Applicative f}} {A B : Type} (fa : f A) (fb : f B) : f B :=
   ap (map λ {_ b := b} fa) fb;
