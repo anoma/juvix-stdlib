@@ -16,7 +16,7 @@ type Foldable (container elem : Type) :=
     rfor : {B : Type} -> (B -> elem -> B) -> B → container → B
   };
 
-open Foldable;
+open Foldable public;
 
 --- Make a monomorphic ;Foldable; instance from a polymorphic one.
 --- All polymorphic types that are an instance of ;Poly.Foldable; should use this function to create their monomorphic ;Foldable; instance.
