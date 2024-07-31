@@ -2,6 +2,8 @@ module Stdlib.Trait.Applicative;
 
 import Stdlib.Data.Fixity open;
 import Stdlib.Trait.Functor open;
+import Stdlib.Trait.Foldable.Polymorphic open;
+import Stdlib.Data.Unit.Base open;
 
 trait
 type Applicative (f : Type -> Type) :=
@@ -17,3 +19,14 @@ open Applicative public;
 --- Note that this function will be renamed to >>> once IO becomses a polymorphic type and can be given an Applicative instance.
 applicativeSeq {f : Type -> Type} {{Applicative f}} {A B : Type} (fa : f A) (fb : f B) : f B :=
   ap (map λ {_ b := b} fa) fb;
+
+syntax iterator mapM_ {init := 0; range := 1};
+mapM_
+  {t : Type -> Type}
+  {f : Type -> Type}
+  {A B}
+  {{Foldable t}}
+  {{Applicative f}}
+  (fun : A -> f B)
+  (l : t A)
+  : f Unit := rfor (acc := pure unit) (x in l) {applicativeSeq (fun x) acc};
