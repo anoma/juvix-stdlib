@@ -1,7 +1,7 @@
 module Stdlib.Data.Byte;
 
 import Stdlib.Data.Byte.Base open using {Byte} public;
-import Stdlib.Data.Byte.Base as Byte;
+import Stdlib.Data.Byte.Base as Byte public;
 import Stdlib.Function open;
 import Stdlib.Data.Nat;
 import Stdlib.Data.String.Base open;
