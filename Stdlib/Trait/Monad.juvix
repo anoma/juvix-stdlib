@@ -1,0 +1,21 @@
+module Stdlib.Trait.Monad;
+
+import Stdlib.Data.Fixity open;
+import Stdlib.Function open;
+import Stdlib.Data.Bool.Base open;
+import Stdlib.Data.Nat.Base open;
+import Stdlib.Data.List.Base open;
+import Stdlib.Data.Unit.Base open;
+import Stdlib.Trait.Functor open;
+import Stdlib.Trait.Applicative open;
+import Stdlib.Trait.Foldable.Polymorphic open;
+import Stdlib.Data.Unit.Base open;
+
+trait
+type Monad (m : Type -> Type) :=
+  mkMonad {
+    {{applicative}} : Applicative m;
+    >>= : {A B : Type} -> m A -> (A -> m B) -> m B
+  };
+
+open Monad public;
