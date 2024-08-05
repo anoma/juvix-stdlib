@@ -8,6 +8,7 @@ import Stdlib.Data.Nat;
 import Stdlib.Trait.Eq open public;
 import Stdlib.Trait.Show open public;
 import Stdlib.Trait.Natural open public;
+import Stdlib.Trait.FromNatural open;
 import Stdlib.Trait.Integral open public;
 import Stdlib.Trait.Numeric open public;
 
@@ -23,11 +24,17 @@ showFieldI : Show Field :=
 
 {-# specialize: true, inline: case #-}
 instance
+fromNaturalFieldI : FromNatural Field :=
+  mkFromNatural@{
+    fromNat := Field.fromNat
+  };
+
+{-# specialize: true, inline: case #-}
+instance
 naturalFieldI : Natural Field :=
   mkNatural@{
     + := (Field.+);
-    * := (Field.*);
-    fromNat := Field.fromNat
+    * := (Field.*)
   };
 
 {-# specialize: true, inline: case #-}

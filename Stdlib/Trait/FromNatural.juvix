@@ -1,0 +1,3 @@
+module Stdlib.Trait.FromNatural;
+
+import Juvix.Builtin.V1.Trait.FromNatural open public;
