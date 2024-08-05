@@ -1,0 +1,28 @@
+module Stdlib.Data.Byte;
+
+import Stdlib.Data.Byte.Base open using {Byte} public;
+import Stdlib.Data.Byte.Base as Byte public;
+import Stdlib.Function open;
+import Stdlib.Data.Nat;
+import Stdlib.Data.String.Base open;
+
+import Stdlib.Trait.Eq open public;
+import Stdlib.Trait.FromNatural open;
+import Stdlib.Trait.Show open public;
+
+{-# specialize: true, inline: case #-}
+instance
+eqByteI : Eq Byte := mkEq (Byte.==);
+
+instance
+showByteI : Show Byte :=
+  mkShow@{
+    show := Byte.toNat >> Show.show
+  };
+
+{-# specialize: true, inline: case #-}
+instance
+fromNaturalByteI : FromNatural Byte :=
+  mkFromNatural@{
+    fromNat := Byte.fromNat
+  };

@@ -1,0 +1,22 @@
+module Stdlib.Data.Byte.Base;
+
+import Stdlib.Data.Bool.Base open;
+import Stdlib.Data.Fixity open;
+import Stdlib.Data.Nat.Base open;
+
+--- An 8-bit unsigned integer.
+builtin byte
+axiom Byte : Type;
+
+--- Converts a ;Nat; to a ;Byte;. It takes the modulus of the input natural number with 256.
+builtin byte-from-nat
+axiom fromNat : Nat -> Byte;
+
+--- Converts a ;Byte; to the corresponding ;Nat;.
+builtin byte-to-nat
+axiom toNat : Byte -> Nat;
+
+syntax operator == comparison;
+
+builtin byte-eq
+axiom == : Byte -> Byte -> Bool;
