@@ -9,7 +9,7 @@ check:
 
 PHONY: html
 html:
-	@${JUVIXBIN} --no-stdlib html --theme ayu --output-dir=docs/ index.juvix
+	@${JUVIXBIN} --no-stdlib html --output-dir=docs/ index.juvix
 
 PHONY: clean
 clean:
