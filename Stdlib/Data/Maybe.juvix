@@ -45,5 +45,6 @@ functorMaybeI : Functor Maybe :=
       | (just a) := just (f a)
   };
 
+{-# specialize: true, inline: case #-}
 instance
 monomorphicFunctorMaybeI {A} : Monomorphic.Functor (Maybe A) A := fromPolymorphicFunctor;
