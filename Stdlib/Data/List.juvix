@@ -53,15 +53,18 @@ showListI {A} {{Show A}} : Show (List A) :=
       | s := "(" ++str go s ++str ")"
     };
 
+{-# inline: case #-}
 instance
 functorListI : Functor List :=
   mkFunctor@{
     map := listMap
   };
 
+{-# specialize: true, inline: case #-}
 instance
 monomorphicFunctorListI {A} : Monomorphic.Functor (List A) A := fromPolymorphicFunctor;
 
+{-# inline: case #-}
 instance
 polymorphicFoldableListI : Polymorphic.Foldable List :=
   Polymorphic.mkFoldable@{
@@ -69,5 +72,6 @@ polymorphicFoldableListI : Polymorphic.Foldable List :=
     rfor := listRfor
   };
 
+{-# specialize: true, inline: case #-}
 instance
 foldableListI {A} : Foldable (List A) A := fromPolymorphicFoldable;
