@@ -22,7 +22,7 @@ syntax iterator for {init := 1; range := 1};
 for {A N} {{Ord N}} {{Natural N}} (f : A → N → A) (a : A) : Range N → A
   | mkRange@{low; high; step} :=
     let
-      {-# specialize-by: [f] #-}
+      {-# specialize-by: [f, high, step] #-}
       terminating
       go (acc : A) (n : N) : A := ite (n > high) acc (go (f acc n) (n + step));
     in go a low;
