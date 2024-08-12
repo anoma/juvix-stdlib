@@ -4,6 +4,7 @@ import Stdlib.Function open;
 import Stdlib.Trait.Foldable.Polymorphic as Poly;
 
 --- A trait for combining elements into a single result, processing one element at a time.
+{-# specialize: true #-}
 trait
 type Foldable (container elem : Type) :=
   mkFoldable {
@@ -26,7 +27,7 @@ fromPolymorphicFoldable
     rfor := Poly.rfor
   };
 
-{-# inline: 2 #-}
+{-# inline: true #-}
 foldl
   {container elem}
   {{Foldable container elem}}
@@ -37,7 +38,7 @@ foldl
   : B := for (acc := ini) (x in ls) {g acc x};
 
 --- Combine the elements of the type using the provided function starting with the element in the right-most position.
-{-# inline: 1 #-}
+{-# inline: 2 #-}
 foldr
   {container elem : Type}
   {{Foldable container elem}}

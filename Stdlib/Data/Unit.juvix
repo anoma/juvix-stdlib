@@ -21,9 +21,12 @@ ordUnitI : Ord Unit := mkOrd λ {unit unit := EQ};
 instance
 showUnitI : Show Unit := mkShow λ {unit := "unit"};
 
+{-# specialize: true, inline: case #-}
 instance
 foldableUnitI : Foldable Unit Unit :=
   mkFoldable@{
+    {-# inline: true #-}
     rfor {B : Type} (f : B -> Unit -> B) (ini : B) (_ : Unit) : B := f ini unit;
+    {-# inline: true #-}
     for {B : Type} (f : B -> Unit -> B) (ini : B) (_ : Unit) : B := f ini unit
   };

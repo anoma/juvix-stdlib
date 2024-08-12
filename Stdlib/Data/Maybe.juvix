@@ -10,6 +10,7 @@ import Stdlib.Trait.Functor open;
 import Stdlib.Data.Bool.Base open;
 import Stdlib.Data.String.Base open;
 
+{-# specialize: true, inline: case #-}
 instance
 eqMaybeI {A} {{Eq A}} : Eq (Maybe A) :=
   mkEq
@@ -27,6 +28,7 @@ showMaybeI {A} {{Show A}} : Show (Maybe A) :=
       | (just a) := "just " ++str Show.show a
     };
 
+{-# specialize: true, inline: case #-}
 instance
 ordMaybeI {A} {{Ord A}} : Ord (Maybe A) :=
   mkOrd
@@ -37,6 +39,7 @@ ordMaybeI {A} {{Ord A}} : Ord (Maybe A) :=
       | (just _) nothing := GT
     };
 
+{-# specialize: true, inline: case #-}
 instance
 functorMaybeI : Functor Maybe :=
   mkFunctor@{
@@ -45,6 +48,6 @@ functorMaybeI : Functor Maybe :=
       | (just a) := just (f a)
   };
 
-{-# specialize: true, inline: case #-}
+{-# specizalize: true, inline: true #-}
 instance
 monomorphicFunctorMaybeI {A} : Monomorphic.Functor (Maybe A) A := fromPolymorphicFunctor;

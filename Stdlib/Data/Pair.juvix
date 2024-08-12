@@ -8,10 +8,12 @@ import Stdlib.Trait.Eq open;
 import Stdlib.Trait.Ord open;
 import Stdlib.Trait.Show open;
 
+{-# specialize: true, inline: case #-}
 instance
 eqProductI {A B} : {{Eq A}} -> {{Eq B}} -> Eq (Pair A B)
   | {{mkEq eq-a}} {{mkEq eq-b}} := mkEq λ {(a1, b1) (a2, b2) := eq-a a1 a2 && eq-b b1 b2};
 
+{-# specialize: true, inline: case #-}
 instance
 ordProductI {A B} : {{Ord A}} -> {{Ord B}} -> Ord (Pair A B)
   | {{mkOrd cmp-a}} {{mkOrd cmp-b}} :=

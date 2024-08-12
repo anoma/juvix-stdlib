@@ -7,6 +7,7 @@ import Stdlib.Trait.Eq open;
 import Stdlib.Trait.Ord open;
 import Stdlib.Trait.Functor open;
 
+{-# specialize: true, inline: case #-}
 instance
 ordResultI {A B} {{Ord A}} {{Ord B}} : Ord (Result A B) :=
   mkOrd@{
@@ -17,6 +18,7 @@ ordResultI {A B} {{Ord A}} {{Ord B}} : Ord (Result A B) :=
       | (ok _) (error _) := GT
   };
 
+{-# specialize: true, inline: case #-}
 instance
 eqResultI {A B} {{Eq A}} {{Eq B}} : Eq (Result A B) :=
   mkEq@{
@@ -26,12 +28,14 @@ eqResultI {A B} {{Eq A}} {{Eq B}} : Eq (Result A B) :=
       | _ _ := false
   };
 
+{-# specialize: true, inline: case #-}
 instance
 functorResultI {err} : Functor (Result err) :=
   mkFunctor@{
     map := mapOk
   };
 
+{-# specialize: true, inline: true #-}
 instance
 monomorphicFunctorResultI {err res} : Monomorphic.Functor (Result err res) res :=
   fromPolymorphicFunctor;
