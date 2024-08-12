@@ -44,24 +44,26 @@ step {N} (r : Range N) (s : N) : Range N := r@Range{step := s};
 instance
 foldableRangeI {N} {{Ord N}} {{Natural N}} : Foldable (Range N) N :=
   mkFoldable@{
+    {-# specialize: [1, 3] #-}
     for {B : Type} (f : B -> N -> B) (ini : B) : Range N -> B
       | (mkRange low high step) :=
         let
-          {-# specialize-by: [f] #-}
+          {-# specialize-by: [f, high, step] #-}
           terminating
           go (acc : B) (next : N) : B :=
             if
               | next > high := acc
               | else := go (f acc next) (next + step);
         in go ini low;
-    rfor {B : Type} (g : B -> N -> B) (ini : B) : Range N -> B
+    {-# specialize: [1, 3] #-}
+    rfor {B : Type} (f : B -> N -> B) (ini : B) : Range N -> B
       | (mkRange low high step) :=
         let
-          {-# specialize-by: [g] #-}
+          {-# specialize-by: [f] #-}
           terminating
           go (base : B) (next : N) : B :=
             if
-              | next <= high := g (go base (next + step)) next
+              | next <= high := f (go base (next + step)) next
               | else := base;
         in go ini low
   };
