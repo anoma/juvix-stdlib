@@ -18,5 +18,5 @@ syntax operator == comparison;
 syntax operator /= comparison;
 
 --- Tests for inequality.
-{-# inline: true, isabelle-operator: {name: "≠", prec: 50, assoc: none} #-}
+{-# inline: true, isabelle-operator: {name: "\\<noteq>", prec: 50, assoc: none} #-}
 /= {A} {{Ord A}} (x y : A) : Bool := not (x == y);

@@ -4,7 +4,7 @@ import Juvix.Builtin.V1.Bool open public;
 import Stdlib.Data.Fixity open;
 
 --- Logical negation.
-{-# isabelle-function: {name: "¬"} #-}
+{-# isabelle-function: {name: "\\<not>"} #-}
 not : Bool → Bool
   | true := false
   | false := true;
