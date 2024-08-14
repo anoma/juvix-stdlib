@@ -31,8 +31,7 @@ syntax operator step step;
 
 --- `x to y step s` is the range [x, x + s, ..., y]
 {-# inline: always #-}
-step {N} (r : Range N) (s : N) : StepRange N :=
-  mkStepRange r s;
+step {N} (r : Range N) (s : N) : StepRange N := mkStepRange r s;
 
 -- This instance assumes that `low <= high`.
 {-# specialize: true, inline: case #-}
