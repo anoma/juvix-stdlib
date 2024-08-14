@@ -4,15 +4,14 @@ import Stdlib.Function open;
 import Stdlib.Trait.Foldable.Polymorphic as Poly;
 
 --- A trait for combining elements into a single result, processing one element at a time.
+{-# specialize: true #-}
 trait
 type Foldable (container elem : Type) :=
   mkFoldable {
     syntax iterator for {init := 1; range := 1};
-    {-# inline: 0 #-}
     for : {B : Type} -> (B -> elem -> B) -> B -> container -> B;
 
     syntax iterator rfor {init := 1; range := 1};
-    {-# inline: 0 #-}
     rfor : {B : Type} -> (B -> elem -> B) -> B → container → B
   };
 
@@ -20,6 +19,7 @@ open Foldable public;
 
 --- Make a monomorphic ;Foldable; instance from a polymorphic one.
 --- All polymorphic types that are an instance of ;Poly.Foldable; should use this function to create their monomorphic ;Foldable; instance.
+{-# inline: case #-}
 fromPolymorphicFoldable
   {f : Type -> Type} {{foldable : Poly.Foldable f}} {elem} : Foldable (f elem) elem :=
   mkFoldable@{
@@ -27,6 +27,7 @@ fromPolymorphicFoldable
     rfor := Poly.rfor
   };
 
+{-# inline: true #-}
 foldl
   {container elem}
   {{Foldable container elem}}
@@ -37,6 +38,7 @@ foldl
   : B := for (acc := ini) (x in ls) {g acc x};
 
 --- Combine the elements of the type using the provided function starting with the element in the right-most position.
+{-# inline: 2 #-}
 foldr
   {container elem : Type}
   {{Foldable container elem}}

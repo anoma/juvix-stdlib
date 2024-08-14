@@ -5,6 +5,7 @@ import Stdlib.Trait.Eq open;
 import Stdlib.Trait.Ord open;
 import Stdlib.Trait.Show open;
 
+{-# specialize: true, inline: case #-}
 instance
 boolEqI : Eq Bool :=
   mkEq
@@ -14,6 +15,7 @@ boolEqI : Eq Bool :=
       | _ _ := false
     };
 
+{-# specialize: true, inline: case #-}
 instance
 boolOrdI : Ord Bool :=
   mkOrd

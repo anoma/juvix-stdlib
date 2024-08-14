@@ -4,23 +4,28 @@ import Stdlib.Data.Fixity open;
 import Stdlib.Data.Unit open;
 import Stdlib.Trait.Functor.Polymorphic as Poly;
 
+{-# specialize: true #-}
 trait
 type Functor (container elem : Type) :=
   mkFunctor {
     syntax iterator map {init := 0; range := 1};
+    {-# specialize: [1] #-}
     map : (elem -> elem) -> container -> container
   };
 
 open Functor public;
 
+{-# inline: case #-}
 fromPolymorphicFunctor {f : Type -> Type} {{Poly.Functor f}} {elem} : Functor (f elem) elem :=
   mkFunctor@{
     map := Poly.map
   };
 
 syntax operator <$> lapp;
+{-# inline: true #-}
 <$> {container elem} {{Functor container elem}} : (elem -> elem) -> container -> container := map;
 
 syntax operator $> lapp;
+{-# inline: true #-}
 $> {container elem : Type} {{Functor container elem}} (fa : container) (b : elem) : container :=
   λ {_ := b} <$> fa;
