@@ -15,6 +15,7 @@ trait
 type Monad (m : Type -> Type) :=
   mkMonad {
     {{applicative}} : Applicative m;
+    builtin monad-bind
     bind : {A B : Type} -> m A -> (A -> m B) -> m B
   };
 
