@@ -7,6 +7,7 @@ import Stdlib.Trait.Ord open;
 import Stdlib.Trait.Show open;
 import Stdlib.Trait.Functor open;
 import Stdlib.Trait.Applicative open;
+import Stdlib.Trait.Monad open;
 
 import Stdlib.Data.Bool.Base open;
 import Stdlib.Data.String.Base open;
@@ -60,4 +61,12 @@ applicativeMaybeI : Applicative Maybe :=
     ap {A B} : Maybe (A -> B) -> Maybe A -> Maybe B
       | (just f) (just x) := just (f x)
       | _ _ := nothing
+  };
+
+instance
+monadMaybeI : Monad Maybe :=
+  mkMonad@{
+    bind {A B} : Maybe A -> (A -> Maybe B) -> Maybe B
+     | nothing _ := nothing
+     | (just a) f := f a;
   };

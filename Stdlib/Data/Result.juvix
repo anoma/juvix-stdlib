@@ -49,3 +49,11 @@ applicativeResultI {err} : Applicative (Result err) :=
       | (ok _) (error e) := error e
       | (error e) _ := error e
   };
+
+instance
+monadResultI {err} : Monad (Result err) :=
+  mkMonad@{
+    bind {A B} : Result err A -> (A -> Result err B) -> Result err B
+     | (error e) _ := error e
+     | (ok a) f := f a;
+  };
