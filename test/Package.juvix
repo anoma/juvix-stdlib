@@ -6,5 +6,5 @@ package : Package :=
   defaultPackage@?{
     name := "stdlib-test";
     dependencies :=
-      [path "../"; github "anoma" "juvix-quickcheck" "104c749950480ed5dad42c7385a020ff31ca8875"]
+      [path "../"; github "anoma" "juvix-quickcheck" "48bd646107545bbb8c64151790eec14c6a97cbfe"]
   };
