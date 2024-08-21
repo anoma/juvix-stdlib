@@ -14,6 +14,7 @@ html:
 PHONY: clean
 clean:
 	rm -rf docs
+	$(MAKE) -C test/ clean
 
 .PHONY: test
 test:
