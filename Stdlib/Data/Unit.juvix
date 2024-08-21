@@ -1,16 +1,13 @@
 --- The unit type.
 module Stdlib.Data.Unit;
 
+import Stdlib.Data.Unit.Base open public;
 import Stdlib.Data.Bool.Base open;
 
 import Stdlib.Trait.Eq open;
 import Stdlib.Trait.Ord open;
 import Stdlib.Trait.Show open;
 import Stdlib.Trait.Foldable open;
-
-type Unit :=
-  --- The only constructor of ;Unit;.
-  unit;
 
 instance
 eqUnitI : Eq Unit := mkEq λ {unit unit := true};
