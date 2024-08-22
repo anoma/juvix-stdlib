@@ -18,3 +18,9 @@ syntax operator >>= seq;
 
 syntax operator >=> seq;
 >=> {A B C} {f : Type -> Type} {{Monad f}} (h : A -> f B) (g : B -> f C) (a : A) : f C := h a >>= g;
+
+join {A} {f : Type -> Type} {{Monad f}} (x : f (f A)) : f A :=
+  do {
+    y <- x;
+    y;
+  };
