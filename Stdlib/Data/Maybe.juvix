@@ -67,6 +67,6 @@ instance
 monadMaybeI : Monad Maybe :=
   mkMonad@{
     bind {A B} : Maybe A -> (A -> Maybe B) -> Maybe B
-     | nothing _ := nothing
-     | (just a) f := f a;
+      | nothing _ := nothing
+      | (just a) f := f a
   };

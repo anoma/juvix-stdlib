@@ -88,5 +88,5 @@ applicativeListI : Applicative List :=
 instance
 monadListI : Monad List :=
   mkMonad@{
-    bind := flip concatMap;
+    bind := flip concatMap
   };
