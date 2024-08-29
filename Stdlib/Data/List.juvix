@@ -84,3 +84,9 @@ applicativeListI : Applicative List :=
       | [] _ := []
       | (f :: fs) l := map f l ++ ap fs l
   };
+
+instance
+monadListI : Monad List :=
+  mkMonad@{
+    bind := flip concatMap
+  };

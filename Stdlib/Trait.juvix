@@ -5,6 +5,7 @@ import Stdlib.Trait.Show as Show open using {Show; module Show} public;
 import Stdlib.Trait.Ord as Ord open using {Ord; module Ord} public;
 import Stdlib.Trait.Functor open public;
 import Stdlib.Trait.Applicative open public;
+import Stdlib.Trait.Monad open public;
 import Stdlib.Trait.Foldable open public;
 import Stdlib.Trait.Partial open public;
 import Stdlib.Trait.Natural open public;
