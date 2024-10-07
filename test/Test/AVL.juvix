@@ -1,0 +1,96 @@
+module Test.AVL;
+
+import Test.JuvixUnit open;
+import Stdlib.Prelude open;
+
+import Stdlib.Data.Set.AVL open;
+
+type Box := mkBox {b : Nat};
+
+instance
+BoxOrdI : Ord Box := mkOrd (Ord.cmp on Box.b);
+
+--- Test for size and balance.
+mkTests {A} : TestDescr A -> List Test
+  | mkTestDescr@{testTitle; testLen; testSet} :=
+    let
+      mkTitle : String -> String
+        | m := testTitle ++str " " ++str m;
+      sizeMsg : String := "sizes do not match";
+      balanceMsg : String := "not balanced";
+    in [ testCase (mkTitle "size") (assertEqual sizeMsg (size testSet) testLen)
+       ; testCase (mkTitle "balanced") (assertTrue balanceMsg (isBalanced testSet))
+       ];
+
+type TestDescr (A : Type) :=
+  mkTestDescr {
+    testTitle : String;
+    testLen : Nat;
+    testSet : AVLTree A
+  };
+
+s1-tree : AVLTree Nat := fromList [1; 2; 8; 3; 3; 2; 9];
+
+s2-tree : AVLTree Nat := fromList [1; 3; 0; 4; 4; 8; 2];
+
+s1 : TestDescr Nat := mkTestDescr "s1" 5 s1-tree;
+
+s2 : TestDescr Nat := mkTestDescr "s2" 6 s2-tree;
+
+s2-delete : TestDescr Nat :=
+  mkTestDescr@{
+    testTitle := TestDescr.testTitle s2 ++str "-delete";
+    testLen := sub (TestDescr.testLen s2) 2;
+    testSet := deleteMany [1; 8] (TestDescr.testSet s2)
+  };
+
+s2-delete-with : TestDescr Box :=
+  mkTestDescr@{
+    testTitle := TestDescr.testTitle s2 ++str "-delete-with";
+    testLen := sub (TestDescr.testLen s2) 2;
+    testSet := deleteManyWith Box.b [1; 8] (TestDescr.testSet s2 |> toList |> map mkBox |> fromList)
+  };
+
+s3 : TestDescr Nat :=
+  mkTestDescr@{
+    testTitle := "s3";
+    testLen := 6;
+    testSet := fromList [5; 4; 3; 2; 1; 0]
+  };
+
+s4 : TestDescr Nat :=
+  mkTestDescr@{
+    testTitle := "s4";
+    testLen := 5;
+    testSet := fromList [1; 2; 3; 4; 5]
+  };
+
+tests : List Test :=
+  [ testCase "s1-member" (assertTrue "member? 3 s1" (member? 3 s1-tree))
+  ; testCase
+    "s1-s2-intersection"
+    (assertEqual
+      "intersection s1-tree s2-tree"
+      (intersection s1-tree s2-tree)
+      (fromList [1; 2; 3; 8]))
+  ; testCase
+    "s1-s2-difference"
+    (assertEqual "difference s1-tree s2-tree" (difference s1-tree s2-tree) (fromList [9]))
+  ; testCase
+    "s1-s2-union"
+    (assertEqual "union s1-tree s2-tree" (union s1-tree s2-tree) (fromList [0; 1; 2; 3; 4; 8; 9]))
+  ; testCase "for ascending iteration"
+    <| assertEqual "for iterates in ascending order" [1; 2; 3; 4]
+    <| for (acc := []) (k in fromList [3; 2; 4; 1])
+         snoc acc k
+  ; testCase "rfor ascending iteration"
+    <| assertEqual "rfor iterates in descending order" [4; 3; 2; 1]
+    <| rfor (acc := []) (k in fromList [3; 2; 4; 1])
+         snoc acc k
+  ]
+    ++ concatMap mkTests [s1; s2; s3; s4; s2-delete];
+
+suite : TestSuite := testSuite "AVL Set" tests;
+
+main : IO :=
+  printStringLn (pretty s1-tree) >>> printStringLn (prettyDebug s1-tree) >>> runTestSuite suite;

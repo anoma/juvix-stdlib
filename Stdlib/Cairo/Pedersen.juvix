@@ -1,8 +1,7 @@
 module Stdlib.Cairo.Pedersen;
 
 import Stdlib.Data.Field open using {Field};
-import
-Stdlib.Cairo.Ec as Ec;
+import Stdlib.Cairo.Ec as Ec;
 
 module ConstantPoints;
   P0 : Ec.Point :=

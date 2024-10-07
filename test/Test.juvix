@@ -9,7 +9,13 @@ import Data.String open;
 
 import Test.QuickCheckTest as QC;
 import Test.Arb as QC;
-import Test.StdlibTestExtra;
+
+import Test.JuvixUnit open;
+import Stdlib.System.IO open;
+import Test.AVL open using {suite as avlSuite};
+import Test.Map open using {suite as mapSuite};
+import Test.Queue open using {suite as queueSuite};
+import Test.UnbalancedSet open using {suite as unbalancedSetSuite};
 
 prop-reverseDoesNotChangeLength : List Int -> Bool
   | xs := length (reverse xs) == length xs;
@@ -324,4 +330,9 @@ main : IO :=
           ; resultMaybeToResult
           ; resultMapError
           ; resultMapOk
-          ]};
+          ]}
+          >>>
+  runTestSuite avlSuite
+    >>> runTestSuite mapSuite
+    >>> runTestSuite queueSuite
+    >>> runTestSuite unbalancedSetSuite;
