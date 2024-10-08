@@ -4,9 +4,9 @@ import Stdlib.System.IO.Base open;
 import Stdlib.Data.String open;
 
 builtin string-print
-axiom printString : String → IO;
+axiom printString : String -> IO;
 
 builtin IO-readline
-axiom readLn : (String → IO) → IO;
+axiom readLn : (String -> IO) -> IO;
 
 printStringLn (s : String) : IO := printString s >>> printString "\n";

@@ -6,11 +6,16 @@ import Stdlib.Trait.Eq open;
 import Stdlib.Trait.Ord open;
 import Stdlib.Data.Bool open;
 
---- Computes the greatest common divisor.
+--- Computes the greatest common divisor of `a` and `b`.
 gcd {A} {{Eq A}} {{Ord A}} {{Natural A}} {{DivMod A}} (a b : A) : A :=
   let
     -- Internal helper for computing the greatest common divisor. The first element
     -- should be smaller than the second.
     terminating
-    gcd' (a b : A) : A := ite (a == 0) b (gcd' (mod b a) a);
-  in ite (a > b) (gcd' b a) (gcd' a b);
+    gcd' (a b : A) : A :=
+      if
+        | a == 0 := b
+        | else := gcd' (mod b a) a;
+  in if
+    | a > b := gcd' b a
+    | else := gcd' a b;

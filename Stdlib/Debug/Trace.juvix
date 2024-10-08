@@ -2,4 +2,4 @@ module Stdlib.Debug.Trace;
 
 --- Primitive that prints the given element and returns it.
 builtin trace
-axiom trace : {A : Type} → A → A;
+axiom trace : {A : Type} -> A -> A;

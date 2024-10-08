@@ -2,6 +2,6 @@ module Stdlib.Debug.Fail;
 
 import Stdlib.Data.String.Base open;
 
---- Primitive that exits the program with an error message.
+--- Exit the program with an error message.
 builtin fail
-axiom failwith : {A : Type} → String → A;
+axiom failwith : {A : Type} -> (message : String) -> A;

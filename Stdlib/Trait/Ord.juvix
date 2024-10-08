@@ -9,25 +9,29 @@ type Ordering :=
   | EQ : Ordering
   | GT : Ordering;
 
-isLT : Ordering → Bool
-  | LT := true
-  | _ := false;
+isLT (ordering : Ordering) : Bool :=
+  case ordering of
+    | LT := true
+    | _ := false;
 
-isEQ : Ordering → Bool
-  | EQ := true
-  | _ := false;
+isEQ (ordering : Ordering) : Bool :=
+  case ordering of
+    | EQ := true
+    | _ := false;
 
-isGT : Ordering → Bool
-  | GT := true
-  | _ := false;
+isGT (ordering : Ordering) : Bool :=
+  case ordering of
+    | GT := true
+    | _ := false;
 
 instance
 orderingEqI : Eq Ordering :=
   mkEq@{
-    eq (x : Ordering) : Ordering -> Bool
-      | LT := isLT x
-      | EQ := isEQ x
-      | GT := isGT x
+    eq (ordering1 ordering2 : Ordering) : Bool :=
+      case ordering2 of
+        | LT := isLT ordering1
+        | EQ := isEQ ordering1
+        | GT := isGT ordering1
   };
 
 --- A trait for defining a total order
