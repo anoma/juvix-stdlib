@@ -5,7 +5,11 @@ import Stdlib.Data.List open;
 
 type BinaryTree (A : Type) :=
   | leaf : BinaryTree A
-  | node : BinaryTree A -> A -> BinaryTree A -> BinaryTree A;
+  | node {
+    left : BinaryTree A;
+    element : A;
+    right : BinaryTree A;
+   };
 
 --- fold a tree in depth first order
 fold {A B} (f : A -> B -> B -> B) (acc : B) : BinaryTree A -> B :=
@@ -15,6 +19,6 @@ fold {A B} (f : A -> B -> B -> B) (acc : B) : BinaryTree A -> B :=
       | (node l a r) := f a (go acc l) (go acc r);
   in go acc;
 
-length : {A : Type} -> BinaryTree A -> Nat := fold λ {_ l r := 1 + l + r} 0;
+length : {A : Type} -> BinaryTree A -> Nat := fold \ {_ l r := 1 + l + r} 0;
 
-to-list : {A : Type} -> BinaryTree A -> List A := fold λ {e ls rs := e :: ls ++ rs} nil;
+toList : {A : Type} -> BinaryTree A -> List A := fold \ {e ls rs := e :: ls ++ rs} nil;
