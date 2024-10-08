@@ -16,9 +16,10 @@ type Int :=
     negSuc Nat;
 
 --- Converts an ;Int; to a ;Nat;. If the ;Int; is negative, it returns ;zero;.
-toNat : Int -> Nat
-  | (ofNat n) := n
-  | (negSuc _) := zero;
+toNat (int : Int) : Nat :=
+  case int of
+    | ofNat n := n
+    | negSuc _ := zero;
 
 --- Non-negative predicate for ;Int;s.
 builtin int-nonneg
@@ -88,6 +89,7 @@ mod : Int -> Int -> Int
   | (negSuc m) (negSuc n) := negNat (Nat.mod (suc m) (suc n));
 
 --- Absolute value
-abs : Int -> Nat
-  | (ofNat n) := n
-  | (negSuc n) := suc n;
+abs (int : Int) : Nat :=
+  case int of
+    | ofNat n := n
+    | negSuc n := suc n;

@@ -9,63 +9,65 @@ import Stdlib.Data.Maybe.Base open;
 import Stdlib.Trait.Ord open;
 import Stdlib.Data.Pair.Base open;
 
---- 𝒪(𝓃). Returns ;true; if the given
---- object is in the ;List;.
+--- 𝒪(𝓃). Returns ;true; if the given object elem is in the ;List;.
 {-# specialize: [1] #-}
-elem {A} (eq : A → A → Bool) (s : A) : List A → Bool
+isMember {A} (eq : A -> A -> Bool) (elem : A) : (list : List A) -> Bool
   | nil := false
-  | (x :: xs) := eq s x || elem eq s xs;
+  | (x :: xs) := eq elem x || isMember eq elem xs;
 
 --- 𝒪(𝓃). Returns the leftmost element of the list satisfying the predicate or
---- nothing if there's no such element.
+--- nothing if there is no such element.
 {-# specialize: [1] #-}
-find {A} (predicate : A → Bool) : List A → Maybe A
+find {A} (predicate : A -> Bool) : (list : List A) -> Maybe A
   | nil := nothing
   | (x :: xs) :=
     if
       | predicate x := just x
       | else := find predicate xs;
 
---- Right-associative fold.
-{-# specialize: [1] #-}
-liftFoldr {A B} (f : A → B → B) (z : B) : List A → B
-  | nil := z
-  | (h :: hs) := f h (liftFoldr f z hs);
-
 syntax iterator listRfor {init := 1; range := 1};
 
 {-# specialize: [1] #-}
-listRfor {A B} (f : B → A → B) (acc : B) : List A → B
+listRfor {A B} (fun : B -> A -> B) (acc : B) : (list : List A) -> B
   | nil := acc
-  | (x :: xs) := f (listRfor f acc xs) x;
+  | (x :: xs) := fun (listRfor fun acc xs) x;
+
+--- Right-associative fold.
+{-# specialize: [1] #-}
+liftFoldr {A B} (fun : A -> B -> B) (acc : B) (list : List A) : B := listRfor (flip fun) acc list;
 
 --- Left-associative and tail-recursive fold.
 {-# specialize: [1] #-}
-listFoldl {A B} (f : B → A → B) (z : B) : List A → B
-  | nil := z
-  | (h :: hs) := listFoldl f (f z h) hs;
+listFoldl {A B} (fun : B -> A -> B) (acc : B) : (list : List A) -> B
+  | nil := acc
+  | (h :: hs) := listFoldl fun (fun acc h) hs;
 
 syntax iterator listFor {init := 1; range := 1};
 
 {-# inline: 0, isabelle-function: {name: "foldl"} #-}
-listFor : {A B : Type} → (B → A → B) → B → List A → B := listFoldl;
+listFor : {A B : Type} -> (B -> A -> B) -> B -> List A -> B := listFoldl;
 
 syntax iterator listMap {init := 0; range := 1};
 
 --- 𝒪(𝓃). Maps a function over each element of a ;List;.
 {-# specialize: [1] #-}
-listMap {A B} (f : A → B) : List A → List B
+listMap {A B} (fun : A -> B) : (list : List A) -> List B
   | nil := nil
-  | (h :: hs) := f h :: listMap f hs;
+  | (h :: hs) := fun h :: listMap fun hs;
 
 syntax iterator filter {init := 0; range := 1};
 
 --- 𝒪(𝓃). Filters a ;List; according to a given predicate, i.e.,
 --- keeps the elements for which the given predicate returns ;true;.
 {-# specialize: [1] #-}
-filter {A} (f : A → Bool) : List A → List A
+filter {A} (predicate : A -> Bool) : (list : List A) -> List A
   | nil := nil
-  | (h :: hs) := ite (f h) (h :: filter f hs) (filter f hs);
+  | (h :: hs) :=
+    if
+      | predicate h := h :: filter predicate hs
+      | else := filter predicate hs;
+
+-- HERE: Continue updating style here
 
 --- 𝒪(𝓃). Returns the length of the ;List;.
 length {A} (l : List A) : Nat := listFor (acc := zero) (_ in l) {suc acc};
