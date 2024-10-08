@@ -4,17 +4,17 @@ import Stdlib.Data.Fixity open;
 import Stdlib.Trait.Applicative open;
 
 trait
-type Monad (m : Type -> Type) :=
+type Monad (M : Type -> Type) :=
   mkMonad {
-    {{applicative}} : Applicative m;
+    {{applicative}} : Applicative M;
     builtin monad-bind
-    bind : {A B : Type} -> m A -> (A -> m B) -> m B
+    bind : {A B : Type} -> M A -> (A -> M B) -> M B
   };
 
 open Monad public;
 
 syntax operator >>= seq;
->>= {A B} {f : Type -> Type} {{Monad f}} (x : f A) (g : A -> f B) : f B := bind x g;
+>>= {A B} {F : Type -> Type} {{Monad F}} (x : F A) (g : A -> F B) : F B := bind x g;
 
 syntax operator >=> seq;
->=> {A B C} {f : Type -> Type} {{Monad f}} (h : A -> f B) (g : B -> f C) (a : A) : f C := h a >>= g;
+>=> {A B C} {F : Type -> Type} {{Monad F}} (h : A -> F B) (g : B -> F C) (a : A) : F C := h a >>= g;

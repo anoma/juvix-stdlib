@@ -10,20 +10,20 @@ import Stdlib.Trait.Show open;
 import Stdlib.Trait.Foldable open;
 
 instance
-eqUnitI : Eq Unit := mkEq λ {unit unit := true};
+eqUnitI : Eq Unit := mkEq \ {unit unit := true};
 
 instance
-ordUnitI : Ord Unit := mkOrd λ {unit unit := EQ};
+ordUnitI : Ord Unit := mkOrd \ {unit unit := EQ};
 
 instance
-showUnitI : Show Unit := mkShow λ {unit := "unit"};
+showUnitI : Show Unit := mkShow \ {unit := "unit"};
 
 {-# specialize: true, inline: case #-}
 instance
 foldableUnitI : Foldable Unit Unit :=
   mkFoldable@{
     {-# inline: true #-}
-    rfor {B : Type} (f : B -> Unit -> B) (ini : B) (_ : Unit) : B := f ini unit;
+    rfor {Acc : Type} (fun : Acc -> Unit -> Acc) (initialValue : Acc) (_ : Unit) : Acc := fun initialValue unit;
     {-# inline: true #-}
-    for {B : Type} (f : B -> Unit -> B) (ini : B) (_ : Unit) : B := f ini unit
+    for {Acc : Type} (fun : Acc -> Unit -> Acc) (initialValue : Acc) (_ : Unit) : Acc := fun initialValue unit
   };
