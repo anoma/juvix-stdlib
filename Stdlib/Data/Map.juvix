@@ -19,32 +19,44 @@ open AVL using {AVLTree};
 
 import Stdlib.Data.BinaryTree as Tree;
 
-type Binding A B := binding A B;
+type Binding Key Value :=
+  mkBinding {
+    key : Key;
+    value : Value
+  };
 
-key {A B} : Binding A B -> A
-  | (binding a _) := a;
+key {Key Value} (binding : Binding Key Value) : Key := Binding.key binding;
 
-value {A B} : Binding A B -> B
-  | (binding _ b) := b;
+value {Key Value} (binding : Binding Key Value) : Value := Binding.value binding;
 
-toPair {A B} : Binding A B -> Pair A B
-  | (binding a b) := a, b;
+toPair {Key Value} (binding : Binding Key Value) : Pair Key Value := key binding, value binding;
 
 instance
-bindingKeyOrdering {A B} {{Ord A}} : Ord (Binding A B) :=
-  mkOrd λ {b1 b2 := Ord.cmp (key b1) (key b2)};
+bindingKeyOrdering {Key Value} {{Ord Key}} : Ord (Binding Key Value) :=
+  mkOrd@{
+    cmp (b1 b2 : Binding Key Value) : Ordering := Ord.cmp (key b1) (key b2)
+  };
 
-type Map A B := mkMap (AVLTree (Binding A B));
+type Map Key Value := mkMap (AVLTree (Binding Key Value));
 
-empty {A B} : Map A B := mkMap AVL.empty;
+empty {Key Value} : Map Key Value := mkMap AVL.empty;
 
 {-# specialize: [1, f] #-}
-insertWith {A B} {{Ord A}} (f : B -> B -> B) (k : A) (v : B) : Map A B -> Map A B
-  | (mkMap s) :=
-    let
-      f' : Binding A B -> Binding A B -> Binding A B
-        | (binding a b1) (binding _ b2) := binding a (f b1 b2);
-    in mkMap (Set.insertWith f' (binding k v) s);
+insertWith
+  {Key Value}
+  {{Ord Key}}
+  (fun : Value -> Value -> Value)
+  (key : Key)
+  (value : Value)
+  (map : Map Key Value)
+  : Map Key Value :=
+  case map of
+    mkMap tree :=
+      let
+        fun' (binding1 binding2 : Binding Key Value) : Binding Key Value :=
+          case binding1, binding2 of mkBinding a b1, mkBinding _ b2 := mkBinding a (fun b1 b2);
+        binding := mkBinding key value;
+      in mkMap (Set.insertWith fun' binding tree);
 
 insert {A B : Type} {{Ord A}} : A -> B -> Map A B -> Map A B := insertWith λ {old new := new};
 

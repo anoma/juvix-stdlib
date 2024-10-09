@@ -8,33 +8,26 @@ syntax operator , pair;
 builtin pair
 type Pair (A B : Type) := , : A → B → Pair A B;
 
---- Converts a function of two arguments to a function with a product argument.
-uncurry {A B C} (f : A -> B -> C) : Pair A B -> C
-  | (a, b) := f a b;
+--- Converts a function f of two arguments to a function with a product argument.
+uncurry {A B C} (f : A -> B -> C) (pair : Pair A B) : C := case pair of a, b := f a b;
 
---- Converts a function with a product argument to a function of two arguments.
+--- Converts a function f with a product argument to a function of two arguments.
 curry {A B C} (f : Pair A B -> C) (a : A) (b : B) : C := f (a, b);
 
 --- Projects the first component of a tuple.
-fst {A B} : Pair A B → A
-  | (a, _) := a;
+fst {A B} (pair : Pair A B) : A := case pair of a, _ := a;
 
 --- Projects the second component of a tuple.
-snd {A B} : Pair A B → B
-  | (_, b) := b;
+snd {A B} (pair : Pair A B) : B := case pair of _, b := b;
 
 --- Swaps the components of a tuple.
-swap {A B} : Pair A B → Pair B A
-  | (a, b) := b, a;
+swap {A B} (pair : Pair A B) : Pair B A := case pair of a, b := b, a;
 
---- Applies a function to the first component.
-first {A B A'} (f : A → A') : Pair A B → Pair A' B
-  | (a, b) := f a, b;
+--- Applies a function f to the first component.
+first {A B A'} (f : A -> A') (pair : Pair A B) : Pair A' B := case pair of a, b := f a, b;
 
---- Applies a function to the second component.
-second {A B B'} (f : B → B') : Pair A B → Pair A B'
-  | (a, b) := a, f b;
+--- Applies a function f to the second component.
+second {A B B'} (f : B -> B') (pair : Pair A B) : Pair A B' := case pair of a, b := a, f b;
 
---- Applies a function to both components.
-both {A B} (f : A → B) : Pair A A → Pair B B
-  | (a, b) := f a, f b;
+--- Applies a function f to both components.
+both {A B} (f : A -> B) (pair : Pair A A) : Pair B B := case pair of a, b := f a, f b;

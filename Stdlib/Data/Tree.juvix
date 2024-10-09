@@ -10,7 +10,6 @@ import Stdlib.Function open;
 Forest (A : Type) : Type := List (Tree A);
 
 --- N-Ary tree.
-positive
 type Tree (A : Type) :=
   node {
     element : A;

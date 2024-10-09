@@ -39,44 +39,50 @@ height {A} (tree : AVLTree A) : Nat :=
     | node@{height} := height;
 
 type BalanceFactor :=
-  | --- Left children is higher.
+  | --- Left child is higher.
     LeanLeft
   | --- Equal heights of children.
     LeanNone
-  | --- Right children is higher.
+  | --- Right child is higher.
     LeanRight;
 
-{-# inline: true #-}
 diffFactor {A} (tree : AVLTree A) : Int :=
   case tree of
     | empty := 0
     | node@{left; right} := intSubNat (height right) (height left);
 
---- 𝒪(1). Computes the balance factor, i.e., the height of the right subtree
---- minus the height of the left subtree.
 {-# inline: true #-}
-balanceFactor {A} (tree : AVLTree A) : BalanceFactor :=
+balanceFactor' {A} (left right : AVLTree A) : BalanceFactor :=
   let
-    diff : Int := diffFactor tree;
+    h1 := height left;
+    h2 := height right;
   in if
-    | 0 < diff := LeanRight
-    | diff < 0 := LeanLeft
+    | h1 < h2 := LeanRight
+    | h2 < h1 := LeanLeft
     | else := LeanNone;
 
+--- 𝒪(1). Computes the balance factor, i.e., the height of the right subtree
+--- minus the height of the left subtree.
+balanceFactor {A} (tree : AVLTree A) : BalanceFactor :=
+  -- We avoid `diffFactor` here for efficiency.
+  case tree of
+    | empty := LeanNone
+    | node@{left; right} := balanceFactor' left right;
+
 --- 𝒪(1). Helper function for creating a node.
-mknode {A} (value : A) (left : AVLTree A) (right : AVLTree A) : AVLTree A :=
+mkNode {A} (value : A) (left : AVLTree A) (right : AVLTree A) : AVLTree A :=
   node value (1 + max (height left) (height right)) left right;
 
 --- 𝒪(1). Left rotation.
 rotateLeft {A} (tree : AVLTree A) : AVLTree A :=
   case tree of
-    | node x _ a (node z _ b c) := mknode z (mknode x a b) c
+    | node x _ a (node z _ b c) := mkNode z (mkNode x a b) c
     | n := n;
 
 --- 𝒪(1). Right rotation.
 rotateRight {A} (tree : AVLTree A) : AVLTree A :=
   case tree of
-    | node z _ (node y _ x t3) t4 := mknode y x (mknode z t3 t4)
+    | node z _ (node y _ x t3) t4 := mkNode y x (mkNode z t3 t4)
     | n := n;
 
 --- 𝒪(1). Applies local rotations if needed.
@@ -84,20 +90,18 @@ balance {A} (tree : AVLTree A) : AVLTree A :=
   case tree of
     | empty := empty
     | node@{element; height; left; right} :=
-      let
-        factor : BalanceFactor := balanceFactor tree;
-      in case factor of
-           | LeanRight :=
-             case balanceFactor right of {
-               | LeanLeft := rotateLeft (mknode element left (rotateRight right))
-               | _ := rotateLeft tree
-             }
-           | LeanLeft :=
-             case balanceFactor left of {
-               | LeanRight := rotateRight (mknode element (rotateLeft left) right)
-               | _ := rotateRight tree
-             }
-           | LeanNone := tree;
+      case balanceFactor' left right of
+        | LeanRight :=
+          case balanceFactor right of {
+            | LeanLeft := rotateLeft (mkNode element left (rotateRight right))
+            | _ := rotateLeft tree
+          }
+        | LeanLeft :=
+          case balanceFactor left of {
+            | LeanRight := rotateRight (mkNode element (rotateLeft left) right)
+            | _ := rotateRight tree
+          }
+        | LeanNone := tree;
 
 --- 𝒪(log 𝓃). Lookup a member from the ;AVLTree; using a projection function.
 --- Ord A, Ord K and fun must be compatible. i.e cmp_k (fun a1) (fun a2) == cmp_a a1 a2
@@ -131,11 +135,11 @@ insertWith {A} {{order : Ord A}} (fun : A -> A -> A) (elem : A) (tree : AVLTree 
   let
     {-# specialize-by: [order, fun] #-}
     go : AVLTree A -> AVLTree A
-      | empty := mknode elem empty empty
+      | empty := mkNode elem empty empty
       | node@{element; height; left; right} :=
         case Ord.cmp elem element of
-          | LT := balance (mknode element (go left) right)
-          | GT := balance (mknode element left (go right))
+          | LT := balance (mkNode element (go left) right)
+          | GT := balance (mkNode element left (go right))
           | EQ := node (fun element elem) height left right;
   in go tree;
 
@@ -149,7 +153,7 @@ deleteMin {A} {{Ord A}} : (tree : AVLTree A) -> Maybe (Pair A (AVLTree A))
   | node@{element; left; right} :=
     case deleteMin left of
       | nothing := just (element, right)
-      | just (element', left') := just (element', mknode element left' right);
+      | just (element', left') := just (element', mkNode element left' right);
 
 --- 𝒪(log 𝓃). Removes an element from an ;AVLTree; based on a projected comparison value.
 ---
@@ -169,15 +173,15 @@ deleteWith
       | empty := empty
       | node@{element; left; right} :=
         case Ord.cmp elem (fun element) of
-          | LT := balance (mknode element (go left) right)
-          | GT := balance (mknode element left (go right))
+          | LT := balance (mkNode element (go left) right)
+          | GT := balance (mkNode element left (go right))
           | EQ :=
             case left of
               | empty := right
               | _ :=
                 case deleteMin right of
                   | nothing := left
-                  | just (minRight, right') := balance (mknode minRight left right');
+                  | just (minRight, right') := balance (mkNode minRight left right');
   in go tree;
 
 --- 𝒪(log 𝓃). Removes an element from an ;AVLTree;.
@@ -198,17 +202,17 @@ lookupMax {A} : AVLTree A -> Maybe A
   | (node _ _ l empty) := lookupMax l
   | (node _ _ _ r) := lookupMax r;
 
---- 𝒪(𝒹 log 𝓃). Deletes d elements from an ;AVLTree;.
+--- 𝒪(𝒹 log 𝓃). Deletes elements from an ;AVLTree;.
 {-# specialize: [1] #-}
 deleteMany {A} {{Ord A}} : List A -> AVLTree A -> AVLTree A := deleteManyWith id;
 
---- 𝒪(𝒹 log 𝓃). Deletes d elements from an ;AVLTree; based on a projected comparison value.
+--- 𝒪(𝒹 log 𝓃). Deletes elements from an ;AVLTree; based on a projected comparison value.
 ---
---- Assumption Ord A and Ord B are compatible: Given a1 a2, A then (fun a1 == fun a2) == (a1 == a2)
+--- Assumption: Ord A and Ord B are compatible, i.e., for a1 a2 in A, we have (fun a1 == fun a2) == (a1 == a2)
 {-# specialize: [1, 2] #-}
-deleteManyWith {A B} {{Ord A}} {{Ord B}} (fun : A -> B) (toDelete : List B) (tree : AVLTree A) : AVLTree A :=
-  for (acc := tree) (x in toDelete)
-    deleteWith fun x acc;
+deleteManyWith
+  {A B} {{Ord A}} {{Ord B}} (fun : A -> B) (toDelete : List B) (tree : AVLTree A) : AVLTree A :=
+  for (acc := tree) (x in toDelete) {deleteWith fun x acc};
 
 --- 𝒪(𝓃). Checks the ;AVLTree; height invariant. I.e. that
 --- every two children do not differ on height by more than 1.
@@ -218,8 +222,7 @@ isBalanced {A} : (tree : AVLTree A) -> Bool
 
 --- 𝒪(𝓃 log 𝓃). Create an ;AVLTree; from an unsorted ;List;.
 {-# specialize: [1] #-}
-fromList {A} {{Ord A}} (list : List A) : AVLTree A :=
-  for (acc := empty) (x in list) {insert x acc};
+fromList {A} {{Ord A}} (list : List A) : AVLTree A := for (acc := empty) (x in list) {insert x acc};
 
 --- 𝒪(𝓃). Returns the number of elements of an ;AVLTree;.
 size {A} : AVLTree A -> Nat
@@ -266,11 +269,11 @@ prettyDebug {A} {{Show A}} (tree : AVLTree A) : String :=
 --- 𝒪(𝓃).
 toTree {A} : (tree : AVLTree A) -> Maybe (Tree A)
   | empty := nothing
-  | node@{element; left; right} := just (Tree.node element (catMaybes (toTree left :: toTree right :: nil)));
+  | node@{element; left; right} :=
+    just (Tree.node element (catMaybes (toTree left :: toTree right :: nil)));
 
 --- Returns the textual representation of an ;AVLTree;.
-pretty {A} {{Show A}} (tree : AVLTree A) : String :=
-  maybe "empty" Tree.treeToString (toTree tree);
+pretty {A} {{Show A}} (tree : AVLTree A) : String := maybe "empty" Tree.treeToString (toTree tree);
 
 -- TODO: remove toList
 instance
@@ -293,4 +296,4 @@ polymorphicFoldableAVLTreeI : Polymorphic.Foldable AVLTree :=
 
 {-# specialize: true, inline: true #-}
 instance
-foldableVLTreeI {A} : Foldable (AVLTree A) A := fromPolymorphicFoldable;
+foldableAVLTreeI {A} : Foldable (AVLTree A) A := fromPolymorphicFoldable;

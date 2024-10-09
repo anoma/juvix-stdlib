@@ -3,6 +3,7 @@ module Stdlib.Data.Unit;
 
 import Stdlib.Data.Unit.Base open public;
 import Stdlib.Data.Bool.Base open;
+import Stdlib.Data.String.Base open;
 
 import Stdlib.Trait.Eq open;
 import Stdlib.Trait.Ord open;
@@ -10,20 +11,31 @@ import Stdlib.Trait.Show open;
 import Stdlib.Trait.Foldable open;
 
 instance
-eqUnitI : Eq Unit := mkEq \ {unit unit := true};
+eqUnitI : Eq Unit :=
+  mkEq@{
+    eq (_ _ : Unit) : Bool := true
+  };
 
 instance
-ordUnitI : Ord Unit := mkOrd \ {unit unit := EQ};
+ordUnitI : Ord Unit :=
+  mkOrd@{
+    cmp (_ _ : Unit) : Ordering := Equal
+  };
 
 instance
-showUnitI : Show Unit := mkShow \ {unit := "unit"};
+showUnitI : Show Unit :=
+  mkShow@{
+    show (_ : Unit) : String := "unit"
+  };
 
 {-# specialize: true, inline: case #-}
 instance
 foldableUnitI : Foldable Unit Unit :=
   mkFoldable@{
     {-# inline: true #-}
-    rfor {Acc : Type} (fun : Acc -> Unit -> Acc) (initialValue : Acc) (_ : Unit) : Acc := fun initialValue unit;
+    rfor {Acc : Type} (fun : Acc -> Unit -> Acc) (initialValue : Acc) (_ : Unit) : Acc :=
+      fun initialValue unit;
     {-# inline: true #-}
-    for {Acc : Type} (fun : Acc -> Unit -> Acc) (initialValue : Acc) (_ : Unit) : Acc := fun initialValue unit
+    for {Acc : Type} (fun : Acc -> Unit -> Acc) (initialValue : Acc) (_ : Unit) : Acc :=
+      fun initialValue unit
   };
