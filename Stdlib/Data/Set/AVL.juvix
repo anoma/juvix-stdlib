@@ -14,7 +14,7 @@ import Stdlib.Data.Nat open;
 import Stdlib.Data.Int open;
 import Stdlib.Data.Bool open;
 import Stdlib.Data.Pair open;
-import Stdlib.Data.List open;
+import Stdlib.Data.List open hiding {isMember};
 import Stdlib.Data.String open;
 import Stdlib.Trait.Foldable open;
 import Stdlib.Function open;
