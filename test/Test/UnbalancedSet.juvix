@@ -1,0 +1,32 @@
+module Test.UnbalancedSet;
+
+import Juvix.Builtin.V1 open;
+import Stdlib.Data.List open using {quickSort};
+import Stdlib.System.IO.Base open;
+import Test.JuvixUnit open;
+
+import Stdlib.Data.UnbalancedSet as Set;
+open Set using {UnbalancedSet};
+
+tests : List Test :=
+  let
+    s : UnbalancedSet Nat := Set.insert 1 (Set.insert 3 (Set.insert 2 (Set.insert 1 Set.empty)));
+    setInSet : UnbalancedSet (UnbalancedSet Nat) := Set.insert s Set.empty;
+  in [ testCase
+       "Set.length computes the expected size"
+       (assertEqual "unexpected size" (Set.length s) 3)
+     ; testCase
+       "Set.to-list computes the expected members"
+       (assertEqual "unexpected memebrs" (quickSort (Set.to-list s)) [1; 2; 3])
+     ; testCase
+       "Set.member? computes true for expected member"
+       (assertTrue "expected member is not present" (Set.member? 1 s))
+     ; testCase
+       "Set.member? computes false for unexpected member"
+       (assertFalse "unexpected member is present" (Set.member? 0 s))
+     ; testCase "setInSet has length 1" (assertEqual "unexpected size" (Set.length setInSet) 1)
+     ];
+
+suite : TestSuite := testSuite "UnbalancedSet" tests;
+
+main : IO := runTestSuite suite;

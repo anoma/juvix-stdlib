@@ -2,9 +2,11 @@ module Stdlib.Data.Result;
 
 import Stdlib.Data.Result.Base open public;
 import Stdlib.Data.Bool.Base open;
+import Stdlib.Data.String.Base open;
 
 import Stdlib.Trait.Eq open;
 import Stdlib.Trait.Ord open;
+import Stdlib.Trait.Show open;
 import Stdlib.Trait open;
 
 {-# specialize: true, inline: case #-}
@@ -26,6 +28,14 @@ eqResultI {A B} {{Eq A}} {{Eq B}} : Eq (Result A B) :=
       | (error a1) (error a2) := a1 == a2
       | (ok b1) (ok b2) := b1 == b2
       | _ _ := false
+  };
+
+instance
+showResultI {A B} {{Show A}} {{Show B}} : Show (Result A B) :=
+  mkShow@{
+    show : Result A B -> String
+      | (error x) := "Error (" ++str Show.show x ++str ")"
+      | (ok x) := "Ok (" ++str Show.show x ++str ")"
   };
 
 {-# specialize: true, inline: case #-}

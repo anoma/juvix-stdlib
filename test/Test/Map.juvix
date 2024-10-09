@@ -1,0 +1,56 @@
+module Test.Map;
+
+import Juvix.Builtin.V1 open;
+import Stdlib.System.IO open;
+import Stdlib.Data.Pair open;
+import Stdlib.Data.List open;
+import Stdlib.Function open;
+import Test.JuvixUnit open;
+
+import Stdlib.Data.Map as Map;
+open Map using {Map};
+
+tests : List Test :=
+  let
+    m : Map Nat String := Map.insert 2 "two" (Map.insert 1 "one" Map.empty);
+    m2 : Map Nat Nat := Map.insert 3 4 (Map.insert 1 2 Map.empty);
+    assertEqListPair : List (Pair Nat Nat) -> List (Pair Nat Nat) -> Assertion
+      | actual expected := assertEqual "lists are not equal" (quickSort actual) expected;
+  in [ testCase
+       "Map.lookup missing key"
+       (assertNothing (const "found a key expected to be missing") (Map.lookup 10 m))
+     ; testCase
+       "Map.lookup available key"
+       (assertJust "could not find expected key" (Map.lookup 2 m))
+     ; testCase
+       "Map.delete exiting key"
+       (assertNothing (const "expected deleted key to be missing") (Map.delete 2 m |> Map.lookup 2))
+     ; testCase
+       "Map.delete missing key"
+       (assertEqual "expected maps to be equal" m (Map.delete 100 m))
+     ; testCase
+       "Map.length computes the number of keys in the map"
+       (assertEqual "expected length 2" (Map.size m) 2)
+     ; testCase
+       "Map.toList computes the expected members"
+       (assertEqListPair (Map.toList m2) [1, 2; 3, 4])
+     ; testCase
+       "Map.insert-with replaces duplicates using merge function"
+       (assertEqListPair (Map.toList (Map.insertWith (+) 1 3 m2)) [1, 5; 3, 4])
+     ; testCase
+       "Map.fromListWith de-duplicates using merge function"
+       (assertEqListPair (Map.toList (Map.fromListWith (+) [1, 1; 1, 2])) [1, 3])
+     ; testCase
+       "Map.fromList can be used to create the empty Map"
+       (assertEqListPair (Map.toList (Map.fromList nil)) (nil))
+     ; testCase
+       "Map.fromList overwrites duplicates"
+       (assertEqListPair (Map.toList (Map.fromList [1, 1; 1, 2])) [1, 2])
+     ; testCase
+       "Map.fromList distinct keys"
+       (assertEqListPair (Map.toList (Map.fromList [1, 1; 2, 2])) [1, 1; 2, 2])
+     ];
+
+suite : TestSuite := testSuite "Map" tests;
+
+main : IO := runTestSuite suite;

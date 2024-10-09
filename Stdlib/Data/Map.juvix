@@ -1,0 +1,72 @@
+module Stdlib.Data.Map;
+
+import Stdlib.Data.Pair open;
+import Stdlib.Data.Maybe open;
+import Stdlib.Data.List open;
+import Stdlib.Data.Nat open;
+
+import Stdlib.Trait.Functor open;
+import Stdlib.Trait.Foldable open;
+import Stdlib.Trait.Ord open;
+
+import Stdlib.Function open;
+
+import Stdlib.Data.Set as Set;
+open Set using {Set};
+
+import Stdlib.Data.Set.AVL as AVL;
+open AVL using {AVLTree};
+
+import Stdlib.Data.BinaryTree as Tree;
+
+type Binding A B := binding A B;
+
+key {A B} : Binding A B -> A
+  | (binding a _) := a;
+
+value {A B} : Binding A B -> B
+  | (binding _ b) := b;
+
+toPair {A B} : Binding A B -> Pair A B
+  | (binding a b) := a, b;
+
+instance
+bindingKeyOrdering {A B} {{Ord A}} : Ord (Binding A B) :=
+  mkOrd λ {b1 b2 := Ord.cmp (key b1) (key b2)};
+
+type Map A B := mkMap (AVLTree (Binding A B));
+
+empty {A B} : Map A B := mkMap AVL.empty;
+
+{-# specialize: [1, f] #-}
+insertWith {A B} {{Ord A}} (f : B -> B -> B) (k : A) (v : B) : Map A B -> Map A B
+  | (mkMap s) :=
+    let
+      f' : Binding A B -> Binding A B -> Binding A B
+        | (binding a b1) (binding _ b2) := binding a (f b1 b2);
+    in mkMap (Set.insertWith f' (binding k v) s);
+
+insert {A B : Type} {{Ord A}} : A -> B -> Map A B -> Map A B := insertWith λ {old new := new};
+
+{-# specialize: [1] #-}
+lookup {A B} {{Ord A}} (k : A) : Map A B -> Maybe B
+  | (mkMap s) := map value (Set.lookupWith key k s);
+
+{-# specialize: [1, f] #-}
+fromListWith {A B} {{Ord A}} (f : B -> B -> B) (xs : List (Pair A B)) : Map A B :=
+  for (acc := empty) (k, v in xs)
+    insertWith f k v acc;
+
+fromList {A B} {{Ord A}} : List (Pair A B) -> Map A B := fromListWith λ {old new := new};
+
+toList {A B} : Map A B -> List (Pair A B)
+  | (mkMap s) := map (x in Set.toList s) toPair x;
+
+size {A B} : Map A B -> Nat
+  | (mkMap s) := Set.size s;
+
+delete {A B} {{Ord A}} (k : A) : Map A B -> Map A B
+  | m@(mkMap s) := Set.deleteWith key k s |> mkMap;
+
+instance
+eqMapI {A B} {{Eq A}} {{Eq B}} : Eq (Map A B) := mkEq (Eq.eq on toList);

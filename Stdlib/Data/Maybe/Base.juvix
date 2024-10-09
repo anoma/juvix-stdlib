@@ -1,6 +1,7 @@
 module Stdlib.Data.Maybe.Base;
 
 import Juvix.Builtin.V1.Maybe open public;
+import Juvix.Builtin.V1.Bool open;
 
 --- Extracts the value from a ;Maybe; if present, else returns the given value.
 {-# inline: true #-}
@@ -14,3 +15,7 @@ fromMaybe {A} (a : A) : Maybe A → A
 maybe {A B} (b : B) (f : A → B) : Maybe A → B
   | nothing := b
   | (just a) := f a;
+
+isJust {A} : Maybe A -> Bool
+  | nothing := false
+  | (just _) := true;

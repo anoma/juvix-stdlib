@@ -1,0 +1,46 @@
+module Stdlib.Data.UnbalancedSet;
+
+import Stdlib.Prelude open;
+
+import Stdlib.Trait.Ord as Ord open using {Ord; mkOrd; module Ord};
+
+import Stdlib.Data.BinaryTree as Tree;
+open Tree using {BinaryTree; leaf; node};
+
+type UnbalancedSet (A : Type) := unbalancedSet : Ord A -> BinaryTree A -> UnbalancedSet A;
+
+empty {A} {{o : Ord A}} : UnbalancedSet A := unbalancedSet o leaf;
+
+member? {A} (x : A) : UnbalancedSet A -> Bool
+  | (unbalancedSet o@(mkOrd cmp) t) :=
+    let
+      go : BinaryTree A -> Bool
+        | leaf := false
+        | (node l y r) :=
+          case cmp x y of
+            | Ord.LT := go l
+            | Ord.GT := go r
+            | Ord.EQ := true;
+    in go t;
+
+insert {A} (x : A) : UnbalancedSet A -> UnbalancedSet A
+  | (unbalancedSet o@(mkOrd cmp) t) :=
+    let
+      go : BinaryTree A -> BinaryTree A
+        | leaf := node leaf x leaf
+        | n@(node l y r) :=
+          case cmp x y of
+            | Ord.LT := node (go l) y r
+            | Ord.EQ := n
+            | Ord.GT := node l y (go r);
+    in unbalancedSet o (go t);
+
+length {A} : UnbalancedSet A -> Nat
+  | (unbalancedSet _ t) := Tree.length t;
+
+to-list {A} : UnbalancedSet A -> List A
+  | (unbalancedSet _ t) := Tree.to-list t;
+
+instance
+set-ordering {A} {{Ord A}} : Ord (UnbalancedSet A) :=
+  mkOrd λ {s1 s2 := Ord.cmp (to-list s1) (to-list s2)};
