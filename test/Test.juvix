@@ -288,51 +288,50 @@ resultMapOk : QC.Test := QC.mkTest "result: mapOk" prop-resultMapOk;
 
 main : IO :=
   readLn
-    \ {seed :=
-      let
-        seedNat := stringToNat seed;
-      in QC.runTestsIO
-          100
-          seedNat
-          [ partitionTest
-          ; reverseLengthTest
-          ; reverseReverseIdTest
-          ; splitAtRecombineTest
-          ; splitAtLengthTest
-          ; mergeSumLengthsTest
-          ; tailLengthOneLessTest
-          ; equalCompareToEqTest
-          ; zipTest
-          ; zipWithTest
-          ; snocTest
-          ; dropTest
-          ; sortTest "mergeSort" mergeSort
-          ; sortTest "quickSort" quickSort
-          ; transposeMatrixIdTest
-          ; transposeMatrixDimentionsTest
-          ; findFoundElementSatisfiesPredicate
-          ; findNonExistenceImpliesPredicateFalseForAll
-          ; findConsistentWithSplitAt
-          ; findOnEmptyListIsNothing
-          ; findWithAlwaysTrueIsJust
-          ; findWithAlwaysFalseIsNothing
-          ]
-        >>> QC.runTestsIO
-          100
-          seedNat
-          [ resultResultErrorApplication
-          ; resultResultOkApplication
-          ; resultIsError
-          ; resultIsOk
-          ; resultFromError
-          ; resultFromOk
-          ; resultResultToMaybe
-          ; resultMaybeToResult
-          ; resultMapError
-          ; resultMapOk
-          ]}
-          >>>
-  runTestSuite avlSuite
+      \ {seed :=
+        let
+          seedNat := stringToNat seed;
+        in QC.runTestsIO
+            100
+            seedNat
+            [ partitionTest
+            ; reverseLengthTest
+            ; reverseReverseIdTest
+            ; splitAtRecombineTest
+            ; splitAtLengthTest
+            ; mergeSumLengthsTest
+            ; tailLengthOneLessTest
+            ; equalCompareToEqTest
+            ; zipTest
+            ; zipWithTest
+            ; snocTest
+            ; dropTest
+            ; sortTest "mergeSort" mergeSort
+            ; sortTest "quickSort" quickSort
+            ; transposeMatrixIdTest
+            ; transposeMatrixDimentionsTest
+            ; findFoundElementSatisfiesPredicate
+            ; findNonExistenceImpliesPredicateFalseForAll
+            ; findConsistentWithSplitAt
+            ; findOnEmptyListIsNothing
+            ; findWithAlwaysTrueIsJust
+            ; findWithAlwaysFalseIsNothing
+            ]
+          >>> QC.runTestsIO
+            100
+            seedNat
+            [ resultResultErrorApplication
+            ; resultResultOkApplication
+            ; resultIsError
+            ; resultIsOk
+            ; resultFromError
+            ; resultFromOk
+            ; resultResultToMaybe
+            ; resultMaybeToResult
+            ; resultMapError
+            ; resultMapOk
+            ]}
+    >>> runTestSuite avlSuite
     >>> runTestSuite mapSuite
     >>> runTestSuite queueSuite
     >>> runTestSuite unbalancedSetSuite;
