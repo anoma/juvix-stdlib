@@ -11,9 +11,9 @@ import Stdlib.Data.Pair.Base open;
 
 --- 𝒪(𝓃). Returns ;true; if the given object elem is in the ;List;.
 {-# specialize: [1] #-}
-isMember {A} (eq : A -> A -> Bool) (elem : A) : (list : List A) -> Bool
+isElement {A} (eq : A -> A -> Bool) (elem : A) : (list : List A) -> Bool
   | nil := false
-  | (x :: xs) := eq elem x || isMember eq elem xs;
+  | (x :: xs) := eq elem x || isElement eq elem xs;
 
 --- 𝒪(𝓃). Returns the leftmost element of the list satisfying the predicate or
 --- nothing if there is no such element.
@@ -67,8 +67,6 @@ filter {A} (predicate : A -> Bool) : (list : List A) -> List A
       | predicate h := h :: filter predicate hs
       | else := filter predicate hs;
 
--- HERE: Continue updating style here
-
 --- 𝒪(𝓃). Returns the length of the ;List;.
 length {A} (l : List A) : Nat := listFor (acc := zero) (_ in l) {suc acc};
 
@@ -76,24 +74,25 @@ length {A} (l : List A) : Nat := listFor (acc := zero) (_ in l) {suc acc};
 {-# isabelle-function: {name: "rev"} #-}
 reverse {A} (l : List A) : List A := listFor (acc := nil) (x in l) {x :: acc};
 
---- Returns a ;List; of length n where every element is the given value.
-replicate {A} : Nat → A → List A
+--- Returns a ;List; of length resultLength where every element is the given value.
+replicate {A} : (resultLength : Nat) -> (value : A) -> List A
   | zero _ := nil
   | (suc n) x := x :: replicate n x;
 
---- Takes the first n elements of a ;List;.
-take {A} : Nat → List A → List A
+--- Takes the first elemsNum elements of a ;List;.
+take {A} : (elemsNum : Nat) -> (list : List A) -> List A
   | (suc n) (x :: xs) := x :: take n xs
   | _ _ := nil;
 
---- Drops the first n elements of a ;List;.
-drop {A} : Nat → List A → List A
+--- Drops the first elemsNum elements of a ;List;.
+drop {A} : (elemsNum : Nat) -> (list : List A) -> List A
   | (suc n) (x :: xs) := drop n xs
   | _ xs := xs;
 
---- 𝒪(𝓃). splitAt n xs returns a tuple where first element is xs
---- prefix of length n and second element is the remainder of the ;List;.
-splitAt {A} : Nat → List A → Pair (List A) (List A)
+--- 𝒪(𝓃). Returns a tuple where first element is the
+--- prefix of the given list of length prefixLength and second element is the
+--- remainder of the ;List;.
+splitAt {A} : (prefixLength : Nat) -> (list : List A) -> Pair (List A) (List A)
   | _ nil := nil, nil
   | zero xs := nil, xs
   | (suc zero) (x :: xs) := x :: nil, xs
@@ -101,92 +100,108 @@ splitAt {A} : Nat → List A → Pair (List A) (List A)
 
 --- 𝒪(𝓃 + 𝓂). Merges two lists according the given ordering.
 terminating
-merge {A} {{Ord A}} : List A → List A → List A
-  | xs@(x :: xs') ys@(y :: ys') :=
-    if
-      | isLT (Ord.cmp x y) := x :: merge xs' ys
-      | else := y :: merge xs ys'
-  | nil ys := ys
-  | xs nil := xs;
+merge {A} {{Ord A}} (list1 list2 : List A) : List A :=
+  case list1, list2 of
+    | xs@(x :: xs'), ys@(y :: ys') :=
+      if
+        | x < y := x :: merge xs' ys
+        | else := y :: merge xs ys'
+    | nil, ys := ys
+    | xs, nil := xs;
 
 --- 𝒪(𝓃). Returns a tuple where the first component has the items that
 --- satisfy the predicate and the second component has the elements that don't.
-partition {A} (f : A → Bool) : List A → Pair (List A) (List A)
+partition {A} (predicate : A → Bool) : (list : List A) -> Pair (List A) (List A)
   | nil := nil, nil
-  | (x :: xs) := case partition f xs of l1, l2 := ite (f x) (x :: l1, l2) (l1, x :: l2);
+  | (x :: xs) :=
+    case partition predicate xs of
+      l1, l2 :=
+        if
+          | predicate x := x :: l1, l2
+          | else := l1, x :: l2;
 
 syntax operator ++ cons;
 
 --- Concatenates two ;List;s.
-++ : {A : Type} → List A → List A → List A
+++ : {A : Type} -> (list1 : List A) -> (list2 : List A) -> List A
   | nil ys := ys
   | (x :: xs) ys := x :: xs ++ ys;
 
 --- 𝒪(𝓃). Append an element.
-snoc {A} (xs : List A) (x : A) : List A := xs ++ x :: nil;
+snoc {A} (list : List A) (elem : A) : List A := list ++ elem :: nil;
 
 --- Concatenates a ;List; of ;List;s.
 {-# isabelle-function: {name: "concat"} #-}
-flatten : {A : Type} → List (List A) → List A := listFoldl (++) nil;
+flatten {A} (listOfLists : List (List A)) : List A := listFoldl (++) nil listOfLists;
 
---- 𝒪(𝓃). Inserts the given element before every element in the given ;List;.
-prependToAll {A} (sep : A) : List A → List A
+--- 𝒪(𝓃). Inserts the given separator before every element in the given ;List;.
+prependToAll {A} (separator : A) : (list : List A) -> List A
   | nil := nil
-  | (x :: xs) := sep :: x :: prependToAll sep xs;
+  | (x :: xs) := separator :: x :: prependToAll separator xs;
 
---- 𝒪(𝓃). Inserts the given element inbetween every two elements in the given ;List;.
-intersperse {A} (sep : A) : List A → List A
-  | nil := nil
-  | (x :: xs) := x :: prependToAll sep xs;
+--- 𝒪(𝓃). Inserts the given separator inbetween every two elements in the given ;List;.
+intersperse {A} (separator : A) (list : List A) : List A :=
+  case list of
+    | nil := nil
+    | x :: xs := x :: prependToAll separator xs;
 
 --- 𝒪(1). Drops the first element of a ;List;.
 {-# isabelle-function: {name: "tl"} #-}
-tail {A} : List A → List A
-  | (_ :: xs) := xs
-  | nil := nil;
+tail {A} (list : List A) : List A :=
+  case list of
+    | _ :: xs := xs
+    | nil := nil;
 
-head {A} (a : A) : List A -> A
-  | (x :: _) := x
-  | nil := a;
+head {A} (defaultValue : A) (list : List A) : A :=
+  case list of
+    | x :: _ := x
+    | nil := defaultValue;
 
 syntax iterator any {init := 0; range := 1};
 
 --- 𝒪(𝓃). Returns ;true; if at least one element of the ;List; satisfies the predicate.
 {-# specialize: [1] #-}
-any {A} (f : A → Bool) : List A → Bool
+any {A} (predicate : A -> Bool) : (list : List A) -> Bool
   | nil := false
-  | (x :: xs) := ite (f x) true (any f xs);
+  | (x :: xs) :=
+    if
+      | predicate x := true
+      | else := any predicate xs;
 
 syntax iterator all {init := 0; range := 1};
 
 --- 𝒪(𝓃). Returns ;true; if all elements of the ;List; satisfy the predicate.
 {-# specialize: [1] #-}
-all {A} (f : A -> Bool) : List A -> Bool
+all {A} (predicate : A -> Bool) : (list : List A) -> Bool
   | nil := true
-  | (x :: xs) := ite (f x) (all f xs) false;
+  | (x :: xs) :=
+    if
+      | predicate x := all predicate xs
+      | else := false;
 
 --- 𝒪(1). Returns ;true; if the ;List; is empty.
-null {A} : List A → Bool
-  | nil := true
-  | _ := false;
+null {A} (list : List A) : Bool :=
+  case list of
+    | nil := true
+    | _ := false;
 
 --- 𝒪(min(𝓂, 𝓃)). Returns a list containing the results of applying a function
 --- to each pair of elements from the input lists.
 {-# specialize: [1] #-}
-zipWith {A B C} (f : A -> B -> C) : List A -> List B -> List C
+zipWith {A B C} (fun : A -> B -> C) : (listA : List A) -> (listB : List B) -> List C
   | nil _ := nil
   | _ nil := nil
-  | (x :: xs) (y :: ys) := f x y :: zipWith f xs ys;
+  | (x :: xs) (y :: ys) := fun x y :: zipWith fun xs ys;
 
 --- 𝒪(min(𝓂, 𝓃)). Returns a list of pairs formed from the input lists.
-zip {A B} : List A -> List B -> List (Pair A B)
+zip {A B} : (listA : List A) -> (listB : List B) -> List (Pair A B)
   | nil _ := nil
   | _ nil := nil
   | (x :: xs) (y :: ys) := (x, y) :: zip xs ys;
 
 --- 𝒪(𝓃 log 𝓃). Sorts a list of elements in ascending order using the MergeSort
 --- algorithm.
-mergeSort {A} {{Ord A}} (l : List A) : List A :=
+mergeSort {A} {{Ord A}} (list : List A) : List A :=
   let
     terminating
     go : Nat -> List A -> List A
@@ -199,22 +214,22 @@ mergeSort {A} {{Ord A}} (l : List A) : List A :=
           left : List A := fst splitXs;
           right : List A := snd splitXs;
         in merge (go len' left) (go (sub len len') right);
-  in go (length l) l;
+  in go (length list) list;
 
 --- On average 𝒪(𝓃 log 𝓃), worst case 𝒪(𝓃²). Sorts a list of elements in
 --- ascending order using the QuickSort algorithm.
 terminating
-quickSort {A} {{Ord A}} : List A → List A :=
+quickSort {A} {{Ord A}} (list : List A) : List A :=
   let
     terminating
-    go : List A → List A
+    go : List A -> List A
       | nil := nil
       | xs@(_ :: nil) := xs
-      | (x :: xs) := case partition (Ord.cmp x >> isGT) xs of l1, l2 := go l1 ++ x :: go l2;
-  in go;
+      | (x :: xs) := case partition \ {y := y < x} xs of l1, l2 := go l1 ++ x :: go l2;
+  in go list;
 
 --- 𝒪(𝓃) Filters out every ;nothing; from a ;List;.
-catMaybes {A} : List (Maybe A) -> List A
+catMaybes {A} : (listOfMaybes : List (Maybe A)) -> List A
   | nil := nil
   | (just h :: hs) := h :: catMaybes hs
   | (nothing :: hs) := catMaybes hs;
@@ -223,10 +238,10 @@ syntax iterator concatMap {init := 0; range := 1};
 
 --- Applies a function to every item on a ;List; and concatenates the result.
 --- 𝒪(𝓃), where 𝓃 is the number of items in the resulting list.
-concatMap {A B} (f : A -> List B) : List A -> List B := listMap f >> flatten;
+concatMap {A B} (fun : A -> List B) (list : List A) : List B := flatten (listMap fun list);
 
 --- 𝒪(𝓃 * 𝓂). Transposes a ;List; of ;List;s interpreted as a matrix.
-transpose {A} : List (List A) -> List (List A)
+transpose {A} : (listOfLists : List (List A)) -> List (List A)
   | nil := nil
   | (xs :: nil) := listMap λ {x := x :: nil} xs
   | (xs :: xss) := zipWith (::) xs (transpose xss);

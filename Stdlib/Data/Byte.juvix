@@ -17,7 +17,7 @@ eqByteI : Eq Byte := mkEq (Byte.==);
 instance
 showByteI : Show Byte :=
   mkShow@{
-    show := Byte.toNat >> Show.show
+    show (x : Byte) : String := Show.show (Byte.toNat x)
   };
 
 {-# specialize: true, inline: case #-}

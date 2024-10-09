@@ -6,21 +6,22 @@ import Test.QuickCheck.Arbitrary open;
 import Test.QuickCheck.Gen open;
 import Data.Random open;
 
-arbitrarySizedList {A} (size : Nat) : Arbitrary A -> Arbitrary (List A)
-  | (mkArbitrary g) :=
-    mkArbitrary
-      (mkGen
-        \ {rand :=
-          let
-            randList : StdGen -> Nat -> List A
-              | _ zero := nil
-              | r (suc n) :=
-                let
-                  rSplit : Pair StdGen StdGen := stdSplit r;
-                  r1 : StdGen := fst rSplit;
-                  r2 : StdGen := snd rSplit;
-                in Gen.run g r1 :: randList r2 n;
-          in randList rand size});
+arbitrarySizedList {A} (size : Nat) (arbitraryA : Arbitrary A) : Arbitrary (List A) :=
+  case arbitraryA of
+    mkArbitrary g :=
+      mkArbitrary
+        (mkGen
+          \ {rand :=
+            let
+              randList : StdGen -> Nat -> List A
+                | _ zero := nil
+                | r (suc n) :=
+                  let
+                    rSplit : Pair StdGen StdGen := stdSplit r;
+                    r1 : StdGen := fst rSplit;
+                    r2 : StdGen := snd rSplit;
+                  in Gen.run g r1 :: randList r2 n;
+            in randList rand size});
 
 --- Generate an arbitrary rectangular matrix
 arbitraryMatrix {A} {{arbA : Arbitrary A}} : Arbitrary (List (List A)) :=

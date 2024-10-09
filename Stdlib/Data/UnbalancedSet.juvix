@@ -23,9 +23,9 @@ isMember {A} (elem : A) (set : UnbalancedSet A) : Bool :=
           | leaf := false
           | node@{element; left; right} :=
             case Ord.cmp elem element of
-              | Ord.LT := go left
-              | Ord.GT := go right
-              | Ord.EQ := true;
+              | Ord.LessThan := go left
+              | Ord.GreaterThan := go right
+              | Ord.Equal := true;
       in go tree;
 
 insert {A} (elem : A) (set : UnbalancedSet A) : UnbalancedSet A :=
@@ -34,11 +34,11 @@ insert {A} (elem : A) (set : UnbalancedSet A) : UnbalancedSet A :=
       let
         go : BinaryTree A -> BinaryTree A
           | leaf := node leaf elem leaf
-          | n@(node l y r) :=
+          | tree@(node l y r) :=
             case Ord.cmp elem y of
-              | Ord.LT := node (go l) y r
-              | Ord.EQ := n
-              | Ord.GT := node l y (go r);
+              | Ord.LessThan := node (go l) y r
+              | Ord.Equal := tree
+              | Ord.GreaterThan := node l y (go r);
       in mkUnbalancedSet order (go tree);
 
 length {A} (set : UnbalancedSet A) : Nat := Tree.length (UnbalancedSet.tree set);

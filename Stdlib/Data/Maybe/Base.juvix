@@ -5,17 +5,20 @@ import Juvix.Builtin.V1.Bool open;
 
 --- Extracts the value from a ;Maybe; if present, else returns the given value.
 {-# inline: true #-}
-fromMaybe {A} (a : A) : Maybe A → A
-  | nothing := a
-  | (just a) := a;
+fromMaybe {A} (defaultValue : A) (maybeValue : Maybe A) : A :=
+  case maybeValue of
+    | nothing := defaultValue
+    | just a := a;
 
 --- Applies a function to the value from a ;Maybe; if present, else returns the
 --- given value.
 {-# inline: true, isabelle-function: {name: "case_option"} #-}
-maybe {A B} (b : B) (f : A → B) : Maybe A → B
-  | nothing := b
-  | (just a) := f a;
+maybe {A B} (defaultValue : B) (fun : A -> B) (maybeValue : Maybe A) : B :=
+  case maybeValue of
+    | nothing := defaultValue
+    | just a := fun a;
 
-isJust {A} : Maybe A -> Bool
-  | nothing := false
-  | (just _) := true;
+isJust {A} (maybeValue : Maybe A) : Bool :=
+  case maybeValue of
+    | nothing := false
+    | just _ := true;

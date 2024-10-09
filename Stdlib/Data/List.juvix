@@ -27,18 +27,20 @@ eqListI {A} {{Eq A}} : Eq (List A) :=
       | (x :: xs) (y :: ys) := ite (Eq.eq x y) (go xs ys) false;
   in mkEq go;
 
+isMember {A} {{Eq A}} (elem : A) (list : List A) : Bool := isElement (Eq.eq) elem list;
+
 instance
 ordListI {A} {{Ord A}} : Ord (List A) :=
   let
     go : List A -> List A -> Ordering
-      | nil nil := EQ
-      | nil _ := LT
-      | _ nil := GT
+      | nil nil := Equal
+      | nil _ := LessThan
+      | _ nil := GreaterThan
       | (x :: xs) (y :: ys) :=
         case Ord.cmp x y of
-          | LT := LT
-          | GT := GT
-          | EQ := go xs ys;
+          | LessThan := LessThan
+          | GreaterThan := GreaterThan
+          | Equal := go xs ys;
   in mkOrd go;
 
 instance
@@ -47,11 +49,12 @@ showListI {A} {{Show A}} : Show (List A) :=
     go : List A -> String
       | nil := "nil"
       | (x :: xs) := Show.show x ++str " :: " ++str go xs;
-  in mkShow
-    λ {
-      | nil := "nil"
-      | s := "(" ++str go s ++str ")"
-    };
+  in mkShow@{
+    show (list : List A) : String :=
+      case list of
+        | nil := "nil"
+        | s := "(" ++str go s ++str ")"
+  };
 
 {-# specialize: true, inline: case #-}
 instance
@@ -80,7 +83,7 @@ instance
 applicativeListI : Applicative List :=
   mkApplicative@{
     pure {A} (a : A) : List A := [a];
-    ap {A B} : List (A -> B) -> List A -> List B
+    ap {A B} : (listOfFuns : List (A -> B)) -> (listOfAs : List A) -> List B
       | [] _ := []
       | (f :: fs) l := map f l ++ ap fs l
   };
