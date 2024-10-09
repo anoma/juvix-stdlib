@@ -11,22 +11,22 @@ import Stdlib.Trait.Foldable.Polymorphic open;
 import Stdlib.Data.Unit.Base open;
 
 trait
-type Applicative (f : Type -> Type) :=
+type Applicative (F : Type -> Type) :=
   mkApplicative {
-    {{functor}} : Functor f;
-    pure : {A : Type} -> A -> f A;
-    ap : {A B : Type} -> f (A -> B) -> f A -> f B
+    {{functor}} : Functor F;
+    pure : {A : Type} -> A -> F A;
+    ap : {A B : Type} -> F (A -> B) -> F A -> F B
   };
 
 open Applicative public;
 
 --- Sequences computations.
 --- Note that this function will be renamed to >>> once IO becomses a polymorphic type and can be given an Applicative instance.
-applicativeSeq {f : Type -> Type} {{Applicative f}} {A B : Type} (fa : f A) (fb : f B) : f B :=
+applicativeSeq {F : Type -> Type} {{Applicative F}} {A B : Type} (fa : F A) (fb : F B) : F B :=
   ap (map λ {_ b := b} fa) fb;
 
 --- lifts a binary function to ;Applicative;
-liftA2 {f : Type -> Type} {{Applicative f}} {A B C} (fun : A -> B -> C) : f A -> f B -> f C :=
+liftA2 {F : Type -> Type} {{Applicative F}} {A B C} (fun : A -> B -> C) : F A -> F B -> F C :=
   map fun >> ap;
 
 syntax iterator mapA_ {init := 0; range := 1};
@@ -40,10 +40,10 @@ mapA_
   (l : t A)
   : f Unit := rfor (acc := pure unit) (x in l) {applicativeSeq (fun x) acc};
 
-replicateA {f : Type -> Type} {A} {{Applicative f}} : Nat -> f A -> f (List A)
+replicateA {F : Type -> Type} {A} {{Applicative F}} : Nat -> F A -> F (List A)
   | zero _ := pure []
   | (suc n) x := liftA2 (::) x (replicateA n x);
 
-when {f : Type -> Type} {{Applicative f}} : Bool -> f Unit -> f Unit
+when {F : Type -> Type} {{Applicative F}} : Bool -> F Unit -> F Unit
   | false _ := pure unit
   | true a := a;

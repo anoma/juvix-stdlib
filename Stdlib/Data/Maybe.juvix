@@ -11,35 +11,39 @@ import Stdlib.Trait.Monad open;
 
 import Stdlib.Data.Bool.Base open;
 import Stdlib.Data.String.Base open;
+import Stdlib.Data.Pair.Base open;
 
 {-# specialize: true, inline: case #-}
 instance
 eqMaybeI {A} {{Eq A}} : Eq (Maybe A) :=
-  mkEq
-    λ {
-      | nothing nothing := true
-      | (just a1) (just a2) := Eq.eq a1 a2
-      | _ _ := false
-    };
+  mkEq@{
+    eq (m1 m2 : Maybe A) : Bool :=
+      case m1, m2 of
+        | nothing, nothing := true
+        | just a1, just a2 := Eq.eq a1 a2
+        | _ := false
+  };
 
 instance
 showMaybeI {A} {{Show A}} : Show (Maybe A) :=
-  mkShow
-    λ {
-      | nothing := "nothing"
-      | (just a) := "just " ++str Show.show a
-    };
+  mkShow@{
+    show (m : Maybe A) : String :=
+      case m of
+        | nothing := "nothing"
+        | just a := "just " ++str Show.show a
+  };
 
 {-# specialize: true, inline: case #-}
 instance
 ordMaybeI {A} {{Ord A}} : Ord (Maybe A) :=
-  mkOrd
-    λ {
-      | nothing nothing := EQ
-      | (just a1) (just a2) := Ord.cmp a1 a2
-      | nothing (just _) := LT
-      | (just _) nothing := GT
-    };
+  mkOrd@{
+    cmp (m1 m2 : Maybe A) : Ordering :=
+      case m1, m2 of
+        | nothing, nothing := Equal
+        | just a1, just a2 := Ord.cmp a1 a2
+        | nothing, just _ := LessThan
+        | just _, nothing := GreaterThan
+  };
 
 {-# specialize: true, inline: case #-}
 instance
@@ -58,15 +62,17 @@ instance
 applicativeMaybeI : Applicative Maybe :=
   mkApplicative@{
     pure := just;
-    ap {A B} : Maybe (A -> B) -> Maybe A -> Maybe B
-      | (just f) (just x) := just (f x)
-      | _ _ := nothing
+    ap {A B} (listOfFuns : Maybe (A -> B)) (list : Maybe A) : Maybe B :=
+      case listOfFuns, list of
+        | just f, just x := just (f x)
+        | _, _ := nothing
   };
 
 instance
 monadMaybeI : Monad Maybe :=
   mkMonad@{
-    bind {A B} : Maybe A -> (A -> Maybe B) -> Maybe B
-      | nothing _ := nothing
-      | (just a) f := f a
+    bind {A B} (maybe : Maybe A) (fun : A -> Maybe B) : Maybe B :=
+      case maybe of
+        | nothing := nothing
+        | just a := fun a
   };

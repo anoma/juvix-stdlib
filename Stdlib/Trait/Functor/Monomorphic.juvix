@@ -6,26 +6,35 @@ import Stdlib.Trait.Functor.Polymorphic as Poly;
 
 {-# specialize: true #-}
 trait
-type Functor (container elem : Type) :=
+type Functor (Container Elem : Type) :=
   mkFunctor {
     syntax iterator map {init := 0; range := 1};
     {-# specialize: [1] #-}
-    map : (elem -> elem) -> container -> container
+    map : (Elem -> Elem) -> Container -> Container
   };
 
 open Functor public;
 
 {-# inline: case #-}
-fromPolymorphicFunctor {f : Type -> Type} {{Poly.Functor f}} {elem} : Functor (f elem) elem :=
+fromPolymorphicFunctor {F : Type -> Type} {{Poly.Functor F}} {Elem} : Functor (F Elem) Elem :=
   mkFunctor@{
     map := Poly.map
   };
 
 syntax operator <$> lapp;
 {-# inline: true #-}
-<$> {container elem} {{Functor container elem}} : (elem -> elem) -> container -> container := map;
+<$>
+  {Container Elem}
+  {{Functor Container Elem}}
+  (fun : Elem -> Elem)
+  (container : Container)
+  : Container := map fun container;
 
 syntax operator $> lapp;
 {-# inline: true #-}
-$> {container elem : Type} {{Functor container elem}} (fa : container) (b : elem) : container :=
-  λ {_ := b} <$> fa;
+$>
+  {Container Elem : Type}
+  {{Functor Container Elem}}
+  (container : Container)
+  (element : Elem)
+  : Container := \ {_ := element} <$> container;

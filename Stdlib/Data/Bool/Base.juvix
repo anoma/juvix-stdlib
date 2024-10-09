@@ -5,7 +5,7 @@ import Stdlib.Data.Fixity open;
 
 --- Logical negation.
 {-# isabelle-function: {name: "\\<not>"} #-}
-not : Bool → Bool
+not : Bool -> Bool
   | true := false
   | false := true;
 
@@ -13,7 +13,7 @@ syntax operator || logical;
 
 --- Logical disjunction. Evaluated lazily. Cannot be partially applied
 builtin bool-or
-|| : Bool → Bool → Bool
+|| : Bool -> Bool -> Bool
   | true _ := true
   | false a := a;
 
@@ -21,13 +21,13 @@ syntax operator && logical;
 
 --- Logical conjunction. Evaluated lazily. Cannot be partially applied.
 builtin bool-and
-&& : Bool → Bool → Bool
+&& : Bool -> Bool -> Bool
   | true a := a
   | false _ := false;
 
 --- Returns the first argument if ;true;, otherwise it returns the second argument. Evaluated lazily. Cannot be partially applied.
 builtin bool-if
-ite : {A : Type} → Bool → A → A → A
+ite : {A : Type} -> Bool -> A -> A -> A
   | true a _ := a
   | false _ b := b;
 

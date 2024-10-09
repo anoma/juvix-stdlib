@@ -1,0 +1,84 @@
+module Stdlib.Data.Map;
+
+import Stdlib.Data.Pair open;
+import Stdlib.Data.Maybe open;
+import Stdlib.Data.List open;
+import Stdlib.Data.Nat open;
+
+import Stdlib.Trait.Functor open;
+import Stdlib.Trait.Foldable open;
+import Stdlib.Trait.Ord open;
+
+import Stdlib.Function open;
+
+import Stdlib.Data.Set as Set;
+open Set using {Set};
+
+import Stdlib.Data.Set.AVL as AVL;
+open AVL using {AVLTree};
+
+import Stdlib.Data.BinaryTree as Tree;
+
+type Binding Key Value :=
+  mkBinding {
+    key : Key;
+    value : Value
+  };
+
+key {Key Value} (binding : Binding Key Value) : Key := Binding.key binding;
+
+value {Key Value} (binding : Binding Key Value) : Value := Binding.value binding;
+
+toPair {Key Value} (binding : Binding Key Value) : Pair Key Value := key binding, value binding;
+
+instance
+bindingKeyOrdering {Key Value} {{Ord Key}} : Ord (Binding Key Value) :=
+  mkOrd@{
+    cmp (b1 b2 : Binding Key Value) : Ordering := Ord.cmp (key b1) (key b2)
+  };
+
+type Map Key Value := mkMap (AVLTree (Binding Key Value));
+
+empty {Key Value} : Map Key Value := mkMap AVL.empty;
+
+{-# specialize: [1, f] #-}
+insertWith
+  {Key Value}
+  {{Ord Key}}
+  (fun : Value -> Value -> Value)
+  (key : Key)
+  (value : Value)
+  (map : Map Key Value)
+  : Map Key Value :=
+  case map of
+    mkMap tree :=
+      let
+        fun' (binding1 binding2 : Binding Key Value) : Binding Key Value :=
+          case binding1, binding2 of mkBinding a b1, mkBinding _ b2 := mkBinding a (fun b1 b2);
+        binding := mkBinding key value;
+      in mkMap (Set.insertWith fun' binding tree);
+
+insert {A B : Type} {{Ord A}} : A -> B -> Map A B -> Map A B := insertWith λ {old new := new};
+
+{-# specialize: [1] #-}
+lookup {A B} {{Ord A}} (k : A) : Map A B -> Maybe B
+  | (mkMap s) := map value (Set.lookupWith key k s);
+
+{-# specialize: [1, f] #-}
+fromListWith {A B} {{Ord A}} (f : B -> B -> B) (xs : List (Pair A B)) : Map A B :=
+  for (acc := empty) (k, v in xs)
+    insertWith f k v acc;
+
+fromList {A B} {{Ord A}} : List (Pair A B) -> Map A B := fromListWith λ {old new := new};
+
+toList {A B} : Map A B -> List (Pair A B)
+  | (mkMap s) := map (x in Set.toList s) toPair x;
+
+size {A B} : Map A B -> Nat
+  | (mkMap s) := Set.size s;
+
+delete {A B} {{Ord A}} (k : A) : Map A B -> Map A B
+  | m@(mkMap s) := Set.deleteWith key k s |> mkMap;
+
+instance
+eqMapI {A B} {{Eq A}} {{Eq B}} : Eq (Map A B) := mkEq (Eq.eq on toList);

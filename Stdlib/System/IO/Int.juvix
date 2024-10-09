@@ -5,6 +5,6 @@ import Stdlib.Data.Int open using {Int};
 import Stdlib.System.IO.String open;
 
 builtin int-print
-axiom printInt : Int → IO;
+axiom printInt : Int -> IO;
 
 printIntLn (i : Int) : IO := printInt i >>> printString "\n";

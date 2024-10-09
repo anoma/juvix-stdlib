@@ -5,6 +5,6 @@ import Stdlib.Data.Nat open;
 import Stdlib.System.IO.String open;
 
 builtin nat-print
-axiom printNat : Nat → IO;
+axiom printNat : Nat -> IO;
 
 printNatLn (n : Nat) : IO := printNat n >>> printString "\n";

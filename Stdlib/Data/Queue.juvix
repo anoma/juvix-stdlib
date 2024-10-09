@@ -1,0 +1,3 @@
+module Stdlib.Data.Queue;
+
+import Stdlib.Data.Queue.Base open public;

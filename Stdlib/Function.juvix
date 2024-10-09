@@ -6,51 +6,52 @@ import Stdlib.Data.Pair.Base open;
 
 syntax operator << composition;
 
---- Function composition, passing results from the second function to the first.
+--- Function composition, passing results from the second function `g` to the first function `f`.
 {-# inline: 2 #-}
-<< {A B C} (f : B → C) (g : A → B) (x : A) : C := f (g x);
+<< {A B C} (f : B -> C) (g : A -> B) (x : A) : C := f (g x);
 
 syntax operator >> lcomposition;
 
---- Function composition, passing results from the first function to the second.
+--- Function composition, passing results from the first function `f` to the second function `g`.
 {-# inline: 2 #-}
->> {A B C} (f : A → B) (g : B → C) (x : A) : C := g (f x);
+>> {A B C} (f : A -> B) (g : B -> C) (x : A) : C := g (f x);
 
---- Always returns the first argument.
+--- Always returns the first argument `a`.
 {-# inline: 1 #-}
 const {A B} (a : A) (_ : B) : A := a;
 
 --- The identity function.
 id {A} (a : A) : A := a;
 
---- Swaps the order of the arguments of the given function.
+--- Swaps the order of the arguments of the given function `f`.
 {-# inline: 1 #-}
-flip {A B C} (f : A → B → C) (b : B) (a : A) : C := f a b;
+flip {A B C} (f : A -> B -> C) (b : B) (a : A) : C := f a b;
 
 syntax operator <| rapp;
 
 --- Application operator with right associativity. Usually used as a syntactical
 --- facility.
-<| {A B} (f : A → B) (x : A) : B := f x;
+<| {A B} (f : A -> B) (x : A) : B := f x;
 
 syntax operator |> lapp;
 
 --- Application operator with left associativity. Usually used as a syntactical
 --- facility.
-|> {A B} (x : A) (f : A → B) : B := f x;
+|> {A B} (x : A) (f : A -> B) : B := f x;
 
 --- Applies a function n times.
-iterate {A} : Nat -> (A -> A) -> A -> A
+iterate {A} : (n : Nat) -> (fun : A -> A) -> (elem : A) -> A
   | zero _ a := a
   | (suc n) f a := iterate n f (f a);
 
 syntax operator on lapp;
 
+--- `(f on g) a b` is equivalent to `f (g a) (g b)`.
 {-# inline: 2 #-}
-on {A B C} (f : B → B → C) (g : A → B) (a b : A) : C := f (g a) (g b);
+on {A B C} (f : B -> B -> C) (g : A -> B) (a b : A) : C := f (g a) (g b);
 
 syntax operator >-> seq;
 
 builtin seq
->-> : {A B : Type} → A → B → B
+>-> : {A B : Type} -> A -> B -> B
   | x y := y;

@@ -1,0 +1,52 @@
+module Stdlib.Data.UnbalancedSet;
+
+import Stdlib.Prelude open;
+
+import Stdlib.Trait.Ord as Ord open using {Ord; mkOrd; module Ord};
+
+import Stdlib.Data.BinaryTree as Tree;
+open Tree using {BinaryTree; leaf; node};
+
+type UnbalancedSet (A : Type) :=
+  mkUnbalancedSet {
+    order : Ord A;
+    tree : BinaryTree A
+  };
+
+empty {A} {{order : Ord A}} : UnbalancedSet A := mkUnbalancedSet order leaf;
+
+isMember {A} (elem : A) (set : UnbalancedSet A) : Bool :=
+  case set of
+    mkUnbalancedSet@{tree} :=
+      let
+        go : BinaryTree A -> Bool
+          | leaf := false
+          | node@{element; left; right} :=
+            case Ord.cmp elem element of
+              | Ord.LessThan := go left
+              | Ord.GreaterThan := go right
+              | Ord.Equal := true;
+      in go tree;
+
+insert {A} (elem : A) (set : UnbalancedSet A) : UnbalancedSet A :=
+  case set of
+    mkUnbalancedSet@{order; tree} :=
+      let
+        go : BinaryTree A -> BinaryTree A
+          | leaf := node leaf elem leaf
+          | tree@(node l y r) :=
+            case Ord.cmp elem y of
+              | Ord.LessThan := node (go l) y r
+              | Ord.Equal := tree
+              | Ord.GreaterThan := node l y (go r);
+      in mkUnbalancedSet order (go tree);
+
+length {A} (set : UnbalancedSet A) : Nat := Tree.length (UnbalancedSet.tree set);
+
+toList {A} (set : UnbalancedSet A) : List A := Tree.toList (UnbalancedSet.tree set);
+
+instance
+unbalancedSetOrdI {A} {{Ord A}} : Ord (UnbalancedSet A) :=
+  mkOrd@{
+    cmp (s1 s2 : UnbalancedSet A) : Ordering := Ord.cmp (toList s1) (toList s2)
+  };

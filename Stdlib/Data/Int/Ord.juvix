@@ -4,7 +4,7 @@ import Stdlib.Data.Fixity open;
 
 import Stdlib.Data.Int.Base open;
 import Stdlib.Data.Bool.Base open;
-import Stdlib.Trait.Ord open using {EQ; LT; GT; Ordering};
+import Stdlib.Trait.Ord open using {Equal; LessThan; GreaterThan; Ordering};
 
 import Stdlib.Data.Nat.Base as Nat;
 import Stdlib.Data.Nat.Ord as Nat;
@@ -49,9 +49,9 @@ syntax operator >= comparison;
 {-# inline: true #-}
 compare (m n : Int) : Ordering :=
   if
-    | m == n := EQ
-    | m < n := LT
-    | else := GT;
+    | m == n := Equal
+    | m < n := LessThan
+    | else := GreaterThan;
 
 --- Returns the smallest ;Int;.
 min (x y : Int) : Int := ite (x < y) x y;

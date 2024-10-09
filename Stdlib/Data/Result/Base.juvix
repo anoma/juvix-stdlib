@@ -6,46 +6,68 @@ import Stdlib.Function open;
 
 --- The Result type represents either a success with a value of `ok` or an error
 --- with value `error`.
-type Result E A :=
-  | error E
-  | ok A;
+type Result Error Value :=
+  | error Error
+  | ok Value;
 
 --- Apply the onError function if the value is ;error; or apply the
 --- onOk function if the value is ;ok;.
-handleResult {E A B} (onError : E -> B) (onOk : A -> B) : Result E A -> B
-  | (error a) := onError a
-  | (ok a) := onOk a;
+{-# inline: true #-}
+handleResult
+  {Error Value1 Value2}
+  (onError : Error -> Value2)
+  (onOk : Value1 -> Value2)
+  (result : Result Error Value1)
+  : Value2 :=
+  case result of
+    | error a := onError a
+    | ok a := onOk a;
 
---- Apply a function to the ;error; value of a Result.
-mapError {A E1 E2} (f : E1 -> E2) : Result E1 A -> Result E2 A := handleResult (f >> error) ok;
+--- Apply a function f to the ;error; value of a Result.
+mapError
+  {Value Error1 Error2}
+  (f : Error1 -> Error2)
+  (result : Result Error1 Value)
+  : Result Error2 Value := handleResult (f >> error) ok result;
 
---- Apply a function to the ;ok; value of a Result.
-mapOk {E A C} (f : A -> C) : Result E A -> Result E C := handleResult error (f >> ok);
+--- Apply a function f to the ;ok; value of a Result.
+mapOk
+  {Error Value1 Value2}
+  (f : Value1 -> Value2)
+  (result : Result Error Value1)
+  : Result Error Value2 := handleResult error (f >> ok) result;
 
 --- Return ;true; if the value is an ;error;, otherwise ;false;.
-isError {E A} : Result E A -> Bool
-  | (error _) := true
-  | (ok _) := false;
+isError {Error Value} (result : Result Error Value) : Bool :=
+  case result of
+    | error _ := true
+    | ok _ := false;
 
 --- Return ;true; if the value is ;ok;, otherwise ;false;.
-isOk {E A} : Result E A -> Bool
-  | (error _) := false
-  | (ok _) := true;
+isOk {Error Value} (result : Result Error Value) : Bool :=
+  case result of
+    | error _ := false
+    | ok _ := true;
 
---- Return the contents of an ;error; value, otherwise return a default.
-fromError {E A} (default : E) : Result E A -> E
-  | (error a) := a
-  | (ok _) := default;
+--- Return the contents of an ;error; value, otherwise return defaultError.
+fromError {Error Value} (defaultError : Error) (result : Result Error Value) : Error :=
+  case result of
+    | error a := a
+    | ok _ := defaultError;
 
---- Return the contents of an ;ok; value, otherwise return a default.
-fromOk {E A} (default : A) : Result E A -> A
-  | (error _) := default
-  | (ok b) := b;
+--- Return the contents of an ;ok; value, otherwise return defaultValue.
+fromOk {Error Value} (defaultValue : Value) (result : Result Error Value) : Value :=
+  case result of
+    | error _ := defaultValue
+    | ok b := b;
 
 --- Convert a Result to a Maybe. An ;error; value becomes `nothing`.
-resultToMaybe {E A} : Result E A -> Maybe A := handleResult (const nothing) just;
+resultToMaybe {Error Value} (result : Result Error Value) : Maybe Value :=
+  handleResult (const nothing) just result;
 
 --- Convert a Maybe to a Result. A ;nothing; value becomes `error defaultError`.
-maybeToResult {E A} (defaultError : E) : Maybe A -> Result E A
-  | nothing := error defaultError
-  | (just x) := ok x;
+maybeToResult
+  {Error Value} (defaultError : Error) (maybeValue : Maybe Value) : Result Error Value :=
+  case maybeValue of
+    | nothing := error defaultError
+    | just x := ok x;

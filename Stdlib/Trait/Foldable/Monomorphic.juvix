@@ -6,13 +6,13 @@ import Stdlib.Trait.Foldable.Polymorphic as Poly;
 --- A trait for combining elements into a single result, processing one element at a time.
 {-# specialize: true #-}
 trait
-type Foldable (container elem : Type) :=
+type Foldable (Container Elem : Type) :=
   mkFoldable {
     syntax iterator for {init := 1; range := 1};
-    for : {B : Type} -> (B -> elem -> B) -> B -> container -> B;
+    for : {B : Type} -> (B -> Elem -> B) -> B -> Container -> B;
 
     syntax iterator rfor {init := 1; range := 1};
-    rfor : {B : Type} -> (B -> elem -> B) -> B → container → B
+    rfor : {B : Type} -> (B -> Elem -> B) -> B -> Container -> B
   };
 
 open Foldable public;
@@ -21,7 +21,7 @@ open Foldable public;
 --- All polymorphic types that are an instance of ;Poly.Foldable; should use this function to create their monomorphic ;Foldable; instance.
 {-# inline: case #-}
 fromPolymorphicFoldable
-  {f : Type -> Type} {{foldable : Poly.Foldable f}} {elem} : Foldable (f elem) elem :=
+  {F : Type -> Type} {{foldable : Poly.Foldable F}} {Elem} : Foldable (F Elem) Elem :=
   mkFoldable@{
     for := Poly.for;
     rfor := Poly.rfor
@@ -29,19 +29,21 @@ fromPolymorphicFoldable
 
 {-# inline: true #-}
 foldl
-  {container elem}
-  {{Foldable container elem}}
-  {B : Type}
-  (g : B -> elem -> B)
-  (ini : B)
-  (ls : container)
-  : B := for (acc := ini) (x in ls) {g acc x};
+  {Container Elem}
+  {{Foldable Container Elem}}
+  {Acc : Type}
+  (fun : Acc -> Elem -> Acc)
+  (initialValue : Acc)
+  (container : Container)
+  : Acc := for (acc := initialValue) (x in container) {fun acc x};
 
 --- Combine the elements of the type using the provided function starting with the element in the right-most position.
 {-# inline: 2 #-}
 foldr
-  {container elem : Type}
-  {{Foldable container elem}}
-  {B : Type}
-  (g : elem -> B -> B)
-  : B -> container -> B := foldl (flip g);
+  {Container Elem : Type}
+  {{Foldable Container Elem}}
+  {Acc : Type}
+  (fun : Elem -> Acc -> Acc)
+  (initialValue : Acc)
+  (container : Container)
+  : Acc := foldl (flip fun) initialValue container;
