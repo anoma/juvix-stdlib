@@ -8,6 +8,7 @@ module Stdlib.Cairo.Ec;
 
 import Stdlib.Data.Field open;
 import Stdlib.Data.Bool open;
+import Stdlib.Data.Pair open;
 
 module StarkCurve;
   ALPHA : Field := 1;
@@ -37,77 +38,80 @@ module Internal;
 end;
 
 --- Checks if an EC point is on the STARK curve.
-isOnCurve : Point -> Bool
-  | (mkPoint x y) :=
-    if
-      | y == 0 := x == 0
-      | else := y * y == (x * x + StarkCurve.ALPHA) * x + StarkCurve.BETA;
+isOnCurve (point : Point) : Bool :=
+  case point of
+    mkPoint x y :=
+      if
+        | y == 0 := x == 0
+        | else := y * y == (x * x + StarkCurve.ALPHA) * x + StarkCurve.BETA;
 
---- Doubles a valid point p (computes p + p) on the elliptic curve.
-double : Point -> Point
-  | p@(mkPoint x y) :=
-    if
-      | y == 0 := p
-      | else :=
-        let
-          slope := (3 * x * x + StarkCurve.ALPHA) / (2 * y);
-          r_x := slope * slope - x - x;
-          r_y := slope * (x - r_x) - y;
-        in mkPoint@?{
-          x := r_x;
-          y := r_y
-        };
+--- Doubles a valid `point` (computes point + point) on the elliptic curve.
+double (point : Point) : Point :=
+  case point of
+    mkPoint x y :=
+      if
+        | y == 0 := point
+        | else :=
+          let
+            slope := (3 * x * x + StarkCurve.ALPHA) / (2 * y);
+            r_x := slope * slope - x - x;
+            r_y := slope * (x - r_x) - y;
+          in mkPoint@?{
+            x := r_x;
+            y := r_y
+          };
 
 --- Adds two valid points on the EC.
-add : Point -> Point -> Point
-  | p@(mkPoint x1 y1) q@(mkPoint x2 y2) :=
-    if
-      | y1 == 0 := q
-      | y2 == 0 := p
-      | x1 == x2 :=
-        if
-          | y1 == y2 := double p
-          | else := mkPoint 0 0
-      | else :=
-        let
-          slope := (y1 - y2) / (x1 - x2);
-          r_x := slope * slope - x1 - x2;
-          r_y := slope * (x1 - r_x) - y1;
-        in mkPoint r_x r_y;
+add (point1 point2 : Point) : Point :=
+  case point1, point2 of
+    mkPoint x1 y1, mkPoint x2 y2 :=
+      if
+        | y1 == 0 := point2
+        | y2 == 0 := point1
+        | x1 == x2 :=
+          if
+            | y1 == y2 := double point1
+            | else := mkPoint 0 0
+        | else :=
+          let
+            slope := (y1 - y2) / (x1 - x2);
+            r_x := slope * slope - x1 - x2;
+            r_y := slope * (x1 - r_x) - y1;
+          in mkPoint r_x r_y;
 
---- Subtracts a point from another on the EC.
-sub (p q : Point) : Point := add p q@Point{y := 0 - y};
+--- Subtracts point2 from point1 on the EC.
+sub (point1 point2 : Point) : Point := add point1 point2@Point{y := 0 - y};
 
---- Computes p + m * q on the elliptic curve.
+--- Computes point1 + alpha * point2 on the elliptic curve.
 --- Because the EC operation builtin cannot handle inputs where additions of points with the same x
 --- coordinate arise during the computation, this function adds and subtracts a nondeterministic
 --- point s to the computation, so that regardless of input, the probability that such additions
 --- arise will become negligibly small.
 --- The precise computation is therefore:
---- ((p + s) + m * q) - s
---- so that the inputs to the builtin itself are (p + s), m, and q.
+--- ((point1 + s) + alpha * point2) - s
+--- so that the inputs to the builtin itself are (point1 + s), alpha, and point2.
 ---
 --- Arguments:
---- p - an EC point.
---- m - the multiplication coefficient of q (a field element).
---- q - an EC point.
+--- point1 - an EC point.
+--- alpha - the multiplication coefficient of point2 (a field element).
+--- point2 - an EC point.
 ---
 --- Returns:
---- p + m * q.
+--- point1 + alpha * point2.
 ---
 --- Assumptions:
---- p and q are valid points on the curve.
-addMul (p : Point) (m : Field) (q : Point) : Point :=
+--- point1 and point2 are valid points on the curve.
+addMul (point1 : Point) (alpha : Field) (point2 : Point) : Point :=
   if
-    | Point.y q == 0 := p
+    | Point.y point2 == 0 := point1
     | else :=
       let
         s : Point := Internal.randomEcPoint;
-        r : Point := Internal.ecOp (add p s) m q;
+        r : Point := Internal.ecOp (add point1 s) alpha point2;
       in sub r s;
 
---- Computes m * p on the elliptic curve.
-mul (m : Field) (p : Point) : Point := addMul (mkPoint 0 0) m p;
+--- Computes alpha * point on the elliptic curve.
+mul (alpha : Field) (point : Point) : Point := addMul (mkPoint 0 0) alpha point;
 
 module Operators;
   import Stdlib.Data.Fixity open;

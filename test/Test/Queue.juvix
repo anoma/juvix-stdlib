@@ -20,8 +20,8 @@ q4 : Queue Nat := push 4 q3;
 
 tests : List Test :=
   let
-    checkWithList : Queue Nat -> List Nat -> Assertion
-      | q q' := assertEqual "Queue should be equal" q (fromList q');
+    checkWithList (q : Queue Nat) (q' : List Nat) : Assertion :=
+      assertEqual "Queue should be equal" q (fromList q');
   in [ testCase "Queue.empty should be empty" (checkWithList q [])
      ; testCase "Queue.push should add an element" (checkWithList q1 [1])
      ; testCase "Queue.push first element should be first pushed" (checkWithList q2 [1; 2])

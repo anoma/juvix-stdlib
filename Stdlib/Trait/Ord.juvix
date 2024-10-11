@@ -5,29 +5,33 @@ import Stdlib.Data.Bool.Base open;
 import Stdlib.Trait.Eq open;
 
 type Ordering :=
-  | LT : Ordering
-  | EQ : Ordering
-  | GT : Ordering;
+  | LessThan
+  | Equal
+  | GreaterThan;
 
-isLT : Ordering → Bool
-  | LT := true
-  | _ := false;
+isLessThan (ordering : Ordering) : Bool :=
+  case ordering of
+    | LessThan := true
+    | _ := false;
 
-isEQ : Ordering → Bool
-  | EQ := true
-  | _ := false;
+isEqual (ordering : Ordering) : Bool :=
+  case ordering of
+    | Equal := true
+    | _ := false;
 
-isGT : Ordering → Bool
-  | GT := true
-  | _ := false;
+isGreaterThan (ordering : Ordering) : Bool :=
+  case ordering of
+    | GreaterThan := true
+    | _ := false;
 
 instance
 orderingEqI : Eq Ordering :=
   mkEq@{
-    eq (x : Ordering) : Ordering -> Bool
-      | LT := isLT x
-      | EQ := isEQ x
-      | GT := isGT x
+    eq (ordering1 ordering2 : Ordering) : Bool :=
+      case ordering2 of
+        | LessThan := isLessThan ordering1
+        | Equal := isEqual ordering1
+        | GreaterThan := isGreaterThan ordering1
   };
 
 --- A trait for defining a total order
@@ -40,9 +44,9 @@ syntax operator <= comparison;
 {-# inline: always, isabelle-operator: {name: "\\<le>", prec: 50, assoc: none} #-}
 <= {A} {{Ord A}} (x y : A) : Bool :=
   case Ord.cmp x y of
-    | EQ := true
-    | LT := true
-    | GT := false;
+    | Equal := true
+    | LessThan := true
+    | GreaterThan := false;
 
 syntax operator < comparison;
 
@@ -50,9 +54,9 @@ syntax operator < comparison;
 {-# inline: always, isabelle-operator: {name: "<", prec: 50, assoc: none} #-}
 < {A} {{Ord A}} (x y : A) : Bool :=
   case Ord.cmp x y of
-    | EQ := false
-    | LT := true
-    | GT := false;
+    | Equal := false
+    | LessThan := true
+    | GreaterThan := false;
 
 syntax operator > comparison;
 
@@ -68,8 +72,14 @@ syntax operator >= comparison;
 
 --- Returns the smaller element.
 {-# inline: always #-}
-min {A} {{Ord A}} (x y : A) : A := ite (x < y) x y;
+min {A} {{Ord A}} (x y : A) : A :=
+  if
+    | x < y := x
+    | else := y;
 
 --- Returns the larger element.
 {-# inline: always #-}
-max {A} {{Ord A}} (x y : A) : A := ite (x > y) x y;
+max {A} {{Ord A}} (x y : A) : A :=
+  if
+    | x > y := x
+    | else := y;

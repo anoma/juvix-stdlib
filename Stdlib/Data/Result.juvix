@@ -3,6 +3,7 @@ module Stdlib.Data.Result;
 import Stdlib.Data.Result.Base open public;
 import Stdlib.Data.Bool.Base open;
 import Stdlib.Data.String.Base open;
+import Stdlib.Data.Pair.Base open;
 
 import Stdlib.Trait.Eq open;
 import Stdlib.Trait.Ord open;
@@ -11,59 +12,63 @@ import Stdlib.Trait open;
 
 {-# specialize: true, inline: case #-}
 instance
-ordResultI {A B} {{Ord A}} {{Ord B}} : Ord (Result A B) :=
+ordResultI {Error Value} {{Ord Error}} {{Ord Value}} : Ord (Result Error Value) :=
   mkOrd@{
-    cmp : Result A B -> Result A B -> Ordering
-      | (error a1) (error a2) := Ord.cmp a1 a2
-      | (ok b1) (ok b2) := Ord.cmp b1 b2
-      | (error _) (ok _) := LT
-      | (ok _) (error _) := GT
+    cmp (result1 result2 : Result Error Value) : Ordering :=
+      case result1, result2 of
+        | error a1, error a2 := Ord.cmp a1 a2
+        | ok b1, ok b2 := Ord.cmp b1 b2
+        | error _, ok _ := LessThan
+        | ok _, error _ := GreaterThan
   };
 
 {-# specialize: true, inline: case #-}
 instance
-eqResultI {A B} {{Eq A}} {{Eq B}} : Eq (Result A B) :=
+eqResultI {Error Value} {{Eq Error}} {{Eq Value}} : Eq (Result Error Value) :=
   mkEq@{
-    eq : Result A B -> Result A B -> Bool
-      | (error a1) (error a2) := a1 == a2
-      | (ok b1) (ok b2) := b1 == b2
-      | _ _ := false
+    eq (result1 result2 : Result Error Value) : Bool :=
+      case result1, result2 of
+        | error a1, error a2 := a1 == a2
+        | ok b1, ok b2 := b1 == b2
+        | _, _ := false
   };
 
 instance
-showResultI {A B} {{Show A}} {{Show B}} : Show (Result A B) :=
+showResultI {Error Value} {{Show Error}} {{Show Value}} : Show (Result Error Value) :=
   mkShow@{
-    show : Result A B -> String
+    show : Result Error Value -> String
       | (error x) := "Error (" ++str Show.show x ++str ")"
       | (ok x) := "Ok (" ++str Show.show x ++str ")"
   };
 
 {-# specialize: true, inline: case #-}
 instance
-functorResultI {err} : Functor (Result err) :=
+functorResultI {Error} : Functor (Result Error) :=
   mkFunctor@{
     map := mapOk
   };
 
 {-# specialize: true, inline: true #-}
 instance
-monomorphicFunctorResultI {err res} : Monomorphic.Functor (Result err res) res :=
+monomorphicFunctorResultI {Error Value} : Monomorphic.Functor (Result Error Value) Value :=
   fromPolymorphicFunctor;
 
 instance
-applicativeResultI {err} : Applicative (Result err) :=
+applicativeResultI {Error} : Applicative (Result Error) :=
   mkApplicative@{
     pure := ok;
-    ap {A B} : Result err (A -> B) -> Result err A -> Result err B
-      | (ok f) (ok x) := ok (f x)
-      | (ok _) (error e) := error e
-      | (error e) _ := error e
+    ap {A B} (resultFun : Result Error (A -> B)) (result : Result Error A) : Result Error B :=
+      case resultFun, result of
+        | ok f, ok x := ok (f x)
+        | ok _, error e := error e
+        | error e, _ := error e
   };
 
 instance
-monadResultI {err} : Monad (Result err) :=
+monadResultI {Error} : Monad (Result Error) :=
   mkMonad@{
-    bind {A B} : Result err A -> (A -> Result err B) -> Result err B
-      | (error e) _ := error e
-      | (ok a) f := f a
+    bind {A B} (result : Result Error A) (fun : A -> Result Error B) : Result Error B :=
+      case result of
+        | error e := error e
+        | ok a := fun a
   };

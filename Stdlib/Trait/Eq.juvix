@@ -13,6 +13,6 @@ syntax operator /= comparison;
 {-# inline: always, isabelle-operator: {name: "=", prec: 50, assoc: none} #-}
 == {A} {{Eq A}} : A -> A -> Bool := Eq.eq;
 
---- Tests for inequality.
+--- Test for inequality.
 {-# inline: always, isabelle-operator: {name: "\\<noteq>", prec: 50, assoc: none} #-}
 /= {A} {{Eq A}} (x y : A) : Bool := not (x == y);

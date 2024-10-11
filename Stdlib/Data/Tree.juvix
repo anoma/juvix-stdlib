@@ -10,22 +10,26 @@ import Stdlib.Function open;
 Forest (A : Type) : Type := List (Tree A);
 
 --- N-Ary tree.
-positive
-type Tree (A : Type) := node A (List (Tree A));
-
-shift (first other : String) (xs : List String) : List String :=
-  zipWith (++str) (first :: replicate (length xs) other) xs;
-
-terminating
-draw {A} {{Show A}} : Tree A -> List String
-  | (node v cs) := Show.show v :: drawForest cs;
+type Tree (A : Type) :=
+  node {
+    element : A;
+    children : List (Tree A)
+  };
 
 terminating
-drawForest {A} {{Show A}} : Forest A -> List String
-  | [] := []
-  | [h] := "|" :: shift "`- " "   " (draw h)
-  | (h :: hs) := "|" :: shift "+- " "|  " (draw h) ++ drawForest hs;
+draw {A} {{Show A}} (tree : Tree A) : List String :=
+  Show.show (Tree.element tree) :: drawForest (Tree.children tree);
 
-treeToString {A} {{Show A}} : Tree A -> String := draw >> unlines;
+terminating
+drawForest {A} {{Show A}} (forest : Forest A) : List String :=
+  let
+    shift (first other : String) (xs : List String) : List String :=
+      zipWith (++str) (first :: replicate (length xs) other) xs;
+  in case forest of
+       | [] := []
+       | [h] := "|" :: shift "`- " "   " (draw h)
+       | h :: hs := "|" :: shift "+- " "|  " (draw h) ++ drawForest hs;
 
-forestToString {A} {{Show A}} : Forest A -> String := drawForest >> unlines;
+treeToString {A} {{Show A}} (tree : Tree A) : String := unlines (draw tree);
+
+forestToString {A} {{Show A}} (forest : Forest A) : String := unlines (drawForest forest);

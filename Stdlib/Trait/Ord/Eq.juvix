@@ -12,7 +12,7 @@ syntax operator == comparison;
 {-# isabelle-operator: {name: "=", prec: 50, assoc: none} #-}
 == {A} {{Ord A}} (x y : A) : Bool :=
   case Ord.cmp x y of
-    | EQ := true
+    | Equal := true
     | _ := false;
 
 syntax operator /= comparison;

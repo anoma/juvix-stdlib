@@ -8,4 +8,4 @@ import Stdlib.Data.Bool open;
 syntax operator == comparison;
 --- Equality for ;String;s.
 builtin string-eq
-axiom == : String → String → Bool;
+axiom == : String -> String -> Bool;
