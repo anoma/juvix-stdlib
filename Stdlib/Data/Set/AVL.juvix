@@ -113,9 +113,9 @@ lookupWith {A K} {{order : Ord K}} (fun : A -> K) (elem : K) (tree : AVLTree A) 
       | empty := nothing
       | node@{element; left; right} :=
         case Ord.cmp elem (fun element) of
-          | LT := go left
-          | GT := go right
-          | EQ := just element;
+          | LessThan := go left
+          | GreaterThan := go right
+          | Equal := just element;
   in go tree;
 
 --- 𝒪(log 𝓃). Queries whether an element is in an ;AVLTree;.
@@ -138,9 +138,9 @@ insertWith {A} {{order : Ord A}} (fun : A -> A -> A) (elem : A) (tree : AVLTree 
       | empty := mkNode elem empty empty
       | node@{element; height; left; right} :=
         case Ord.cmp elem element of
-          | LT := balance (mkNode element (go left) right)
-          | GT := balance (mkNode element left (go right))
-          | EQ := node (fun element elem) height left right;
+          | LessThan := balance (mkNode element (go left) right)
+          | GreaterThan := balance (mkNode element left (go right))
+          | Equal := node (fun element elem) height left right;
   in go tree;
 
 --- 𝒪(log 𝓃). Inserts an element into and ;AVLTree;.
@@ -173,9 +173,9 @@ deleteWith
       | empty := empty
       | node@{element; left; right} :=
         case Ord.cmp elem (fun element) of
-          | LT := balance (mkNode element (go left) right)
-          | GT := balance (mkNode element left (go right))
-          | EQ :=
+          | LessThan := balance (mkNode element (go left) right)
+          | GreaterThan := balance (mkNode element left (go right))
+          | Equal :=
             case left of
               | empty := right
               | _ :=
