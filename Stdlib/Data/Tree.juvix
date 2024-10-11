@@ -1,0 +1,31 @@
+--- N-Ary trees with pretty printing.
+module Stdlib.Data.Tree;
+
+import Stdlib.Data.List open;
+import Stdlib.Data.String open;
+import Stdlib.Trait.Show open;
+import Stdlib.Function open;
+
+--- A ;List; of trees.
+Forest (A : Type) : Type := List (Tree A);
+
+--- N-Ary tree.
+positive
+type Tree (A : Type) := node A (List (Tree A));
+
+shift (first other : String) (xs : List String) : List String :=
+  zipWith (++str) (first :: replicate (length xs) other) xs;
+
+terminating
+draw {A} {{Show A}} : Tree A -> List String
+  | (node v cs) := Show.show v :: drawForest cs;
+
+terminating
+drawForest {A} {{Show A}} : Forest A -> List String
+  | [] := []
+  | [h] := "|" :: shift "`- " "   " (draw h)
+  | (h :: hs) := "|" :: shift "+- " "|  " (draw h) ++ drawForest hs;
+
+treeToString {A} {{Show A}} : Tree A -> String := draw >> unlines;
+
+forestToString {A} {{Show A}} : Forest A -> String := drawForest >> unlines;

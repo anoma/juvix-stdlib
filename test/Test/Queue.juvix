@@ -1,0 +1,44 @@
+module Test.Queue;
+
+import Juvix.Builtin.V1 open;
+import Stdlib.System.IO.Base open;
+import Stdlib.Function open;
+import Stdlib.Data.Pair open;
+import Test.JuvixUnit open;
+
+import Stdlib.Data.Queue open;
+
+q : Queue Nat := empty;
+
+q1 : Queue Nat := push 1 q;
+
+q2 : Queue Nat := push 2 q1;
+
+q3 : Queue Nat := push 3 q2;
+
+q4 : Queue Nat := push 4 q3;
+
+tests : List Test :=
+  let
+    checkWithList : Queue Nat -> List Nat -> Assertion
+      | q q' := assertEqual "Queue should be equal" q (fromList q');
+  in [ testCase "Queue.empty should be empty" (checkWithList q [])
+     ; testCase "Queue.push should add an element" (checkWithList q1 [1])
+     ; testCase "Queue.push first element should be first pushed" (checkWithList q2 [1; 2])
+     ; testCase
+       "Queue.head should return first element"
+       (assertEqual "head of queue q3" (head q3) (just 1))
+     ; testCase
+       "Queue.fromList composes with toList should be the identity"
+       (assertEqual "fromList . toList should be the identity" (toList >> fromList <| q3) q3)
+     ; testCase
+       "Queue.pop should remove first element"
+       (assertEqual "pop of queue q3" (pop q3) (just (1, fromList [2; 3])))
+     ; testCase
+       "Queue.tail should return queue without first element"
+       (assertEqual "tail of queue q3" (tail q3) ((fromList >> just) [2; 3]))
+     ];
+
+suite : TestSuite := testSuite "Queue" tests;
+
+main : IO := runTestSuite suite;

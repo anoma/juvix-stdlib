@@ -1,0 +1,11 @@
+module Stdlib.Data.Set;
+
+import Stdlib.Data.Set.AVL open public;
+import Stdlib.Trait.Eq as Eq open using {Eq};
+import Stdlib.Trait.Ord as Ord open using {Ord};
+
+syntax alias Set := AVLTree;
+
+eqSetI {A} {{Eq A}} : Eq (Set A) := eqAVLTreeI;
+
+ordSetI {A} {{Ord A}} : Ord (Set A) := ordAVLTreeI;
