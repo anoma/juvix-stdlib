@@ -19,7 +19,7 @@ import Stdlib.Trait.Foldable open;
 
 --- A first-in-first-out data structure
 type Queue (A : Type) :=
-  mkQueue {
+  mkQueue@{
     front : List A;
     back : List A
   };

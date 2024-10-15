@@ -24,7 +24,7 @@ end;
 
 builtin ec_point
 type Point :=
-  mkPoint {
+  mkPoint@{
     x : Field;
     y : Field
   };

@@ -20,7 +20,7 @@ open AVL using {AVLTree};
 import Stdlib.Data.BinaryTree as Tree;
 
 type Binding Key Value :=
-  mkBinding {
+  mkBinding@{
     key : Key;
     value : Value
   };

@@ -5,7 +5,7 @@ import Stdlib.Trait.Applicative open;
 
 trait
 type Monad (M : Type -> Type) :=
-  mkMonad {
+  mkMonad@{
     {{applicative}} : Applicative M;
     builtin monad-bind
     bind : {A B : Type} -> M A -> (A -> M B) -> M B
