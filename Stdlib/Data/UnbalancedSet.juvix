@@ -8,7 +8,7 @@ import Stdlib.Data.BinaryTree as Tree;
 open Tree using {BinaryTree; leaf; node};
 
 type UnbalancedSet (A : Type) :=
-  mkUnbalancedSet {
+  mkUnbalancedSet@{
     order : Ord A;
     tree : BinaryTree A
   };

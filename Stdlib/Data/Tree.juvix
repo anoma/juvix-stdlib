@@ -11,7 +11,7 @@ Forest (A : Type) : Type := List (Tree A);
 
 --- N-Ary tree.
 type Tree (A : Type) :=
-  node {
+  node@{
     element : A;
     children : List (Tree A)
   };

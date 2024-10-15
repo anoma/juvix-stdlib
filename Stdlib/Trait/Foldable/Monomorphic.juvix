@@ -7,7 +7,7 @@ import Stdlib.Trait.Foldable.Polymorphic as Poly;
 {-# specialize: true #-}
 trait
 type Foldable (Container Elem : Type) :=
-  mkFoldable {
+  mkFoldable@{
     syntax iterator for {init := 1; range := 1};
     for : {B : Type} -> (B -> Elem -> B) -> B -> Container -> B;
 

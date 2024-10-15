@@ -36,7 +36,7 @@ orderingEqI : Eq Ordering :=
 
 --- A trait for defining a total order
 trait
-type Ord A := mkOrd {cmp : A -> A -> Ordering};
+type Ord A := mkOrd@{cmp : A -> A -> Ordering};
 
 syntax operator <= comparison;
 

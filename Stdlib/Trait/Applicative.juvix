@@ -12,7 +12,7 @@ import Stdlib.Data.Unit.Base open;
 
 trait
 type Applicative (F : Type -> Type) :=
-  mkApplicative {
+  mkApplicative@{
     {{functor}} : Functor F;
     pure : {A : Type} -> A -> F A;
     ap : {A B : Type} -> F (A -> B) -> F A -> F B

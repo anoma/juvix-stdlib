@@ -5,7 +5,7 @@ import Stdlib.Trait.Integral open;
 
 trait
 type Numeric A :=
-  mkNumeric {
+  mkNumeric@{
     integralI : Integral A;
     syntax operator / multiplicative;
     / : A -> A -> A

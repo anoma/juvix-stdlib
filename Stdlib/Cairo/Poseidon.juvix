@@ -5,7 +5,7 @@ import Stdlib.Data.List open;
 
 builtin poseidon_state
 type PoseidonState :=
-  mkPoseidonState {
+  mkPoseidonState@{
     s0 : Field;
     s1 : Field;
     s2 : Field

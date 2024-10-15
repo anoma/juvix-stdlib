@@ -3,4 +3,4 @@ module Stdlib.Trait.Show;
 import Stdlib.Data.String.Base open;
 
 trait
-type Show A := mkShow {show : A -> String};
+type Show A := mkShow@{show : A -> String};
