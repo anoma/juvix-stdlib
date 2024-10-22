@@ -22,7 +22,7 @@ propReverseDoesNotChangeLength (xs : List Int) : Bool := length (reverse xs) == 
 propReverseReverseIsIdentity (xs : List Int) : Bool := eqListInt xs (reverse (reverse xs));
 
 propTailLengthOneLess (xs : List Int) : Bool :=
-  null xs || ofNat (length (tail xs)) == intSubNat (length xs) 1;
+  isEmpty xs || ofNat (length (tail xs)) == intSubNat (length xs) 1;
 
 propSplitAtRecombine (n : Nat) (xs : List Int) : Bool :=
   case splitAt n xs of lhs, rhs := eqListInt xs (lhs ++ rhs);
@@ -95,11 +95,11 @@ propTransposeMatrixDimensions (xs : List (List Int)) : Bool :=
     checkTxsRowXsCol : Bool :=
       case xs of
         | x :: _ := length txs == length x
-        | _ := null txs;
+        | _ := isEmpty txs;
     checkXsRowTxsCol : Bool :=
       case txs of
         | tx :: _ := length xs == length tx
-        | _ := null xs;
+        | _ := isEmpty xs;
   in checkTxsRowXsCol && checkXsRowTxsCol;
 
 propFoundElementSatisfiesPredicate (p : Int -> Bool) (xs : List Int) : Bool :=
@@ -129,7 +129,7 @@ propFindWithEmptyList (p : Int -> Bool) : Bool := find p [] == nothing;
 
 propFindWithAlwaysTrueIsJust (xs : List Int) : Bool :=
   if
-    | null xs := true
+    | isEmpty xs := true
     | else :=
       case find (const true) xs of
         | just _ := true

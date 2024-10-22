@@ -49,7 +49,7 @@ s2DeleteWith : TestDescr Box :=
   mkTestDescr@{
     testTitle := TestDescr.testTitle s2 ++str "-delete-with";
     testLen := sub (TestDescr.testLen s2) 2;
-    testSet := deleteManyWith Box.b [1; 8] (TestDescr.testSet s2 |> toList |> map mkBox |> fromList)
+    testSet := deleteManyWith Box.b [1; 8] (TestDescr.testSet s2 |> AVL.map mkBox)
   };
 
 s3 : TestDescr Nat :=
