@@ -335,7 +335,6 @@ filter {A} {{Ord A}} (predicate : A -> Bool) (tree : AVLTree A) : AVLTree A :=
       | predicate x := insert x acc
       | else := acc};
 
---- O(n log n). Partition the set into two sets, one with all elements that satisfy the predicate and one with all elements that don't satisfy the predicate.
 syntax iterator partition {init := 0; range := 1};
 partition {A} {{Ord A}} (predicate : A -> Bool) (tree : AVLTree A) : Pair (AVLTree A) (AVLTree A) :=
   for (trueSet, falseSet := empty, empty) (x in tree)
