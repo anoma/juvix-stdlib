@@ -24,7 +24,7 @@ type AVLTree (A : Type) :=
   | --- An empty AVL tree.
     empty
   | --- A node of an AVL tree.
-    node {
+    node@{
       element : A;
       height : Nat;
       left : AVLTree A;

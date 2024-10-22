@@ -10,13 +10,13 @@ import Stdlib.Data.Nat open;
 
 --- An inclusive range of naturals
 type Range N :=
-  mkRange {
+  mkRange@{
     low : N;
     high : N
   };
 
 type StepRange N :=
-  mkStepRange {
+  mkStepRange@{
     range : Range N;
     step : N
   };

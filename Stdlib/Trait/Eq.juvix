@@ -5,7 +5,7 @@ import Stdlib.Data.Fixity open;
 
 --- A trait defining equality
 trait
-type Eq A := mkEq {eq : A -> A -> Bool};
+type Eq A := mkEq@{eq : A -> A -> Bool};
 
 syntax operator == comparison;
 syntax operator /= comparison;

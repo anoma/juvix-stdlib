@@ -5,7 +5,7 @@ import Stdlib.Prelude open;
 
 import Stdlib.Data.Set.AVL as AVL open;
 
-type Box := mkBox {b : Nat};
+type Box := mkBox@{b : Nat};
 
 instance
 BoxOrdI : Ord Box := mkOrd (Ord.cmp on Box.b);
@@ -24,7 +24,7 @@ mkTests {A} (descr : TestDescr A) : List Test :=
          ];
 
 type TestDescr (A : Type) :=
-  mkTestDescr {
+  mkTestDescr@{
     testTitle : String;
     testLen : Nat;
     testSet : AVLTree A
