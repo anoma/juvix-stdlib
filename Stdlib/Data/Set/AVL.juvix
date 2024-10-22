@@ -31,6 +31,13 @@ type AVLTree (A : Type) :=
       right : AVLTree A
     };
 
+--- 𝒪(1) Retrieves the height of an ;AVLTree;. The height is the distance from
+--- the root to the deepest child.
+height {A} (tree : AVLTree A) : Nat :=
+  case tree of
+    | empty := 0
+    | node@{height} := height;
+
 module Internal;
   --- 𝒪(n). Maps a function over an ;AVLTree;. Does not check if
   --- after mapping the order of the elements is preserved. It is the
@@ -47,79 +54,74 @@ module Internal;
             (go left)
             (go right);
     in go tree;
+
+  type BalanceFactor :=
+    | --- Left child is higher.
+      LeanLeft
+    | --- Equal heights of children.
+      LeanNone
+    | --- Right child is higher.
+      LeanRight;
+
+  diffFactor {A} (tree : AVLTree A) : Int :=
+    case tree of
+      | empty := 0
+      | node@{left; right} := intSubNat (height right) (height left);
+
+  {-# inline: true #-}
+  balanceFactor' {A} (left right : AVLTree A) : BalanceFactor :=
+    let
+      h1 := height left;
+      h2 := height right;
+    in if
+      | h1 < h2 := LeanRight
+      | h2 < h1 := LeanLeft
+      | else := LeanNone;
+
+  --- 𝒪(1). Computes the balance factor, i.e., the height of the right subtree
+  --- minus the height of the left subtree.
+  balanceFactor {A} (tree : AVLTree A) : BalanceFactor :=
+    -- We avoid `diffFactor` here for efficiency.
+    case tree of
+      | empty := LeanNone
+      | node@{left; right} := balanceFactor' left right;
+
+  --- 𝒪(1). Helper function for creating a node.
+  mkNode {A} (value : A) (left : AVLTree A) (right : AVLTree A) : AVLTree A :=
+    node value (1 + max (height left) (height right)) left right;
+
+  --- 𝒪(1). Left rotation.
+  rotateLeft {A} (tree : AVLTree A) : AVLTree A :=
+    case tree of
+      | node x _ a (node z _ b c) := mkNode z (mkNode x a b) c
+      | n := n;
+
+  --- 𝒪(1). Right rotation.
+  rotateRight {A} (tree : AVLTree A) : AVLTree A :=
+    case tree of
+      | node z _ (node y _ x t3) t4 := mkNode y x (mkNode z t3 t4)
+      | n := n;
+
+  --- 𝒪(1). Applies local rotations if needed.
+  balance {A} (tree : AVLTree A) : AVLTree A :=
+    case tree of
+      | empty := empty
+      | node@{element; height; left; right} :=
+        case balanceFactor' left right of
+          | LeanRight :=
+            case balanceFactor right of {
+              | LeanLeft := rotateLeft (mkNode element left (rotateRight right))
+              | _ := rotateLeft tree
+            }
+          | LeanLeft :=
+            case balanceFactor left of {
+              | LeanRight := rotateRight (mkNode element (rotateLeft left) right)
+              | _ := rotateRight tree
+            }
+          | LeanNone := tree;
 end;
 
---- 𝒪(1) Retrieves the height of an ;AVLTree;. The height is the distance from
---- the root to the deepest child.
-height {A} (tree : AVLTree A) : Nat :=
-  case tree of
-    | empty := 0
-    | node@{height} := height;
-
-type BalanceFactor :=
-  | --- Left child is higher.
-    LeanLeft
-  | --- Equal heights of children.
-    LeanNone
-  | --- Right child is higher.
-    LeanRight;
-
-diffFactor {A} (tree : AVLTree A) : Int :=
-  case tree of
-    | empty := 0
-    | node@{left; right} := intSubNat (height right) (height left);
-
-{-# inline: true #-}
-balanceFactor' {A} (left right : AVLTree A) : BalanceFactor :=
-  let
-    h1 := height left;
-    h2 := height right;
-  in if
-    | h1 < h2 := LeanRight
-    | h2 < h1 := LeanLeft
-    | else := LeanNone;
-
---- 𝒪(1). Computes the balance factor, i.e., the height of the right subtree
---- minus the height of the left subtree.
-balanceFactor {A} (tree : AVLTree A) : BalanceFactor :=
-  -- We avoid `diffFactor` here for efficiency.
-  case tree of
-    | empty := LeanNone
-    | node@{left; right} := balanceFactor' left right;
-
---- 𝒪(1). Helper function for creating a node.
-mkNode {A} (value : A) (left : AVLTree A) (right : AVLTree A) : AVLTree A :=
-  node value (1 + max (height left) (height right)) left right;
-
---- 𝒪(1). Left rotation.
-rotateLeft {A} (tree : AVLTree A) : AVLTree A :=
-  case tree of
-    | node x _ a (node z _ b c) := mkNode z (mkNode x a b) c
-    | n := n;
-
---- 𝒪(1). Right rotation.
-rotateRight {A} (tree : AVLTree A) : AVLTree A :=
-  case tree of
-    | node z _ (node y _ x t3) t4 := mkNode y x (mkNode z t3 t4)
-    | n := n;
-
---- 𝒪(1). Applies local rotations if needed.
-balance {A} (tree : AVLTree A) : AVLTree A :=
-  case tree of
-    | empty := empty
-    | node@{element; height; left; right} :=
-      case balanceFactor' left right of
-        | LeanRight :=
-          case balanceFactor right of {
-            | LeanLeft := rotateLeft (mkNode element left (rotateRight right))
-            | _ := rotateLeft tree
-          }
-        | LeanLeft :=
-          case balanceFactor left of {
-            | LeanRight := rotateRight (mkNode element (rotateLeft left) right)
-            | _ := rotateRight tree
-          }
-        | LeanNone := tree;
+open Internal;
 
 --- 𝒪(log 𝓃). Lookup a member from the ;AVLTree; using a projection function.
 --- Ord A, Ord K and fun must be compatible. i.e cmp_k (fun a1) (fun a2) == cmp_a a1 a2
@@ -162,7 +164,7 @@ insertWith {A} {{order : Ord A}} (fun : A -> A -> A) (elem : A) (tree : AVLTree 
           | Equal := node (fun element elem) height left right;
   in go tree;
 
---- 𝒪(log 𝓃). Inserts an element into and ;AVLTree;.
+--- 𝒪(log 𝓃). Inserts an element into an ;AVLTree;.
 {-# specialize: [1] #-}
 insert {A} {{Ord A}} (elem : A) (tree : AVLTree A) : AVLTree A := insertWith (flip const) elem tree;
 
@@ -206,7 +208,7 @@ deleteWith
 
 --- 𝒪(log 𝓃). Removes an element from an ;AVLTree;.
 {-# specialize: [1] #-}
-delete {A} {{o : Ord A}} : A -> AVLTree A -> AVLTree A := deleteWith id;
+delete {A} {{Ord A}} : A -> AVLTree A -> AVLTree A := deleteWith id;
 
 --- 𝒪(log 𝓃). Returns the minimum element of the ;AVLTree;.
 lookupMin {A} : AVLTree A -> Maybe A
@@ -243,6 +245,13 @@ isBalanced {A} : (tree : AVLTree A) -> Bool
 --- 𝒪(𝓃 log 𝓃). Create an ;AVLTree; from an unsorted ;List;.
 {-# specialize: [1] #-}
 fromList {A} {{Ord A}} (list : List A) : AVLTree A := for (acc := empty) (x in list) {insert x acc};
+
+--- 𝒪(1). Checks if an ;AVLTree; is empty.
+{-# inline: true #-}
+isEmpty {A} (tree : AVLTree A) : Bool :=
+  case tree of
+    | empty := true
+    | node@{} := false;
 
 --- 𝒪(𝓃). Returns the number of elements of an ;AVLTree;.
 size {A} : AVLTree A -> Nat
