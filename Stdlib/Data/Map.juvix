@@ -150,6 +150,30 @@ foldl
   {Key Value Acc} (f : Acc -> Key -> Value -> Acc) (acc : Acc) (container : Map Key Value) : Acc :=
   case container of mkMap s := for (acc := acc) (x in s) {f acc (key x) (value x)};
 
+syntax iterator all {init := 0; range := 1};
+--- 𝒪(𝓃). Returns ;true; if all key-element pairs in the ;Map; satisfy the predicate.
+{-# inline: true #-}
+all {Key Value} (predicate : Key -> Value -> Bool) (container : Map Key Value) : Bool :=
+  case container of mkMap s := Set.all (x in s) {predicate (key x) (value x)};
+
+syntax iterator any {init := 0; range := 1};
+--- 𝒪(𝓃). Returns ;true; if some key-element pair in the ;Map; satisfies the predicate.
+{-# inline: true #-}
+any {Key Value} (predicate : Key -> Value -> Bool) (container : Map Key Value) : Bool :=
+  case container of mkMap s := Set.any (x in s) {predicate (key x) (value x)};
+
+syntax iterator filter {init := 0; range := 1};
+--- 𝒪(n log n). Returns a ;Map; containing all key-element pairs of the given
+--- map container that satisfy the predicate.
+{-# inline: true #-}
+filter
+  {Key Value}
+  {{Ord Key}}
+  (predicate : Key -> Value -> Bool)
+  (container : Map Key Value)
+  : Map Key Value :=
+  case container of mkMap s := mkMap (Set.filter (x in s) {predicate (key x) (value x)});
+
 {-# specialize: true, inline: case #-}
 instance
 functorMapI {Key} : Functor (Map Key) :=
