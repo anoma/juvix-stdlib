@@ -21,7 +21,7 @@ mkTests {A} (descr : TestDescr A) : List Test :=
         sizeMsg : String := "sizes do not match";
         balanceMsg : String := "not balanced";
       in [ testCase (mkTitle "size") (assertEqual sizeMsg (size testSet) testLen)
-         ; testCase (mkTitle "balanced") (assertTrue balanceMsg (isBalanced testSet))
+         ; testCase (mkTitle "balanced") (assertTrue balanceMsg (Internal.isBalanced testSet))
          ];
 
 type TestDescr (A : Type) :=

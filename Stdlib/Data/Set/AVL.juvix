@@ -33,8 +33,8 @@ type AVLTree (A : Type) :=
 
 --- 𝒪(1) Retrieves the height of an ;AVLTree;. The height is the distance from
 --- the root to the deepest child.
-height {A} (tree : AVLTree A) : Nat :=
-  case tree of
+height {A} (set : AVLTree A) : Nat :=
+  case set of
     | empty := 0
     | node@{height} := height;
 
@@ -42,18 +42,20 @@ module Internal;
   --- 𝒪(n). Maps a function over an ;AVLTree;. Does not check if
   --- after mapping the order of the elements is preserved. It is the
   --- responsibility of the caller to ensure that `f` preserves the ordering.
-  unsafeMap {A B} (f : A -> B) (tree : AVLTree A) : AVLTree B :=
+  unsafeMap {A B} (f : A -> B) (set : AVLTree A) : AVLTree B :=
     let
       go : AVLTree A -> AVLTree B
         | empty := empty
         | node@{element; height; left; right} :=
-          -- TODO: we cannot use record creation syntax here because of a bug in the type-checker (https://github.com/anoma/juvix/issues/3112)
+          -- TODO: use record creation syntax here once recursive definition
+            -- parsing is fixed (https://github.com/anoma/juvix/issues/2968,
+            -- https://github.com/anoma/juvix/issues/3112)
             node
             (f element)
             height
             (go left)
             (go right);
-    in go tree;
+    in go set;
 
   type BalanceFactor :=
     | --- Left child is higher.
@@ -63,8 +65,8 @@ module Internal;
     | --- Right child is higher.
       LeanRight;
 
-  diffFactor {A} (tree : AVLTree A) : Int :=
-    case tree of
+  diffFactor {A} (set : AVLTree A) : Int :=
+    case set of
       | empty := 0
       | node@{left; right} := intSubNat (height right) (height left);
 
@@ -80,9 +82,9 @@ module Internal;
 
   --- 𝒪(1). Computes the balance factor, i.e., the height of the right subtree
   --- minus the height of the left subtree.
-  balanceFactor {A} (tree : AVLTree A) : BalanceFactor :=
+  balanceFactor {A} (set : AVLTree A) : BalanceFactor :=
     -- We avoid `diffFactor` here for efficiency.
-    case tree of
+    case set of
       | empty := LeanNone
       | node@{left; right} := balanceFactor' left right;
 
@@ -91,42 +93,48 @@ module Internal;
     node value (1 + max (height left) (height right)) left right;
 
   --- 𝒪(1). Left rotation.
-  rotateLeft {A} (tree : AVLTree A) : AVLTree A :=
-    case tree of
+  rotateLeft {A} (set : AVLTree A) : AVLTree A :=
+    case set of
       | node x _ a (node z _ b c) := mkNode z (mkNode x a b) c
       | n := n;
 
   --- 𝒪(1). Right rotation.
-  rotateRight {A} (tree : AVLTree A) : AVLTree A :=
-    case tree of
+  rotateRight {A} (set : AVLTree A) : AVLTree A :=
+    case set of
       | node z _ (node y _ x t3) t4 := mkNode y x (mkNode z t3 t4)
       | n := n;
 
   --- 𝒪(1). Applies local rotations if needed.
-  balance {A} (tree : AVLTree A) : AVLTree A :=
-    case tree of
+  balance {A} (set : AVLTree A) : AVLTree A :=
+    case set of
       | empty := empty
       | node@{element; height; left; right} :=
         case balanceFactor' left right of
           | LeanRight :=
             case balanceFactor right of {
               | LeanLeft := rotateLeft (mkNode element left (rotateRight right))
-              | _ := rotateLeft tree
+              | _ := rotateLeft set
             }
           | LeanLeft :=
             case balanceFactor left of {
               | LeanRight := rotateRight (mkNode element (rotateLeft left) right)
-              | _ := rotateRight tree
+              | _ := rotateRight set
             }
-          | LeanNone := tree;
+          | LeanNone := set;
+
+  --- 𝒪(𝓃). Checks the ;AVLTree; height invariant. I.e. that
+  --- every two children do not differ on height by more than 1.
+  isBalanced {A} : (set : AVLTree A) -> Bool
+    | empty := true
+    | set@node@{left; right} := isBalanced left && isBalanced right && abs (diffFactor set) <= 1;
 end;
 
 open Internal;
 
---- 𝒪(log 𝓃). Lookup a member from the ;AVLTree; using a projection function.
+--- 𝒪(log 𝓃). Lookup a member from the set using a projection function.
 --- Ord A, Ord K and fun must be compatible. i.e cmp_k (fun a1) (fun a2) == cmp_a a1 a2
 {-# specialize: [1, 2] #-}
-lookupWith {A K} {{order : Ord K}} (fun : A -> K) (elem : K) (tree : AVLTree A) : Maybe A :=
+lookupWith {A K} {{order : Ord K}} (fun : A -> K) (elem : K) (set : AVLTree A) : Maybe A :=
   let
     {-# specialize-by: [order, fun] #-}
     go : AVLTree A -> Maybe A
@@ -136,23 +144,23 @@ lookupWith {A K} {{order : Ord K}} (fun : A -> K) (elem : K) (tree : AVLTree A) 
           | LessThan := go left
           | GreaterThan := go right
           | Equal := just element;
-  in go tree;
+  in go set;
 
---- 𝒪(log 𝓃). Queries whether an element is in an ;AVLTree;.
+--- 𝒪(log 𝓃). Queries whether `elem` is in `set`.
 {-# specialize: [1] #-}
-lookup {A} {{Ord A}} (elem : A) (tree : AVLTree A) : Maybe A := lookupWith id elem tree;
+lookup {A} {{Ord A}} (elem : A) (set : AVLTree A) : Maybe A := lookupWith id elem set;
 
---- 𝒪(log 𝓃). Queries whether an element is in an ;AVLTree;.
+--- 𝒪(log 𝓃). Queries whether `elem` is in `set`.
 {-# specialize: [1] #-}
-isMember {A} {{Ord A}} (elem : A) (tree : AVLTree A) : Bool := isJust (lookupWith id elem tree);
+isMember {A} {{Ord A}} (elem : A) (set : AVLTree A) : Bool := isJust (lookupWith id elem set);
 
---- 𝒪(log 𝓃). Inserts an element elem into and ;AVLTree; using a function to
+--- 𝒪(log 𝓃). Inserts an element `elem` into `set` using a function to
 --- deduplicate entries.
 ---
 --- Assumption: If a1 == a2 then fun a1 a2 == a1 == a2
 --- where == comes from Ord a.
 {-# specialize: [1, 2] #-}
-insertWith {A} {{order : Ord A}} (fun : A -> A -> A) (elem : A) (tree : AVLTree A) : AVLTree A :=
+insertWith {A} {{order : Ord A}} (fun : A -> A -> A) (elem : A) (set : AVLTree A) : AVLTree A :=
   let
     {-# specialize-by: [order, fun] #-}
     go : AVLTree A -> AVLTree A
@@ -162,22 +170,22 @@ insertWith {A} {{order : Ord A}} (fun : A -> A -> A) (elem : A) (tree : AVLTree 
           | LessThan := balance (mkNode element (go left) right)
           | GreaterThan := balance (mkNode element left (go right))
           | Equal := node (fun element elem) height left right;
-  in go tree;
+  in go set;
 
---- 𝒪(log 𝓃). Inserts an element into an ;AVLTree;.
+--- 𝒪(log 𝓃). Inserts `elem` into `set`.
 {-# specialize: [1] #-}
-insert {A} {{Ord A}} (elem : A) (tree : AVLTree A) : AVLTree A := insertWith (flip const) elem tree;
+insert {A} {{Ord A}} (elem : A) (set : AVLTree A) : AVLTree A := insertWith (flip const) elem set;
 
---- 𝒪(log 𝓃). Removes the minimum element from an ;AVLTree;.
+--- 𝒪(log 𝓃). Removes the minimum element from `set`.
 {-# specialize: [1] #-}
-deleteMin {A} {{Ord A}} : (tree : AVLTree A) -> Maybe (Pair A (AVLTree A))
+deleteMin {A} {{Ord A}} : (set : AVLTree A) -> Maybe (Pair A (AVLTree A))
   | empty := nothing
   | node@{element; left; right} :=
     case deleteMin left of
       | nothing := just (element, right)
       | just (element', left') := just (element', mkNode element left' right);
 
---- 𝒪(log 𝓃). Removes an element from an ;AVLTree; based on a projected comparison value.
+--- 𝒪(log 𝓃). Removes an element `elem` from `set` based on a projected comparison value.
 ---
 --- Assumption Ord A and Ord B are compatible: Given a1 a2, A then (fun a1 == fun a2) == (a1 == a2)
 {-# specialize: [1, 2, 3] #-}
@@ -187,7 +195,7 @@ deleteWith
   {{orderB : Ord B}}
   (fun : A -> B)
   (elem : B)
-  (tree : AVLTree A)
+  (set : AVLTree A)
   : AVLTree A :=
   let
     {-# specialize-by: [orderA, orderB, fun] #-}
@@ -204,67 +212,61 @@ deleteWith
                 case deleteMin right of
                   | nothing := left
                   | just (minRight, right') := balance (mkNode minRight left right');
-  in go tree;
+  in go set;
 
---- 𝒪(log 𝓃). Removes an element from an ;AVLTree;.
+--- 𝒪(log 𝓃). Removes `elem` from `set`.
 {-# specialize: [1] #-}
-delete {A} {{Ord A}} : A -> AVLTree A -> AVLTree A := deleteWith id;
+delete {A} {{Ord A}} (elem : A) (set : AVLTree A) : AVLTree A := deleteWith id elem set;
 
---- 𝒪(log 𝓃). Returns the minimum element of the ;AVLTree;.
-lookupMin {A} : AVLTree A -> Maybe A
+--- 𝒪(log 𝓃). Returns the minimum element of `set`.
+lookupMin {A} : (set : AVLTree A) -> Maybe A
   | empty := nothing
   | (node y _ empty empty) := just y
   | (node _ _ empty r) := lookupMin r
   | (node _ _ l _) := lookupMin l;
 
---- 𝒪(log 𝓃). Returns the maximum element of the ;AVLTree;.
-lookupMax {A} : AVLTree A -> Maybe A
+--- 𝒪(log 𝓃). Returns the maximum element of `set`.
+lookupMax {A} : (set : AVLTree A) -> Maybe A
   | empty := nothing
   | (node y _ empty empty) := just y
   | (node _ _ l empty) := lookupMax l
   | (node _ _ _ r) := lookupMax r;
 
---- 𝒪(𝒹 log 𝓃). Deletes elements from an ;AVLTree;.
+--- 𝒪(𝒹 log 𝓃). Deletes elements from `set`.
 {-# specialize: [1] #-}
-deleteMany {A} {{Ord A}} : List A -> AVLTree A -> AVLTree A := deleteManyWith id;
+deleteMany {A} {{Ord A}} (toDelete : List A) (set : AVLTree A) : AVLTree A := deleteManyWith id toDelete set;
 
---- 𝒪(𝒹 log 𝓃). Deletes elements from an ;AVLTree; based on a projected comparison value.
+--- 𝒪(𝒹 log 𝓃). Deletes elements from `set` based on a projected comparison value.
 ---
 --- Assumption: Ord A and Ord B are compatible, i.e., for a1 a2 in A, we have (fun a1 == fun a2) == (a1 == a2)
 {-# specialize: [1, 2] #-}
 deleteManyWith
-  {A B} {{Ord A}} {{Ord B}} (fun : A -> B) (toDelete : List B) (tree : AVLTree A) : AVLTree A :=
-  for (acc := tree) (x in toDelete) {deleteWith fun x acc};
+  {A B} {{Ord A}} {{Ord B}} (fun : A -> B) (toDelete : List B) (set : AVLTree A) : AVLTree A :=
+  for (acc := set) (x in toDelete) {deleteWith fun x acc};
 
---- 𝒪(𝓃). Checks the ;AVLTree; height invariant. I.e. that
---- every two children do not differ on height by more than 1.
-isBalanced {A} : (tree : AVLTree A) -> Bool
-  | empty := true
-  | tree@node@{left; right} := isBalanced left && isBalanced right && abs (diffFactor tree) <= 1;
-
---- 𝒪(𝓃 log 𝓃). Create an ;AVLTree; from an unsorted ;List;.
+--- 𝒪(𝓃 log 𝓃). Create a set from an unsorted ;List;.
 {-# specialize: [1] #-}
 fromList {A} {{Ord A}} (list : List A) : AVLTree A := for (acc := empty) (x in list) {insert x acc};
 
---- 𝒪(1). Checks if an ;AVLTree; is empty.
+--- 𝒪(1). Checks if `set` is empty.
 {-# inline: true #-}
-isEmpty {A} (tree : AVLTree A) : Bool :=
-  case tree of
+isEmpty {A} (set : AVLTree A) : Bool :=
+  case set of
     | empty := true
     | node@{} := false;
 
---- 𝒪(𝓃). Returns the number of elements of an ;AVLTree;.
-size {A} : AVLTree A -> Nat
+--- 𝒪(𝓃). Returns the number of elements of `set`.
+size {A} : (set : AVLTree A) -> Nat
   | empty := 0
   | node@{left; right} := 1 + size left + size right;
 
 {-# specialize: [1] #-}
-foldr {A B} (fun : A -> B -> B) (acc : B) : AVLTree A -> B
+foldr {A B} (fun : A -> B -> B) (acc : B) : (set : AVLTree A) -> B
   | empty := acc
   | node@{element; left; right} := foldr fun (fun element (foldr fun acc right)) left;
 
 {-# specialize: [1] #-}
-foldl {A B} (fun : B -> A -> B) (acc : B) : AVLTree A -> B
+foldl {A B} (fun : B -> A -> B) (acc : B) : (set : AVLTree A) -> B
   | empty := acc
   | node@{element; left; right} := foldl fun (fun (foldl fun acc left) element) right;
 
@@ -273,110 +275,110 @@ instance
 polymorphicFoldableAVLTreeI : Polymorphic.Foldable AVLTree :=
   Polymorphic.mkFoldable@{
     {-# inline: true #-}
-    for {A B} (f : B -> A -> B) (acc : B) (tree : AVLTree A) : B := foldl f acc tree;
+    for {A B} (f : B -> A -> B) (acc : B) (set : AVLTree A) : B := foldl f acc set;
     {-# inline: true #-}
-    rfor {A B} (f : B -> A -> B) (acc : B) (tree : AVLTree A) : B := foldr (flip f) acc tree
+    rfor {A B} (f : B -> A -> B) (acc : B) (set : AVLTree A) : B := foldr (flip f) acc set
   };
 
 {-# specialize: true, inline: true #-}
 instance
 foldableAVLTreeI {A} : Foldable (AVLTree A) A := fromPolymorphicFoldable;
 
---- 𝒪(n). Returns the elements of an ;AVLTree; in ascending order.
-toList {A} (tree : AVLTree A) : List A := rfor (acc := nil) (x in tree) {x :: acc};
+--- 𝒪(n). Returns the elements of `set` in ascending order.
+toList {A} (set : AVLTree A) : List A := rfor (acc := nil) (x in set) {x :: acc};
 
---- 𝒪(n log n). Returns an ;AVLTree; containing elements that are members of both ;AVLTree;s.
+--- 𝒪(n log n). Returns a set containing the elements that are members of `set1` and `set2`.
 {-# specialize: [1] #-}
-intersection {A} {{Ord A}} (tree1 tree2 : AVLTree A) : AVLTree A :=
-  for (acc := empty) (x in tree1)
+intersection {A} {{Ord A}} (set1 set2 : AVLTree A) : AVLTree A :=
+  for (acc := empty) (x in set1)
     {if
-      | isMember x tree2 := insert x acc
+      | isMember x set2 := insert x acc
       | else := acc};
 
---- 𝒪(n log n). Returns an ;AVLTree; containing elements that are members of the first but not the second ;AVLTree;.
+--- 𝒪(n log n). Returns a set containing the elements that are members of `set1` but not of `set2`.
 {-# specialize: [1] #-}
-difference {A} {{Ord A}} (tree1 tree2 : AVLTree A) : AVLTree A :=
-  for (acc := empty) (x in tree1)
+difference {A} {{Ord A}} (set1 set2 : AVLTree A) : AVLTree A :=
+  for (acc := empty) (x in set1)
     {if
-      | isMember x tree2 := acc
+      | isMember x set2 := acc
       | else := insert x acc};
 
---- 𝒪(n log n). Returns an ;AVLTree; containing elements that are members of either the first or second ;AVLTree;.
+--- 𝒪(n log n). Returns a set containing the elements that are members of `set1` or `set2`.
 {-# specialize: [1] #-}
-union {A} {{Ord A}} (tree1 tree2 : AVLTree A) : AVLTree A :=
-  for (acc := tree1) (x in tree2) {insert x acc};
+union {A} {{Ord A}} (set1 set2 : AVLTree A) : AVLTree A :=
+  for (acc := set1) (x in set2) {insert x acc};
 
 syntax iterator all {init := 0; range := 1};
---- 𝒪(𝓃). Returns ;true; if all elements of the ;AVLTree; satisfy the predicate.
+--- 𝒪(𝓃). Returns ;true; if all elements of `set` satisfy `predicate`.
 {-# specialize: [1] #-}
-all {A} (predicate : A -> Bool) (tree : AVLTree A) : Bool :=
+all {A} (predicate : A -> Bool) (set : AVLTree A) : Bool :=
   let
     go : AVLTree A -> Bool
       | empty := true
       | node@{element; left; right} := predicate element && go left && go right;
-  in go tree;
+  in go set;
 
 syntax iterator any {init := 0; range := 1};
---- 𝒪(𝓃). Returns ;true; if some elements of the ;AVLTree; satisfies the predicate.
+--- 𝒪(𝓃). Returns ;true; if some element of `set` satisfies `predicate`.
 {-# specialize: [1] #-}
-any {A} (predicate : A -> Bool) (tree : AVLTree A) : Bool :=
+any {A} (predicate : A -> Bool) (set : AVLTree A) : Bool :=
   let
     go : AVLTree A -> Bool
       | empty := true
       | node@{element; left; right} := predicate element || go left || go right;
-  in go tree;
+  in go set;
 
 syntax iterator filter {init := 0; range := 1};
---- 𝒪(n log n). Returns an ;AVLTree; containing all elements of the tree that satisfy the predicate.
+--- 𝒪(n log n). Returns a set containing all elements of `set` that satisfy `predicate`.
 {-# specialize: [1] #-}
-filter {A} {{Ord A}} (predicate : A -> Bool) (tree : AVLTree A) : AVLTree A :=
-  for (acc := empty) (x in tree)
+filter {A} {{Ord A}} (predicate : A -> Bool) (set : AVLTree A) : AVLTree A :=
+  for (acc := empty) (x in set)
     {if
       | predicate x := insert x acc
       | else := acc};
 
 syntax iterator partition {init := 0; range := 1};
-partition {A} {{Ord A}} (predicate : A -> Bool) (tree : AVLTree A) : Pair (AVLTree A) (AVLTree A) :=
-  for (trueSet, falseSet := empty, empty) (x in tree)
+partition {A} {{Ord A}} (predicate : A -> Bool) (set : AVLTree A) : Pair (AVLTree A) (AVLTree A) :=
+  for (trueSet, falseSet := empty, empty) (x in set)
     {if
       | predicate x := insert x trueSet, falseSet
       | else := trueSet, insert x falseSet};
 
---- 𝒪(1). Creates an ;AVLTree; with a single element.
-singleton {A} (element : A) : AVLTree A := mkNode element empty empty;
+--- 𝒪(1). Creates a set with a single element `elem`.
+singleton {A} (elem : A) : AVLTree A := mkNode elem empty empty;
 
---- 𝒪(n log n). Checks if all elements of tree1 are in tree2.
-isSubset {A} {{Ord A}} (tree1 tree2 : AVLTree A) : Bool := all (x in tree1) {isMember x tree2};
+--- 𝒪(n log n). Checks if all elements of `set1` are in `set2`.
+isSubset {A} {{Ord A}} (set1 set2 : AVLTree A) : Bool := all (x in set1) {isMember x set2};
 
 syntax iterator map {init := 0; range := 1};
-map {A B} {{Ord B}} (f : A -> B) (tree : AVLTree A) : AVLTree B :=
-  for (acc := empty) (x in tree) {insert (f x) acc};
+map {A B} {{Ord B}} (fun : A -> B) (set : AVLTree A) : AVLTree B :=
+  for (acc := empty) (x in set) {insert (fun x) acc};
 
---- Formats the tree in a debug friendly format.
-prettyDebug {A} {{Show A}} (tree : AVLTree A) : String :=
+--- Formats the set in a debug friendly format.
+prettyDebug {A} {{Show A}} (set : AVLTree A) : String :=
   let
     go : AVLTree A -> String
       | empty := "_"
-      | tree@node@{element; left; right} :=
+      | set@node@{element; left; right} :=
         "("
           ++str go left
           ++str " h"
-          ++str Show.show (diffFactor tree)
+          ++str Show.show (diffFactor set)
           ++str " "
           ++str Show.show element
           ++str " "
           ++str go right
           ++str ")";
-  in go tree;
+  in go set;
 
 --- 𝒪(𝓃).
-toTree {A} : (tree : AVLTree A) -> Maybe (Tree A)
+toTree {A} : (set : AVLTree A) -> Maybe (Tree A)
   | empty := nothing
   | node@{element; left; right} :=
     just (Tree.node element (catMaybes (toTree left :: toTree right :: nil)));
 
 --- Returns the textual representation of an ;AVLTree;.
-pretty {A} {{Show A}} (tree : AVLTree A) : String := maybe "empty" Tree.treeToString (toTree tree);
+pretty {A} {{Show A}} (set : AVLTree A) : String := maybe "empty" Tree.treeToString (toTree set);
 
 instance
 eqAVLTreeI {A} {{Eq A}} : Eq (AVLTree A) := mkEq (Eq.eq on toList);
