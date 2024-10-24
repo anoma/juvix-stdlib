@@ -4,18 +4,16 @@ import Stdlib.Data.Pair open;
 import Stdlib.Data.Maybe open;
 import Stdlib.Data.List open;
 import Stdlib.Data.Nat open;
+import Stdlib.Data.Bool open;
 
 import Stdlib.Trait.Functor open;
-import Stdlib.Trait.Foldable open;
+import Stdlib.Trait.Foldable open hiding {foldr; foldl};
 import Stdlib.Trait.Ord open;
 
 import Stdlib.Function open;
 
-import Stdlib.Data.Set as Set;
-open Set using {Set};
-
-import Stdlib.Data.Set.AVL as AVL;
-open AVL using {AVLTree};
+import Stdlib.Data.Set as Set open using {Set};
+import Stdlib.Data.Set.AVL as AVL open using {AVLTree};
 
 import Stdlib.Data.BinaryTree as Tree;
 
@@ -34,6 +32,7 @@ toPair {Key Value} (binding : Binding Key Value) : Pair Key Value := key binding
 instance
 bindingKeyOrdering {Key Value} {{Ord Key}} : Ord (Binding Key Value) :=
   mkOrd@{
+    {-# inline: true #-}
     cmp (b1 b2 : Binding Key Value) : Ordering := Ord.cmp (key b1) (key b2)
   };
 
@@ -54,31 +53,162 @@ insertWith
     mkMap tree :=
       let
         fun' (binding1 binding2 : Binding Key Value) : Binding Key Value :=
-          case binding1, binding2 of mkBinding a b1, mkBinding _ b2 := mkBinding a (fun b1 b2);
+          case binding1, binding2 of mkBinding k b1, mkBinding _ b2 := mkBinding k (fun b1 b2);
         binding := mkBinding key value;
       in mkMap (Set.insertWith fun' binding tree);
 
-insert {A B : Type} {{Ord A}} : A -> B -> Map A B -> Map A B := insertWith λ {old new := new};
+--- 𝒪(log 𝓃). Inserts an element into a ;Map; at a given key.
+{-# inline: true #-}
+insert {Key Value : Type} {{Ord Key}} : Key -> Value -> Map Key Value -> Map Key Value :=
+  insertWith \ {old new := new};
 
+--- 𝒪(log 𝓃). Queries whether a given key is in a ;Map;.
 {-# specialize: [1] #-}
-lookup {A B} {{Ord A}} (k : A) : Map A B -> Maybe B
-  | (mkMap s) := map value (Set.lookupWith key k s);
+lookup {Key Value} {{Ord Key}} (lookupKey : Key) (container : Map Key Value) : Maybe Value :=
+  case container of mkMap s := map value (Set.lookupWith key lookupKey s);
+
+--- 𝒪(log 𝓃). Queries whether a given key is in a ;Map;.
+{-# specialize: [1] #-}
+isMember {Key Value} {{Ord Key}} (key : Key) (container : Map Key Value) : Bool :=
+  isJust (lookup key container);
 
 {-# specialize: [1, f] #-}
-fromListWith {A B} {{Ord A}} (f : B -> B -> B) (xs : List (Pair A B)) : Map A B :=
-  for (acc := empty) (k, v in xs)
-    insertWith f k v acc;
+fromListWithKey
+  {Key Value}
+  {{Ord Key}}
+  (f : Key -> Value -> Value -> Value)
+  (xs : List (Pair Key Value))
+  : Map Key Value := for (acc := empty) (k, v in xs) {insertWith (f k) k v acc};
 
-fromList {A B} {{Ord A}} : List (Pair A B) -> Map A B := fromListWith λ {old new := new};
+{-# inline: true #-}
+fromListWith
+  {Key Value}
+  {{Ord Key}}
+  (f : Value -> Value -> Value)
+  (xs : List (Pair Key Value))
+  : Map Key Value := fromListWithKey (const f) xs;
 
-toList {A B} : Map A B -> List (Pair A B)
-  | (mkMap s) := map (x in Set.toList s) toPair x;
+{-# inline: true #-}
+fromList {Key Value} {{Ord Key}} : List (Pair Key Value) -> Map Key Value :=
+  fromListWith λ {old new := new};
 
-size {A B} : Map A B -> Nat
-  | (mkMap s) := Set.size s;
+toList {Key Value} (container : Map Key Value) : List (Pair Key Value) :=
+  case container of mkMap s := map (x in Set.toList s) {toPair x};
 
-delete {A B} {{Ord A}} (k : A) : Map A B -> Map A B
-  | m@(mkMap s) := Set.deleteWith key k s |> mkMap;
+{-# specialize: [1, f] #-}
+fromSet {Key Value} {{Ord Key}} (f : Key -> Value) (set : Set Key) : Map Key Value :=
+  for (acc := empty) (k in set) {insert k (f k) acc};
+
+--- 𝒪(1). Checks if a ;Map; is empty.
+{-# inline: true #-}
+isEmpty {Key Value} (container : Map Key Value) : Bool :=
+  case container of mkMap s := Set.isEmpty s;
+
+--- 𝒪(𝓃). Returns the number of elements of a ;Map;.
+{-# inline: true #-}
+size {Key Value} (container : Map Key Value) : Nat := case container of mkMap s := Set.size s;
+
+--- 𝒪(log 𝓃). Removes a key assignment from a ;Map;.
+{-# inline: true #-}
+delete {Key Value} {{Ord Key}} (deleteKey : Key) (container : Map Key Value) : Map Key Value :=
+  case container of mkMap s := mkMap (Set.deleteWith key deleteKey s);
+
+keys {Key Value} (container : Map Key Value) : List Key :=
+  case container of mkMap s := map (x in Set.toList s) {key x};
+
+values {Key Value} (container : Map Key Value) : List Value :=
+  case container of mkMap s := map (x in Set.toList s) {value x};
+
+keySet {Key Value} {{Ord Key}} (container : Map Key Value) : Set Key :=
+  case container of mkMap s := Set.map (x in s) {key x};
+
+valueSet {Key Value} {{Ord Value}} (container : Map Key Value) : Set Value :=
+  case container of mkMap s := Set.map (x in s) {value x};
+
+{-# specialize: [f] #-}
+mapValuesWithKey
+  {Key Value1 Value2} (f : Key -> Value1 -> Value2) (container : Map Key Value1) : Map Key Value2 :=
+  case container of
+    mkMap s := mkMap (Set.Internal.unsafeMap \ {(mkBinding k v) := mkBinding k (f k v)} s);
+
+{-# inline: true #-}
+mapValues
+  {Key Value1 Value2} (f : Value1 -> Value2) (container : Map Key Value1) : Map Key Value2 :=
+  mapValuesWithKey (const f) container;
+
+{-# inline: true #-}
+singleton {Key Value} {{Ord Key}} (key : Key) (value : Value) : Map Key Value :=
+  insert key value empty;
+
+{-# inline: true #-}
+foldr
+  {Key Value Acc} (f : Key -> Value -> Acc -> Acc) (acc : Acc) (container : Map Key Value) : Acc :=
+  case container of mkMap s := rfor (acc := acc) (x in s) {f (key x) (value x) acc};
+
+{-# inline: true #-}
+foldl
+  {Key Value Acc} (f : Acc -> Key -> Value -> Acc) (acc : Acc) (container : Map Key Value) : Acc :=
+  case container of mkMap s := for (acc := acc) (x in s) {f acc (key x) (value x)};
+
+syntax iterator all {init := 0; range := 1};
+--- 𝒪(𝓃). Returns ;true; if all key-element pairs in the ;Map; satisfy the predicate.
+{-# inline: true #-}
+all {Key Value} (predicate : Key -> Value -> Bool) (container : Map Key Value) : Bool :=
+  case container of mkMap s := Set.all (x in s) {predicate (key x) (value x)};
+
+syntax iterator any {init := 0; range := 1};
+--- 𝒪(𝓃). Returns ;true; if some key-element pair in the ;Map; satisfies the predicate.
+{-# inline: true #-}
+any {Key Value} (predicate : Key -> Value -> Bool) (container : Map Key Value) : Bool :=
+  case container of mkMap s := Set.any (x in s) {predicate (key x) (value x)};
+
+syntax iterator filter {init := 0; range := 1};
+--- 𝒪(n log n). Returns a ;Map; containing all key-element pairs of the given
+--- map container that satisfy the predicate.
+{-# inline: true #-}
+filter
+  {Key Value}
+  {{Ord Key}}
+  (predicate : Key -> Value -> Bool)
+  (container : Map Key Value)
+  : Map Key Value :=
+  case container of mkMap s := mkMap (Set.filter (x in s) {predicate (key x) (value x)});
+
+syntax iterator partition {init := 0; range := 1};
+{-# inline: true #-}
+partition
+  {Key Value}
+  {{Ord Key}}
+  (predicate : Key -> Value -> Bool)
+  (container : Map Key Value)
+  : Pair (Map Key Value) (Map Key Value) :=
+  case container of
+    mkMap s :=
+      case Set.partition (x in s) {predicate (key x) (value x)} of
+        left, right := mkMap left, mkMap right;
+
+{-# specialize: true, inline: case #-}
+instance
+functorMapI {Key} : Functor (Map Key) :=
+  mkFunctor@{
+    map {A B} (f : A -> B) (container : Map Key A) : Map Key B := mapValues f container
+  };
+
+{-# specialize: true, inline: case #-}
+instance
+foldableMapI {Key Value} : Foldable (Map Key Value) (Pair Key Value) :=
+  mkFoldable@{
+    {-# inline: true #-}
+    for {B} (f : B -> Pair Key Value -> B) (acc : B) (container : Map Key Value) : B :=
+      foldl \ {a k v := f a (k, v)} acc container;
+
+    {-# inline: true #-}
+    rfor {B} (f : B -> Pair Key Value -> B) (acc : B) (container : Map Key Value) : B :=
+      foldr \ {k v a := f a (k, v)} acc container
+  };
 
 instance
 eqMapI {A B} {{Eq A}} {{Eq B}} : Eq (Map A B) := mkEq (Eq.eq on toList);
+
+instance
+ordMapI {A B} {{Ord A}} {{Ord B}} : Ord (Map A B) := mkOrd (Ord.cmp on toList);

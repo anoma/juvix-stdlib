@@ -180,7 +180,7 @@ all {A} (predicate : A -> Bool) : (list : List A) -> Bool
       | else := false;
 
 --- 𝒪(1). Returns ;true; if the ;List; is empty.
-null {A} (list : List A) : Bool :=
+isEmpty {A} (list : List A) : Bool :=
   case list of
     | nil := true
     | _ := false;

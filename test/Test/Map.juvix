@@ -1,14 +1,10 @@
 module Test.Map;
 
-import Juvix.Builtin.V1 open;
-import Stdlib.System.IO open;
-import Stdlib.Data.Pair open;
-import Stdlib.Data.List open;
-import Stdlib.Function open;
+import Stdlib.Prelude open;
 import Test.JuvixUnit open;
 
-import Stdlib.Data.Map as Map;
-open Map using {Map};
+import Stdlib.Data.Map as Map open using {Map};
+import Stdlib.Data.Set as Set open using {Set};
 
 tests : List Test :=
   let
@@ -49,6 +45,46 @@ tests : List Test :=
      ; testCase
        "Map.fromList distinct keys"
        (assertEqListPair (Map.toList (Map.fromList [1, 1; 2, 2])) [1, 1; 2, 2])
+     ; testCase
+       "Map.fromSet"
+       (assertEqListPair (Map.toList (Map.fromSet id (Set.fromList [1; 2; 3]))) [1, 1; 2, 2; 3, 3])
+     ; testCase "Map.keys" (assertEqual "expected keys" (Map.keys m) [1; 2])
+     ; testCase "Map.values" (assertEqual "expected values" (Map.values m) ["one"; "two"])
+     ; testCase "Map.keySet" (assertEqual "expected key set" (Map.keySet m) (Set.fromList [1; 2]))
+     ; testCase
+       "Map.valueSet"
+       (assertEqual "expected value set" (Map.valueSet m2) (Set.fromList [2; 4]))
+     ; testCase
+       "Map.isEmpty"
+       (assertEqual "expected empty map" (Map.isEmpty (Map.empty {Nat} {Nat})) true)
+     ; testCase "Map.isEmpty" (assertEqual "expected non-empty map" (Map.isEmpty m) false)
+     ; testCase "Map.isMember" (assertEqual "expected member" (Map.isMember 1 m) true)
+     ; testCase "Map.isMember" (assertEqual "expected non-member" (Map.isMember 3 m) false)
+     ; testCase
+       "Map.filter"
+       (assertEqListPair (Map.toList (Map.filter \ {k v := k + v > 3} m2)) [3, 4])
+     ; testCase
+       "Map.partition"
+       (assertEqual
+         "expected partition"
+         ([1, 2], [3, 4])
+         (Map.partition \ {k v := k < 3} m2 |> both Map.toList))
+     ; testCase
+       "Map.mapValuesWithKey"
+       (assertEqListPair (Map.toList (Map.mapValuesWithKey \ {k v := k + v} m2)) [1, 3; 3, 7])
+     ; testCase
+       "Map.mapValues"
+       (assertEqListPair (Map.toList (Map.mapValues ((+) 1) m2)) [1, 3; 3, 5])
+     ; testCase "Map.map" (assertEqListPair (Map.toList (map ((+) 1) m2)) [1, 3; 3, 5])
+     ; testCase "Map.all" (assertTrue "expected all to be true" (Map.all \ {_ v := v > 0} m2))
+     ; testCase "Map.any" (assertTrue "expected any to be true" (Map.any \ {_ v := v > 3} m2))
+     ; testCase
+       "Map.foldl"
+       (assertEqual "expected foldl" (Map.foldl \ {acc k v := acc + k + v} 0 m2) 10)
+     ; testCase
+       "Map.foldr"
+       (assertEqual "expected foldr" (Map.foldr \ {acc k v := acc + k + v} 0 m2) 10)
+     ; testCase "Map.singleton" (assertEqListPair (Map.toList (Map.singleton 1 2)) [1, 2])
      ];
 
 suite : TestSuite := testSuite "Map" tests;

@@ -2,6 +2,7 @@ module Test.AVL;
 
 import Test.JuvixUnit open;
 import Stdlib.Prelude open;
+import Stdlib.Debug as Debug;
 
 import Stdlib.Data.Set.AVL as AVL open;
 
@@ -49,7 +50,7 @@ s2DeleteWith : TestDescr Box :=
   mkTestDescr@{
     testTitle := TestDescr.testTitle s2 ++str "-delete-with";
     testLen := sub (TestDescr.testLen s2) 2;
-    testSet := deleteManyWith Box.b [1; 8] (TestDescr.testSet s2 |> toList |> map mkBox |> fromList)
+    testSet := deleteManyWith Box.b [1; 8] (TestDescr.testSet s2 |> AVL.map mkBox)
   };
 
 s3 : TestDescr Nat :=
@@ -67,7 +68,7 @@ s4 : TestDescr Nat :=
   };
 
 tests : List Test :=
-  [ testCase "s1-member" (assertTrue "member? 3 s1" (AVL.isMember 3 s1Tree))
+  [ testCase "s1-member" (assertTrue "isMember 3 s1" (AVL.isMember 3 s1Tree))
   ; testCase
     "s1-s2-intersection"
     (assertEqual "intersection s1Tree s2Tree" (intersection s1Tree s2Tree) (fromList [1; 2; 3; 8]))
@@ -77,6 +78,30 @@ tests : List Test :=
   ; testCase
     "s1-s2-union"
     (assertEqual "union s1Tree s2Tree" (union s1Tree s2Tree) (fromList [0; 1; 2; 3; 4; 8; 9]))
+  ; testCase
+    "s2-filter"
+    (assertEqual "filter (> 3) s2" [0; 1; 2] (AVL.filter ((>) 3) s2Tree |> AVL.toList))
+  ; testCase "s2-all" (assertTrue "all (> 9) s2" (AVL.all ((>) 9) s2Tree))
+  ; testCase "s2-any" (assertTrue "any (< 3) s2" (AVL.any ((<) 3) s2Tree))
+  ; testCase
+    "s2-partition"
+    (assertEqual
+      "partition (< 3) s2"
+      ([0; 1; 2], [3; 4; 8])
+      (AVL.partition ((>) 3) s2Tree |> both AVL.toList))
+  ; testCase "s2-lookup" (assertJust "lookup 4 s2" (lookup 4 s2Tree))
+  ; testCase "s2-lookup" (assertNothing (const "lookup 5 s2") (lookup 5 s2Tree))
+  ; testCase "s2-lookup" (assertNothing (const "lookup 6 s2") (lookup 6 s2Tree))
+  ; testCase "s1-s2-not-isSubset" (assertFalse "isSubset s1 s2" (isSubset s1Tree s2Tree))
+  ; testCase "s2-s1-not-isSubset" (assertFalse "isSubset s2 s1" (isSubset s2Tree s1Tree))
+  ; testCase
+    "singleton-s2-isSubset"
+    (assertTrue "isSubset (singleton 1) s2" (isSubset (singleton 1) s2Tree))
+  ; testCase "s2-foldr" (assertEqual "foldr (+) 0 s2" 18 (AVL.foldr (+) 0 s2Tree))
+  ; testCase "s2-foldl" (assertEqual "foldl (+) 0 s2" 18 (AVL.foldl (+) 0 s2Tree))
+  ; testCase
+    "s2-map"
+    (assertEqual "map (+ 1) s2" [1; 2; 3; 4; 5; 9] (AVL.map ((+) 1) s2Tree |> AVL.toList))
   ; testCase "for ascending iteration"
     <| assertEqual "for iterates in ascending order" [1; 2; 3; 4]
     <| for (acc := []) (k in fromList [3; 2; 4; 1]) {snoc acc k}

@@ -14,9 +14,9 @@ import Stdlib.Data.Nat open;
 import Stdlib.Data.Int open;
 import Stdlib.Data.Bool open;
 import Stdlib.Data.Pair open;
-import Stdlib.Data.List open hiding {isMember};
+import Stdlib.Data.List open using {List; nil; ::; filter; ++; catMaybes};
 import Stdlib.Data.String open;
-import Stdlib.Trait.Foldable open;
+import Stdlib.Trait.Foldable open hiding {foldr; foldl};
 import Stdlib.Function open;
 
 --- A self-balancing binary search tree.
@@ -38,70 +38,90 @@ height {A} (tree : AVLTree A) : Nat :=
     | empty := 0
     | node@{height} := height;
 
-type BalanceFactor :=
-  | --- Left child is higher.
-    LeanLeft
-  | --- Equal heights of children.
-    LeanNone
-  | --- Right child is higher.
-    LeanRight;
+module Internal;
+  --- 𝒪(n). Maps a function over an ;AVLTree;. Does not check if
+  --- after mapping the order of the elements is preserved. It is the
+  --- responsibility of the caller to ensure that `f` preserves the ordering.
+  unsafeMap {A B} (f : A -> B) (tree : AVLTree A) : AVLTree B :=
+    let
+      go : AVLTree A -> AVLTree B
+        | empty := empty
+        | node@{element; height; left; right} :=
+          -- TODO: we cannot use record creation syntax here because of a bug in the type-checker (https://github.com/anoma/juvix/issues/3112)
+            node
+            (f element)
+            height
+            (go left)
+            (go right);
+    in go tree;
 
-diffFactor {A} (tree : AVLTree A) : Int :=
-  case tree of
-    | empty := 0
-    | node@{left; right} := intSubNat (height right) (height left);
+  type BalanceFactor :=
+    | --- Left child is higher.
+      LeanLeft
+    | --- Equal heights of children.
+      LeanNone
+    | --- Right child is higher.
+      LeanRight;
 
-{-# inline: true #-}
-balanceFactor' {A} (left right : AVLTree A) : BalanceFactor :=
-  let
-    h1 := height left;
-    h2 := height right;
-  in if
-    | h1 < h2 := LeanRight
-    | h2 < h1 := LeanLeft
-    | else := LeanNone;
+  diffFactor {A} (tree : AVLTree A) : Int :=
+    case tree of
+      | empty := 0
+      | node@{left; right} := intSubNat (height right) (height left);
 
---- 𝒪(1). Computes the balance factor, i.e., the height of the right subtree
---- minus the height of the left subtree.
-balanceFactor {A} (tree : AVLTree A) : BalanceFactor :=
-  -- We avoid `diffFactor` here for efficiency.
-  case tree of
-    | empty := LeanNone
-    | node@{left; right} := balanceFactor' left right;
+  {-# inline: true #-}
+  balanceFactor' {A} (left right : AVLTree A) : BalanceFactor :=
+    let
+      h1 := height left;
+      h2 := height right;
+    in if
+      | h1 < h2 := LeanRight
+      | h2 < h1 := LeanLeft
+      | else := LeanNone;
 
---- 𝒪(1). Helper function for creating a node.
-mkNode {A} (value : A) (left : AVLTree A) (right : AVLTree A) : AVLTree A :=
-  node value (1 + max (height left) (height right)) left right;
+  --- 𝒪(1). Computes the balance factor, i.e., the height of the right subtree
+  --- minus the height of the left subtree.
+  balanceFactor {A} (tree : AVLTree A) : BalanceFactor :=
+    -- We avoid `diffFactor` here for efficiency.
+    case tree of
+      | empty := LeanNone
+      | node@{left; right} := balanceFactor' left right;
 
---- 𝒪(1). Left rotation.
-rotateLeft {A} (tree : AVLTree A) : AVLTree A :=
-  case tree of
-    | node x _ a (node z _ b c) := mkNode z (mkNode x a b) c
-    | n := n;
+  --- 𝒪(1). Helper function for creating a node.
+  mkNode {A} (value : A) (left : AVLTree A) (right : AVLTree A) : AVLTree A :=
+    node value (1 + max (height left) (height right)) left right;
 
---- 𝒪(1). Right rotation.
-rotateRight {A} (tree : AVLTree A) : AVLTree A :=
-  case tree of
-    | node z _ (node y _ x t3) t4 := mkNode y x (mkNode z t3 t4)
-    | n := n;
+  --- 𝒪(1). Left rotation.
+  rotateLeft {A} (tree : AVLTree A) : AVLTree A :=
+    case tree of
+      | node x _ a (node z _ b c) := mkNode z (mkNode x a b) c
+      | n := n;
 
---- 𝒪(1). Applies local rotations if needed.
-balance {A} (tree : AVLTree A) : AVLTree A :=
-  case tree of
-    | empty := empty
-    | node@{element; height; left; right} :=
-      case balanceFactor' left right of
-        | LeanRight :=
-          case balanceFactor right of {
-            | LeanLeft := rotateLeft (mkNode element left (rotateRight right))
-            | _ := rotateLeft tree
-          }
-        | LeanLeft :=
-          case balanceFactor left of {
-            | LeanRight := rotateRight (mkNode element (rotateLeft left) right)
-            | _ := rotateRight tree
-          }
-        | LeanNone := tree;
+  --- 𝒪(1). Right rotation.
+  rotateRight {A} (tree : AVLTree A) : AVLTree A :=
+    case tree of
+      | node z _ (node y _ x t3) t4 := mkNode y x (mkNode z t3 t4)
+      | n := n;
+
+  --- 𝒪(1). Applies local rotations if needed.
+  balance {A} (tree : AVLTree A) : AVLTree A :=
+    case tree of
+      | empty := empty
+      | node@{element; height; left; right} :=
+        case balanceFactor' left right of
+          | LeanRight :=
+            case balanceFactor right of {
+              | LeanLeft := rotateLeft (mkNode element left (rotateRight right))
+              | _ := rotateLeft tree
+            }
+          | LeanLeft :=
+            case balanceFactor left of {
+              | LeanRight := rotateRight (mkNode element (rotateLeft left) right)
+              | _ := rotateRight tree
+            }
+          | LeanNone := tree;
+end;
+
+open Internal;
 
 --- 𝒪(log 𝓃). Lookup a member from the ;AVLTree; using a projection function.
 --- Ord A, Ord K and fun must be compatible. i.e cmp_k (fun a1) (fun a2) == cmp_a a1 a2
@@ -123,6 +143,7 @@ lookupWith {A K} {{order : Ord K}} (fun : A -> K) (elem : K) (tree : AVLTree A) 
 lookup {A} {{Ord A}} (elem : A) (tree : AVLTree A) : Maybe A := lookupWith id elem tree;
 
 --- 𝒪(log 𝓃). Queries whether an element is in an ;AVLTree;.
+{-# specialize: [1] #-}
 isMember {A} {{Ord A}} (elem : A) (tree : AVLTree A) : Bool := isJust (lookupWith id elem tree);
 
 --- 𝒪(log 𝓃). Inserts an element elem into and ;AVLTree; using a function to
@@ -143,7 +164,8 @@ insertWith {A} {{order : Ord A}} (fun : A -> A -> A) (elem : A) (tree : AVLTree 
           | Equal := node (fun element elem) height left right;
   in go tree;
 
---- 𝒪(log 𝓃). Inserts an element into and ;AVLTree;.
+--- 𝒪(log 𝓃). Inserts an element into an ;AVLTree;.
+{-# specialize: [1] #-}
 insert {A} {{Ord A}} (elem : A) (tree : AVLTree A) : AVLTree A := insertWith (flip const) elem tree;
 
 --- 𝒪(log 𝓃). Removes the minimum element from an ;AVLTree;.
@@ -186,7 +208,7 @@ deleteWith
 
 --- 𝒪(log 𝓃). Removes an element from an ;AVLTree;.
 {-# specialize: [1] #-}
-delete {A} {{o : Ord A}} : A -> AVLTree A -> AVLTree A := deleteWith id;
+delete {A} {{Ord A}} : A -> AVLTree A -> AVLTree A := deleteWith id;
 
 --- 𝒪(log 𝓃). Returns the minimum element of the ;AVLTree;.
 lookupMin {A} : AVLTree A -> Maybe A
@@ -224,30 +246,111 @@ isBalanced {A} : (tree : AVLTree A) -> Bool
 {-# specialize: [1] #-}
 fromList {A} {{Ord A}} (list : List A) : AVLTree A := for (acc := empty) (x in list) {insert x acc};
 
+--- 𝒪(1). Checks if an ;AVLTree; is empty.
+{-# inline: true #-}
+isEmpty {A} (tree : AVLTree A) : Bool :=
+  case tree of
+    | empty := true
+    | node@{} := false;
+
 --- 𝒪(𝓃). Returns the number of elements of an ;AVLTree;.
 size {A} : AVLTree A -> Nat
   | empty := 0
   | node@{left; right} := 1 + size left + size right;
 
--- TODO: Implement this tail-recursively with an accumulator. Then it will be O(n).
---- 𝒪(n log n). Returns the elements of an ;AVLTree; in ascending order.
-toList {A} : AVLTree A -> List A
-  | empty := nil
-  | node@{element; left; right} := toList left ++ (element :: nil) ++ toList right;
+{-# specialize: [1] #-}
+foldr {A B} (fun : A -> B -> B) (acc : B) : AVLTree A -> B
+  | empty := acc
+  | node@{element; left; right} := foldr fun (fun element (foldr fun acc right)) left;
 
--- TODO: avoid conversion to list.
+{-# specialize: [1] #-}
+foldl {A B} (fun : B -> A -> B) (acc : B) : AVLTree A -> B
+  | empty := acc
+  | node@{element; left; right} := foldl fun (fun (foldl fun acc left) element) right;
+
+{-# specialize: true, inline: case #-}
+instance
+polymorphicFoldableAVLTreeI : Polymorphic.Foldable AVLTree :=
+  Polymorphic.mkFoldable@{
+    {-# inline: true #-}
+    for {A B} (f : B -> A -> B) (acc : B) (tree : AVLTree A) : B := foldl f acc tree;
+    {-# inline: true #-}
+    rfor {A B} (f : B -> A -> B) (acc : B) (tree : AVLTree A) : B := foldr (flip f) acc tree
+  };
+
+{-# specialize: true, inline: true #-}
+instance
+foldableAVLTreeI {A} : Foldable (AVLTree A) A := fromPolymorphicFoldable;
+
+--- 𝒪(n). Returns the elements of an ;AVLTree; in ascending order.
+toList {A} (tree : AVLTree A) : List A := rfor (acc := nil) (x in tree) {x :: acc};
+
 --- 𝒪(n log n). Returns an ;AVLTree; containing elements that are members of both ;AVLTree;s.
-intersection {A} {{Ord A}} (s1 s2 : AVLTree A) : AVLTree A :=
-  toList s1 |> filter \ {x := isMember x s2} |> fromList;
+{-# specialize: [1] #-}
+intersection {A} {{Ord A}} (tree1 tree2 : AVLTree A) : AVLTree A :=
+  for (acc := empty) (x in tree1)
+    {if
+      | isMember x tree2 := insert x acc
+      | else := acc};
 
--- TODO: avoid conversion to list.
 --- 𝒪(n log n). Returns an ;AVLTree; containing elements that are members of the first but not the second ;AVLTree;.
-difference {A} {{Ord A}} (s1 s2 : AVLTree A) : AVLTree A :=
-  toList s1 |> filter \ {x := not (isMember x s2)} |> fromList;
+{-# specialize: [1] #-}
+difference {A} {{Ord A}} (tree1 tree2 : AVLTree A) : AVLTree A :=
+  for (acc := empty) (x in tree1)
+    {if
+      | isMember x tree2 := acc
+      | else := insert x acc};
 
--- TODO: avoid conversion to list.
 --- 𝒪(n log n). Returns an ;AVLTree; containing elements that are members of either the first or second ;AVLTree;.
-union {A} {{Ord A}} (s1 s2 : AVLTree A) : AVLTree A := fromList (toList s1 ++ toList s2);
+{-# specialize: [1] #-}
+union {A} {{Ord A}} (tree1 tree2 : AVLTree A) : AVLTree A :=
+  for (acc := tree1) (x in tree2) {insert x acc};
+
+syntax iterator all {init := 0; range := 1};
+--- 𝒪(𝓃). Returns ;true; if all elements of the ;AVLTree; satisfy the predicate.
+{-# specialize: [1] #-}
+all {A} (predicate : A -> Bool) (tree : AVLTree A) : Bool :=
+  let
+    go : AVLTree A -> Bool
+      | empty := true
+      | node@{element; left; right} := predicate element && go left && go right;
+  in go tree;
+
+syntax iterator any {init := 0; range := 1};
+--- 𝒪(𝓃). Returns ;true; if some elements of the ;AVLTree; satisfies the predicate.
+{-# specialize: [1] #-}
+any {A} (predicate : A -> Bool) (tree : AVLTree A) : Bool :=
+  let
+    go : AVLTree A -> Bool
+      | empty := true
+      | node@{element; left; right} := predicate element || go left || go right;
+  in go tree;
+
+syntax iterator filter {init := 0; range := 1};
+--- 𝒪(n log n). Returns an ;AVLTree; containing all elements of the tree that satisfy the predicate.
+{-# specialize: [1] #-}
+filter {A} {{Ord A}} (predicate : A -> Bool) (tree : AVLTree A) : AVLTree A :=
+  for (acc := empty) (x in tree)
+    {if
+      | predicate x := insert x acc
+      | else := acc};
+
+syntax iterator partition {init := 0; range := 1};
+partition {A} {{Ord A}} (predicate : A -> Bool) (tree : AVLTree A) : Pair (AVLTree A) (AVLTree A) :=
+  for (trueSet, falseSet := empty, empty) (x in tree)
+    {if
+      | predicate x := insert x trueSet, falseSet
+      | else := trueSet, insert x falseSet};
+
+--- 𝒪(1). Creates an ;AVLTree; with a single element.
+singleton {A} (element : A) : AVLTree A := mkNode element empty empty;
+
+--- 𝒪(n log n). Checks if all elements of tree1 are in tree2.
+isSubset {A} {{Ord A}} (tree1 tree2 : AVLTree A) : Bool := all (x in tree1) {isMember x tree2};
+
+syntax iterator map {init := 0; range := 1};
+map {A B} {{Ord B}} (f : A -> B) (tree : AVLTree A) : AVLTree B :=
+  for (acc := empty) (x in tree) {insert (f x) acc};
 
 --- Formats the tree in a debug friendly format.
 prettyDebug {A} {{Show A}} (tree : AVLTree A) : String :=
@@ -275,25 +378,8 @@ toTree {A} : (tree : AVLTree A) -> Maybe (Tree A)
 --- Returns the textual representation of an ;AVLTree;.
 pretty {A} {{Show A}} (tree : AVLTree A) : String := maybe "empty" Tree.treeToString (toTree tree);
 
--- TODO: remove toList
 instance
-eqAVLTreeI {A} {{Eq A}} : Eq (AVLTree A) := mkEq ((==) on toList);
+eqAVLTreeI {A} {{Eq A}} : Eq (AVLTree A) := mkEq (Eq.eq on toList);
 
--- TODO: remove toList
 instance
 ordAVLTreeI {A} {{Ord A}} : Ord (AVLTree A) := mkOrd (Ord.cmp on toList);
-
--- TODO: remove toList
-{-# specialize: true, inline: case #-}
-instance
-polymorphicFoldableAVLTreeI : Polymorphic.Foldable AVLTree :=
-  Polymorphic.mkFoldable@{
-    for {A B} (f : B -> A -> B) (acc : B) (tree : AVLTree A) : B :=
-      Polymorphic.Foldable.for f acc (toList tree);
-    rfor {A B} (f : B → A → B) (acc : B) (tree : AVLTree A) : B :=
-      Polymorphic.Foldable.rfor f acc (toList tree)
-  };
-
-{-# specialize: true, inline: true #-}
-instance
-foldableAVLTreeI {A} : Foldable (AVLTree A) A := fromPolymorphicFoldable;
