@@ -23,7 +23,7 @@ open Applicative public;
 --- Sequences computations.
 --- Note that this function will be renamed to >>> once IO becomses a polymorphic type and can be given an Applicative instance.
 applicativeSeq {F : Type -> Type} {{Applicative F}} {A B : Type} (fa : F A) (fb : F B) : F B :=
-  ap (map λ {_ b := b} fa) fb;
+  ap (map λ{_ b := b} fa) fb;
 
 --- lifts a binary function to ;Applicative;
 liftA2 {F : Type -> Type} {{Applicative F}} {A B C} (fun : A -> B -> C) : F A -> F B -> F C :=
@@ -38,7 +38,10 @@ mapA_
   {{Applicative f}}
   (fun : A -> f B)
   (l : t A)
-  : f Unit := rfor (acc := pure unit) (x in l) {applicativeSeq (fun x) acc};
+  : f Unit :=
+  rfor (acc := pure unit) (x in l) {
+    applicativeSeq (fun x) acc
+  };
 
 replicateA {F : Type -> Type} {A} {{Applicative F}} : Nat -> F A -> F (List A)
   | zero _ := pure []

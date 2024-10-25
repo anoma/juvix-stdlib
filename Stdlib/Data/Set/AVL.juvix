@@ -243,11 +243,16 @@ deleteMany {A} {{Ord A}} (toDelete : List A) (set : AVLTree A) : AVLTree A :=
 {-# specialize: [1, 2] #-}
 deleteManyWith
   {A B} {{Ord A}} {{Ord B}} (fun : A -> B) (toDelete : List B) (set : AVLTree A) : AVLTree A :=
-  for (acc := set) (x in toDelete) {deleteWith fun x acc};
+  for (acc := set) (x in toDelete) {
+    deleteWith fun x acc
+  };
 
 --- 𝒪(𝓃 log 𝓃). Create a set from an unsorted ;List;.
 {-# specialize: [1] #-}
-fromList {A} {{Ord A}} (list : List A) : AVLTree A := for (acc := empty) (x in list) {insert x acc};
+fromList {A} {{Ord A}} (list : List A) : AVLTree A :=
+  for (acc := empty) (x in list) {
+    insert x acc
+  };
 
 --- 𝒪(1). Checks if `set` is empty.
 {-# inline: true #-}
@@ -286,28 +291,35 @@ instance
 foldableAVLTreeI {A} : Foldable (AVLTree A) A := fromPolymorphicFoldable;
 
 --- 𝒪(n). Returns the elements of `set` in ascending order.
-toList {A} (set : AVLTree A) : List A := rfor (acc := nil) (x in set) {x :: acc};
+toList {A} (set : AVLTree A) : List A :=
+  rfor (acc := nil) (x in set) {
+    x :: acc
+  };
 
 --- 𝒪(n log n). Returns a set containing the elements that are members of `set1` and `set2`.
 {-# specialize: [1] #-}
 intersection {A} {{Ord A}} (set1 set2 : AVLTree A) : AVLTree A :=
-  for (acc := empty) (x in set1)
-    {if
+  for (acc := empty) (x in set1) {
+    if
       | isMember x set2 := insert x acc
-      | else := acc};
+      | else := acc
+  };
 
 --- 𝒪(n log n). Returns a set containing the elements that are members of `set1` but not of `set2`.
 {-# specialize: [1] #-}
 difference {A} {{Ord A}} (set1 set2 : AVLTree A) : AVLTree A :=
-  for (acc := empty) (x in set1)
-    {if
+  for (acc := empty) (x in set1) {
+    if
       | isMember x set2 := acc
-      | else := insert x acc};
+      | else := insert x acc
+  };
 
 --- 𝒪(n log n). Returns a set containing the elements that are members of `set1` or `set2`.
 {-# specialize: [1] #-}
 union {A} {{Ord A}} (set1 set2 : AVLTree A) : AVLTree A :=
-  for (acc := set1) (x in set2) {insert x acc};
+  for (acc := set1) (x in set2) {
+    insert x acc
+  };
 
 syntax iterator all {init := 0; range := 1};
 --- 𝒪(𝓃). Returns ;true; if all elements of `set` satisfy `predicate`.
@@ -333,27 +345,34 @@ syntax iterator filter {init := 0; range := 1};
 --- 𝒪(n log n). Returns a set containing all elements of `set` that satisfy `predicate`.
 {-# specialize: [1] #-}
 filter {A} {{Ord A}} (predicate : A -> Bool) (set : AVLTree A) : AVLTree A :=
-  for (acc := empty) (x in set)
-    {if
+  for (acc := empty) (x in set) {
+    if
       | predicate x := insert x acc
-      | else := acc};
+      | else := acc
+  };
 
 syntax iterator partition {init := 0; range := 1};
 partition {A} {{Ord A}} (predicate : A -> Bool) (set : AVLTree A) : Pair (AVLTree A) (AVLTree A) :=
-  for (trueSet, falseSet := empty, empty) (x in set)
-    {if
+  for (trueSet, falseSet := empty, empty) (x in set) {
+    if
       | predicate x := insert x trueSet, falseSet
-      | else := trueSet, insert x falseSet};
+      | else := trueSet, insert x falseSet
+  };
 
 --- 𝒪(1). Creates a set with a single element `elem`.
 singleton {A} (elem : A) : AVLTree A := mkNode elem empty empty;
 
 --- 𝒪(n log n). Checks if all elements of `set1` are in `set2`.
-isSubset {A} {{Ord A}} (set1 set2 : AVLTree A) : Bool := all (x in set1) {isMember x set2};
+isSubset {A} {{Ord A}} (set1 set2 : AVLTree A) : Bool :=
+  all (x in set1) {
+    isMember x set2
+  };
 
 syntax iterator map {init := 0; range := 1};
 map {A B} {{Ord B}} (fun : A -> B) (set : AVLTree A) : AVLTree B :=
-  for (acc := empty) (x in set) {insert (fun x) acc};
+  for (acc := empty) (x in set) {
+    insert (fun x) acc
+  };
 
 --- Formats the set in a debug friendly format.
 prettyDebug {A} {{Show A}} (set : AVLTree A) : String :=

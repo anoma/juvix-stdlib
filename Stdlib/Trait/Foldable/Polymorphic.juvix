@@ -24,7 +24,10 @@ foldl
   (fun : Acc -> Elem -> Acc)
   (initialValue : Acc)
   (container : F Elem)
-  : Acc := for (acc := initialValue) (x in container) {fun acc x};
+  : Acc :=
+  for (acc := initialValue) (x in container) {
+    fun acc x
+  };
 
 --- Combine the elements of the type using the provided function starting with the element in the right-most position.
 {-# inline: true #-}
@@ -35,4 +38,7 @@ foldr
   (fun : Elem -> Acc -> Acc)
   (initialValue : Acc)
   (container : F Elem)
-  : Acc := rfor (acc := initialValue) (x in container) {fun x acc};
+  : Acc :=
+  rfor (acc := initialValue) (x in container) {
+    fun x acc
+  };

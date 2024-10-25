@@ -11,7 +11,7 @@ arbitrarySizedList {A} (size : Nat) (arbitraryA : Arbitrary A) : Arbitrary (List
     mkArbitrary g :=
       mkArbitrary
         (mkGen
-          \ {rand :=
+          \{rand :=
             let
               randList : StdGen -> Nat -> List A
                 | _ zero := nil
@@ -27,7 +27,7 @@ arbitrarySizedList {A} (size : Nat) (arbitraryA : Arbitrary A) : Arbitrary (List
 arbitraryMatrix {A} {{arbA : Arbitrary A}} : Arbitrary (List (List A)) :=
   mkArbitrary
     (mkGen
-      \ {rand :=
+      \{rand :=
         let
           randSplit : Pair StdGen StdGen := stdSplit rand;
           rand1 : StdGen := fst randSplit;

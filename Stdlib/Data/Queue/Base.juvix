@@ -66,7 +66,9 @@ push {A} (x : A) (queue : Queue A) : Queue A :=
 
 --- 𝒪(n). Adds a list of elements to the end of the ;Queue;.
 pushMany {A} (list : List A) (queue : Queue A) : Queue A :=
-  for (acc := queue) (x in list) {push x acc};
+  for (acc := queue) (x in list) {
+    push x acc
+  };
 
 --- 𝒪(n). Build a ;Queue; from a ;List;.
 fromList {A} (list : List A) : Queue A := pushMany list empty;

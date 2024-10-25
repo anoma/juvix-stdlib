@@ -68,11 +68,17 @@ filter {A} (predicate : A -> Bool) : (list : List A) -> List A
       | else := filter predicate hs;
 
 --- 𝒪(𝓃). Returns the length of the ;List;.
-length {A} (list : List A) : Nat := listFor (acc := zero) (_ in list) {suc acc};
+length {A} (list : List A) : Nat :=
+  listFor (acc := zero) (_ in list) {
+    suc acc
+  };
 
 --- 𝒪(𝓃). Returns the given ;List; in reverse order.
 {-# isabelle-function: {name: "rev"} #-}
-reverse {A} (list : List A) : List A := listFor (acc := nil) (x in list) {x :: acc};
+reverse {A} (list : List A) : List A :=
+  listFor (acc := nil) (x in list) {
+    x :: acc
+  };
 
 --- Returns a ;List; of length resultLength where every element is the given value.
 replicate {A} : (resultLength : Nat) -> (value : A) -> List A
@@ -225,7 +231,7 @@ quickSort {A} {{Ord A}} (list : List A) : List A :=
     go : List A -> List A
       | nil := nil
       | xs@(_ :: nil) := xs
-      | (x :: xs) := case partition \ {y := y < x} xs of l1, l2 := go l1 ++ x :: go l2;
+      | (x :: xs) := case partition \{y := y < x} xs of l1, l2 := go l1 ++ x :: go l2;
   in go list;
 
 --- 𝒪(𝓃) Filters out every ;nothing; from a ;List;.
@@ -243,5 +249,5 @@ concatMap {A B} (fun : A -> List B) (list : List A) : List B := flatten (listMap
 --- 𝒪(𝓃 * 𝓂). Transposes a ;List; of ;List;s interpreted as a matrix.
 transpose {A} : (listOfLists : List (List A)) -> List (List A)
   | nil := nil
-  | (xs :: nil) := listMap λ {x := x :: nil} xs
+  | (xs :: nil) := listMap λ{x := x :: nil} xs
   | (xs :: xss) := zipWith (::) xs (transpose xss);

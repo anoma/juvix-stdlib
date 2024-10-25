@@ -104,10 +104,14 @@ tests : List Test :=
     (assertEqual "map (+ 1) s2" [1; 2; 3; 4; 5; 9] (AVL.map ((+) 1) s2Tree |> AVL.toList))
   ; testCase "for ascending iteration"
     <| assertEqual "for iterates in ascending order" [1; 2; 3; 4]
-    <| for (acc := []) (k in fromList [3; 2; 4; 1]) {snoc acc k}
+    <| for (acc := []) (k in fromList [3; 2; 4; 1]) {
+      snoc acc k
+    }
   ; testCase "rfor ascending iteration"
     <| assertEqual "rfor iterates in descending order" [4; 3; 2; 1]
-    <| rfor (acc := []) (k in fromList [3; 2; 4; 1]) {snoc acc k}
+    <| rfor (acc := []) (k in fromList [3; 2; 4; 1]) {
+      snoc acc k
+    }
   ]
     ++ concatMap mkTests [s1; s2; s3; s4; s2Delete];
 

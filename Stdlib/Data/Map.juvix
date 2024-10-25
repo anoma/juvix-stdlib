@@ -81,7 +81,10 @@ fromListWithKey
   {{Ord Key}}
   (fun : Key -> Value -> Value -> Value)
   (list : List (Pair Key Value))
-  : Map Key Value := for (acc := empty) (k, v in list) {insertWith (fun k) k v acc};
+  : Map Key Value :=
+  for (acc := empty) (k, v in list) {
+    insertWith (fun k) k v acc
+  };
 
 {-# inline: true #-}
 fromListWith
@@ -96,11 +99,17 @@ fromList {Key Value} {{Ord Key}} (list : List (Pair Key Value)) : Map Key Value 
   fromListWith (flip const) list;
 
 toList {Key Value} (map : Map Key Value) : List (Pair Key Value) :=
-  case map of mkMap s := fmap (x in Set.toList s) {toPair x};
+  case map of
+    mkMap s :=
+      fmap (x in Set.toList s) {
+        toPair x
+      };
 
 {-# specialize: [1, f] #-}
 fromSet {Key Value} {{Ord Key}} (fun : Key -> Value) (set : Set Key) : Map Key Value :=
-  for (acc := empty) (k in set) {insert k (fun k) acc};
+  for (acc := empty) (k in set) {
+    insert k (fun k) acc
+  };
 
 --- 𝒪(1). Checks if a ;Map; is empty.
 {-# inline: true #-}
@@ -116,16 +125,32 @@ delete {Key Value} {{Ord Key}} (key : Key) (map : Map Key Value) : Map Key Value
   case map of mkMap s := mkMap (Set.deleteWith Binding.key key s);
 
 keys {Key Value} (map : Map Key Value) : List Key :=
-  case map of mkMap s := fmap (x in Set.toList s) {key x};
+  case map of
+    mkMap s :=
+      fmap (x in Set.toList s) {
+        key x
+      };
 
 values {Key Value} (map : Map Key Value) : List Value :=
-  case map of mkMap s := fmap (x in Set.toList s) {value x};
+  case map of
+    mkMap s :=
+      fmap (x in Set.toList s) {
+        value x
+      };
 
 keySet {Key Value} {{Ord Key}} (map : Map Key Value) : Set Key :=
-  case map of mkMap s := Set.map (x in s) {key x};
+  case map of
+    mkMap s :=
+      Set.map (x in s) {
+        key x
+      };
 
 valueSet {Key Value} {{Ord Value}} (map : Map Key Value) : Set Value :=
-  case map of mkMap s := Set.map (x in s) {value x};
+  case map of
+    mkMap s :=
+      Set.map (x in s) {
+        value x
+      };
 
 {-# specialize: [f] #-}
 mapValuesWithKey
@@ -143,23 +168,39 @@ singleton {Key Value} {{Ord Key}} (key : Key) (value : Value) : Map Key Value :=
 
 {-# inline: true #-}
 foldr {Key Value Acc} (fun : Key -> Value -> Acc -> Acc) (acc : Acc) (map : Map Key Value) : Acc :=
-  case map of mkMap s := rfor (acc := acc) (x in s) {fun (key x) (value x) acc};
+  case map of
+    mkMap s :=
+      rfor (acc := acc) (x in s) {
+        fun (key x) (value x) acc
+      };
 
 {-# inline: true #-}
 foldl {Key Value Acc} (fun : Acc -> Key -> Value -> Acc) (acc : Acc) (map : Map Key Value) : Acc :=
-  case map of mkMap s := for (acc := acc) (x in s) {fun acc (key x) (value x)};
+  case map of
+    mkMap s :=
+      for (acc := acc) (x in s) {
+        fun acc (key x) (value x)
+      };
 
 syntax iterator all {init := 0; range := 1};
 --- 𝒪(𝓃). Returns ;true; if all key-value pairs in `map` satisfy `predicate`.
 {-# inline: true #-}
 all {Key Value} (predicate : Key -> Value -> Bool) (map : Map Key Value) : Bool :=
-  case map of mkMap s := Set.all (x in s) {predicate (key x) (value x)};
+  case map of
+    mkMap s :=
+      Set.all (x in s) {
+        predicate (key x) (value x)
+      };
 
 syntax iterator any {init := 0; range := 1};
 --- 𝒪(𝓃). Returns ;true; if some key-value pair in `map` satisfies `predicate`.
 {-# inline: true #-}
 any {Key Value} (predicate : Key -> Value -> Bool) (map : Map Key Value) : Bool :=
-  case map of mkMap s := Set.any (x in s) {predicate (key x) (value x)};
+  case map of
+    mkMap s :=
+      Set.any (x in s) {
+        predicate (key x) (value x)
+      };
 
 syntax iterator filter {init := 0; range := 1};
 --- 𝒪(n log n). Returns a ;Map; containing all key-value pairs of `map` that
@@ -171,7 +212,12 @@ filter
   (predicate : Key -> Value -> Bool)
   (map : Map Key Value)
   : Map Key Value :=
-  case map of mkMap s := mkMap (Set.filter (x in s) {predicate (key x) (value x)});
+  case map of
+    mkMap s :=
+      mkMap
+        (Set.filter (x in s) {
+          predicate (key x) (value x)
+        });
 
 syntax iterator partition {init := 0; range := 1};
 {-# inline: true #-}
@@ -183,8 +229,11 @@ partition
   : Pair (Map Key Value) (Map Key Value) :=
   case map of
     mkMap s :=
-      case Set.partition (x in s) {predicate (key x) (value x)} of
-        left, right := mkMap left, mkMap right;
+      case
+        Set.partition (x in s) {
+          predicate (key x) (value x)
+        }
+      of left, right := mkMap left, mkMap right;
 
 {-# specialize: true, inline: case #-}
 instance

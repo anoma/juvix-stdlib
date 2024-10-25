@@ -73,7 +73,7 @@ propZipWith (f : Int -> Int -> Int) (xs ys : List Int) : Bool :=
     expectedLen : Nat := min (length xs) (length ys);
   in length zs == expectedLen
     && eqListInt zs zsFlip
-    && eqListInt (map λ {x := f x x} xs) (zipWith f xs xs);
+    && eqListInt (map λ{x := f x x} xs) (zipWith f xs xs);
 
 propSnoc (xs : List Int) (x : Int) : Bool :=
   let
@@ -110,7 +110,10 @@ propFoundElementSatisfiesPredicate (p : Int -> Bool) (xs : List Int) : Bool :=
 propNonExistenceImpliesPredicateFalseForAll (p : Int -> Bool) (xs : List Int) : Bool :=
   case find p xs of
     | just _ := true
-    | nothing := all (x in xs) not (p x);
+    | nothing :=
+      all (x in xs) {
+        not (p x)
+      };
 
 propFindConsistentWithSplitAt (n : Nat) (p : Int -> Bool) (xs : List Int) : Bool :=
   let
@@ -280,7 +283,7 @@ resultMapOk : QC.Test := QC.mkTest "result: mapOk" propResultMapOk;
 
 main : IO :=
   readLn
-      \ {seed :=
+      \{seed :=
         let
           seedNat := stringToNat seed;
         in QC.runTestsIO

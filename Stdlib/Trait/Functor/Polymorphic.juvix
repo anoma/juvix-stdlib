@@ -20,7 +20,7 @@ syntax operator <$> lapp;
 
 syntax operator $> lapp;
 {-# inline: true #-}
-$> {F : Type → Type} {A B : Type} {{Functor F}} (fa : F A) (b : B) : F B := λ {_ := b} <$> fa;
+$> {F : Type → Type} {A B : Type} {{Functor F}} (fa : F A) (b : B) : F B := λ{_ := b} <$> fa;
 
 {-# inline: true #-}
 void {F : Type → Type} {A : Type} {{Functor F}} (fa : F A) : F Unit := fa $> unit;
