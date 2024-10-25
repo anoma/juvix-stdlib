@@ -26,16 +26,16 @@ handleResult
 --- Apply a function f to the ;error; value of a Result.
 mapError
   {Value Error1 Error2}
-  (f : Error1 -> Error2)
+  (fun : Error1 -> Error2)
   (result : Result Error1 Value)
-  : Result Error2 Value := handleResult (f >> error) ok result;
+  : Result Error2 Value := handleResult (fun >> error) ok result;
 
 --- Apply a function f to the ;ok; value of a Result.
 mapOk
   {Error Value1 Value2}
-  (f : Value1 -> Value2)
+  (fun : Value1 -> Value2)
   (result : Result Error Value1)
-  : Result Error Value2 := handleResult error (f >> ok) result;
+  : Result Error Value2 := handleResult error (fun >> ok) result;
 
 --- Return ;true; if the value is an ;error;, otherwise ;false;.
 isError {Error Value} (result : Result Error Value) : Bool :=

@@ -31,14 +31,14 @@ type AVLTree (A : Type) :=
       right : AVLTree A
     };
 
---- 𝒪(1) Retrieves the height of an ;AVLTree;. The height is the distance from
---- the root to the deepest child.
-height {A} (set : AVLTree A) : Nat :=
-  case set of
-    | empty := 0
-    | node@{height} := height;
-
 module Internal;
+  --- 𝒪(1) Retrieves the height of an ;AVLTree;. The height is the distance from
+  --- the root to the deepest child.
+  height {A} (set : AVLTree A) : Nat :=
+    case set of
+      | empty := 0
+      | node@{height} := height;
+
   --- 𝒪(n). Maps a function over an ;AVLTree;. Does not check if
   --- after mapping the order of the elements is preserved. It is the
   --- responsibility of the caller to ensure that `f` preserves the ordering.
@@ -234,7 +234,8 @@ lookupMax {A} : (set : AVLTree A) -> Maybe A
 
 --- 𝒪(𝒹 log 𝓃). Deletes elements from `set`.
 {-# specialize: [1] #-}
-deleteMany {A} {{Ord A}} (toDelete : List A) (set : AVLTree A) : AVLTree A := deleteManyWith id toDelete set;
+deleteMany {A} {{Ord A}} (toDelete : List A) (set : AVLTree A) : AVLTree A :=
+  deleteManyWith id toDelete set;
 
 --- 𝒪(𝒹 log 𝓃). Deletes elements from `set` based on a projected comparison value.
 ---

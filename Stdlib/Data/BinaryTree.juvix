@@ -19,6 +19,6 @@ fold {A B} (f : A -> B -> B -> B) (acc : B) (tree : BinaryTree A) : B :=
       | (node l a r) := f a (go acc l) (go acc r);
   in go acc tree;
 
-length {A} (tree : BinaryTree A) : Nat := fold \ {_ l r := 1 + l + r} 0 tree;
+length {A} (tree : BinaryTree A) : Nat := fold \{_ l r := 1 + l + r} 0 tree;
 
-toList {A} (tree : BinaryTree A) : List A := fold \ {e ls rs := e :: ls ++ rs} nil tree;
+toList {A} (tree : BinaryTree A) : List A := fold \{e ls rs := e :: ls ++ rs} nil tree;

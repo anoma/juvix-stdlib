@@ -46,7 +46,7 @@ length {A} (set : UnbalancedSet A) : Nat := Tree.length (UnbalancedSet.tree set)
 toList {A} (set : UnbalancedSet A) : List A := Tree.toList (UnbalancedSet.tree set);
 
 instance
-unbalancedSetOrdI {A} {{Ord A}} : Ord (UnbalancedSet A) :=
+ordUnbalancedSetI {A} {{Ord A}} : Ord (UnbalancedSet A) :=
   mkOrd@{
     cmp (s1 s2 : UnbalancedSet A) : Ordering := Ord.cmp (toList s1) (toList s2)
   };

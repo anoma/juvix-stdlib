@@ -9,7 +9,7 @@ import Stdlib.Data.Set.AVL as AVL open;
 type Box := mkBox@{b : Nat};
 
 instance
-BoxOrdI : Ord Box := mkOrd (Ord.cmp on Box.b);
+ordBoxI : Ord Box := mkOrd (Ord.cmp on Box.b);
 
 --- Test for size and balance.
 mkTests {A} (descr : TestDescr A) : List Test :=
