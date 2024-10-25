@@ -9,7 +9,7 @@ import Stdlib.Data.Set.AVL as AVL open;
 type Box := mkBox@{b : Nat};
 
 instance
-BoxOrdI : Ord Box := mkOrd (Ord.cmp on Box.b);
+ordBoxI : Ord Box := mkOrd (Ord.cmp on Box.b);
 
 --- Test for size and balance.
 mkTests {A} (descr : TestDescr A) : List Test :=
@@ -21,7 +21,7 @@ mkTests {A} (descr : TestDescr A) : List Test :=
         sizeMsg : String := "sizes do not match";
         balanceMsg : String := "not balanced";
       in [ testCase (mkTitle "size") (assertEqual sizeMsg (size testSet) testLen)
-         ; testCase (mkTitle "balanced") (assertTrue balanceMsg (isBalanced testSet))
+         ; testCase (mkTitle "balanced") (assertTrue balanceMsg (Internal.isBalanced testSet))
          ];
 
 type TestDescr (A : Type) :=
@@ -104,10 +104,14 @@ tests : List Test :=
     (assertEqual "map (+ 1) s2" [1; 2; 3; 4; 5; 9] (AVL.map ((+) 1) s2Tree |> AVL.toList))
   ; testCase "for ascending iteration"
     <| assertEqual "for iterates in ascending order" [1; 2; 3; 4]
-    <| for (acc := []) (k in fromList [3; 2; 4; 1]) {snoc acc k}
+    <| for (acc := []) (k in fromList [3; 2; 4; 1]) {
+      snoc acc k
+    }
   ; testCase "rfor ascending iteration"
     <| assertEqual "rfor iterates in descending order" [4; 3; 2; 1]
-    <| rfor (acc := []) (k in fromList [3; 2; 4; 1]) {snoc acc k}
+    <| rfor (acc := []) (k in fromList [3; 2; 4; 1]) {
+      snoc acc k
+    }
   ]
     ++ concatMap mkTests [s1; s2; s3; s4; s2Delete];
 

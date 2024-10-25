@@ -37,4 +37,4 @@ $>
   {{Functor Container Elem}}
   (container : Container)
   (element : Elem)
-  : Container := \ {_ := element} <$> container;
+  : Container := \{_ := element} <$> container;

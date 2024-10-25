@@ -9,7 +9,7 @@ import Stdlib.Trait.Show open;
 
 {-# specialize: true, inline: case #-}
 instance
-boolEqI : Eq Bool :=
+eqBoolI : Eq Bool :=
   mkEq@{
     eq (x y : Bool) : Bool :=
       case x, y of
@@ -20,7 +20,7 @@ boolEqI : Eq Bool :=
 
 {-# specialize: true, inline: case #-}
 instance
-boolOrdI : Ord Bool :=
+ordBoolI : Ord Bool :=
   mkOrd@{
     cmp (x y : Bool) : Ordering :=
       case x, y of

@@ -68,11 +68,17 @@ filter {A} (predicate : A -> Bool) : (list : List A) -> List A
       | else := filter predicate hs;
 
 --- 𝒪(𝓃). Returns the length of the ;List;.
-length {A} (l : List A) : Nat := listFor (acc := zero) (_ in l) {suc acc};
+length {A} (list : List A) : Nat :=
+  listFor (acc := zero) (_ in list) {
+    suc acc
+  };
 
 --- 𝒪(𝓃). Returns the given ;List; in reverse order.
 {-# isabelle-function: {name: "rev"} #-}
-reverse {A} (l : List A) : List A := listFor (acc := nil) (x in l) {x :: acc};
+reverse {A} (list : List A) : List A :=
+  listFor (acc := nil) (x in list) {
+    x :: acc
+  };
 
 --- Returns a ;List; of length resultLength where every element is the given value.
 replicate {A} : (resultLength : Nat) -> (value : A) -> List A
@@ -188,13 +194,13 @@ isEmpty {A} (list : List A) : Bool :=
 --- 𝒪(min(𝓂, 𝓃)). Returns a list containing the results of applying a function
 --- to each pair of elements from the input lists.
 {-# specialize: [1] #-}
-zipWith {A B C} (fun : A -> B -> C) : (listA : List A) -> (listB : List B) -> List C
+zipWith {A B C} (fun : A -> B -> C) : (list1 : List A) -> (list2 : List B) -> List C
   | nil _ := nil
   | _ nil := nil
   | (x :: xs) (y :: ys) := fun x y :: zipWith fun xs ys;
 
 --- 𝒪(min(𝓂, 𝓃)). Returns a list of pairs formed from the input lists.
-zip {A B} : (listA : List A) -> (listB : List B) -> List (Pair A B)
+zip {A B} : (list1 : List A) -> (list2 : List B) -> List (Pair A B)
   | nil _ := nil
   | _ nil := nil
   | (x :: xs) (y :: ys) := (x, y) :: zip xs ys;
@@ -225,7 +231,7 @@ quickSort {A} {{Ord A}} (list : List A) : List A :=
     go : List A -> List A
       | nil := nil
       | xs@(_ :: nil) := xs
-      | (x :: xs) := case partition \ {y := y < x} xs of l1, l2 := go l1 ++ x :: go l2;
+      | (x :: xs) := case partition \{y := y < x} xs of l1, l2 := go l1 ++ x :: go l2;
   in go list;
 
 --- 𝒪(𝓃) Filters out every ;nothing; from a ;List;.
@@ -243,5 +249,5 @@ concatMap {A B} (fun : A -> List B) (list : List A) : List B := flatten (listMap
 --- 𝒪(𝓃 * 𝓂). Transposes a ;List; of ;List;s interpreted as a matrix.
 transpose {A} : (listOfLists : List (List A)) -> List (List A)
   | nil := nil
-  | (xs :: nil) := listMap λ {x := x :: nil} xs
+  | (xs :: nil) := listMap λ{x := x :: nil} xs
   | (xs :: xss) := zipWith (::) xs (transpose xss);

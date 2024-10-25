@@ -62,28 +62,28 @@ tests : List Test :=
      ; testCase "Map.isMember" (assertEqual "expected non-member" (Map.isMember 3 m) false)
      ; testCase
        "Map.filter"
-       (assertEqListPair (Map.toList (Map.filter \ {k v := k + v > 3} m2)) [3, 4])
+       (assertEqListPair (Map.toList (Map.filter \{k v := k + v > 3} m2)) [3, 4])
      ; testCase
        "Map.partition"
        (assertEqual
          "expected partition"
          ([1, 2], [3, 4])
-         (Map.partition \ {k v := k < 3} m2 |> both Map.toList))
+         (Map.partition \{k v := k < 3} m2 |> both Map.toList))
      ; testCase
        "Map.mapValuesWithKey"
-       (assertEqListPair (Map.toList (Map.mapValuesWithKey \ {k v := k + v} m2)) [1, 3; 3, 7])
+       (assertEqListPair (Map.toList (Map.mapValuesWithKey \{k v := k + v} m2)) [1, 3; 3, 7])
      ; testCase
        "Map.mapValues"
        (assertEqListPair (Map.toList (Map.mapValues ((+) 1) m2)) [1, 3; 3, 5])
      ; testCase "Map.map" (assertEqListPair (Map.toList (map ((+) 1) m2)) [1, 3; 3, 5])
-     ; testCase "Map.all" (assertTrue "expected all to be true" (Map.all \ {_ v := v > 0} m2))
-     ; testCase "Map.any" (assertTrue "expected any to be true" (Map.any \ {_ v := v > 3} m2))
+     ; testCase "Map.all" (assertTrue "expected all to be true" (Map.all \{_ v := v > 0} m2))
+     ; testCase "Map.any" (assertTrue "expected any to be true" (Map.any \{_ v := v > 3} m2))
      ; testCase
        "Map.foldl"
-       (assertEqual "expected foldl" (Map.foldl \ {acc k v := acc + k + v} 0 m2) 10)
+       (assertEqual "expected foldl" (Map.foldl \{acc k v := acc + k + v} 0 m2) 10)
      ; testCase
        "Map.foldr"
-       (assertEqual "expected foldr" (Map.foldr \ {acc k v := acc + k + v} 0 m2) 10)
+       (assertEqual "expected foldr" (Map.foldr \{acc k v := acc + k + v} 0 m2) 10)
      ; testCase "Map.singleton" (assertEqListPair (Map.toList (Map.singleton 1 2)) [1, 2])
      ];
 

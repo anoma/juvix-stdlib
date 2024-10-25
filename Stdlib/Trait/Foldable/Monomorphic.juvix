@@ -35,7 +35,10 @@ foldl
   (fun : Acc -> Elem -> Acc)
   (initialValue : Acc)
   (container : Container)
-  : Acc := for (acc := initialValue) (x in container) {fun acc x};
+  : Acc :=
+  for (acc := initialValue) (x in container) {
+    fun acc x
+  };
 
 --- Combine the elements of the type using the provided function starting with the element in the right-most position.
 {-# inline: 2 #-}
