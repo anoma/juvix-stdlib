@@ -15,19 +15,28 @@ type Applicative (F : Type -> Type) :=
   mkApplicative@{
     {{functor}} : Functor F;
     pure : {A : Type} -> A -> F A;
-    ap : {A B : Type} -> F (A -> B) -> F A -> F B
+    ap : {A B : Type} -> F (A -> B) -> F A -> F B;
   };
 
 open Applicative public;
 
 --- Sequences computations.
 --- Note that this function will be renamed to >>> once IO becomses a polymorphic type and can be given an Applicative instance.
-applicativeSeq {F : Type -> Type} {{Applicative F}} {A B : Type} (fa : F A) (fb : F B) : F B :=
-  ap (map λ{_ b := b} fa) fb;
+applicativeSeq
+  {F : Type -> Type}
+  {{Applicative F}}
+  {A B : Type}
+  (fa : F A)
+  (fb : F B)
+  : F B := ap (map λ{_ b := b} fa) fb;
 
 --- lifts a binary function to ;Applicative;
-liftA2 {F : Type -> Type} {{Applicative F}} {A B C} (fun : A -> B -> C) : F A -> F B -> F C :=
-  map fun >> ap;
+liftA2
+  {F : Type -> Type}
+  {{Applicative F}}
+  {A B C}
+  (fun : A -> B -> C)
+  : F A -> F B -> F C := map fun >> ap;
 
 syntax iterator mapA_ {init := 0; range := 1};
 mapA_

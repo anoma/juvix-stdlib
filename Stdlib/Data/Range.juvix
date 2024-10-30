@@ -12,13 +12,13 @@ import Stdlib.Data.Nat open;
 type Range N :=
   mkRange@{
     low : N;
-    high : N
+    high : N;
   };
 
 type StepRange N :=
   mkStepRange@{
     range : Range N;
-    step : N
+    step : N;
   };
 
 syntax operator to range;
@@ -59,7 +59,7 @@ foldableRangeI {N} {{Eq N}} {{Natural N}} : Foldable (Range N) N :=
             if
               | next == high := fun initialValue next
               | else := fun (go (next + 1)) next;
-        in go low
+        in go low;
   };
 
 -- This instance assumes that (low + step*k > high) for some k.
@@ -88,5 +88,5 @@ foldableStepRangeI {N} {{Ord N}} {{Natural N}} : Foldable (StepRange N) N :=
             if
               | next <= high := fun (go (next + step)) next
               | else := initialValue;
-        in go low
+        in go low;
   };

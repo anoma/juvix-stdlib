@@ -20,15 +20,20 @@ mkTests {A} (descr : TestDescr A) : List Test :=
           | m := testTitle ++str " " ++str m;
         sizeMsg : String := "sizes do not match";
         balanceMsg : String := "not balanced";
-      in [ testCase (mkTitle "size") (assertEqual sizeMsg (size testSet) testLen)
-         ; testCase (mkTitle "balanced") (assertTrue balanceMsg (Internal.isBalanced testSet))
+      in [
+           testCase
+             (mkTitle "size")
+             (assertEqual sizeMsg (size testSet) testLen);
+           testCase
+             (mkTitle "balanced")
+             (assertTrue balanceMsg (Internal.isBalanced testSet));
          ];
 
 type TestDescr (A : Type) :=
   mkTestDescr@{
     testTitle : String;
     testLen : Nat;
-    testSet : AVLTree A
+    testSet : AVLTree A;
   };
 
 s1Tree : AVLTree Nat := fromList [1; 2; 8; 3; 3; 2; 9];
@@ -43,79 +48,110 @@ s2Delete : TestDescr Nat :=
   mkTestDescr@{
     testTitle := TestDescr.testTitle s2 ++str "-delete";
     testLen := sub (TestDescr.testLen s2) 2;
-    testSet := deleteMany [1; 8] (TestDescr.testSet s2)
+    testSet := deleteMany [1; 8] (TestDescr.testSet s2);
   };
 
 s2DeleteWith : TestDescr Box :=
   mkTestDescr@{
     testTitle := TestDescr.testTitle s2 ++str "-delete-with";
     testLen := sub (TestDescr.testLen s2) 2;
-    testSet := deleteManyWith Box.b [1; 8] (TestDescr.testSet s2 |> AVL.map mkBox)
+    testSet :=
+      deleteManyWith Box.b [1; 8] (TestDescr.testSet s2 |> AVL.map mkBox);
   };
 
 s3 : TestDescr Nat :=
   mkTestDescr@{
     testTitle := "s3";
     testLen := 6;
-    testSet := fromList [5; 4; 3; 2; 1; 0]
+    testSet := fromList [5; 4; 3; 2; 1; 0];
   };
 
 s4 : TestDescr Nat :=
   mkTestDescr@{
     testTitle := "s4";
     testLen := 5;
-    testSet := fromList [1; 2; 3; 4; 5]
+    testSet := fromList [1; 2; 3; 4; 5];
   };
 
 tests : List Test :=
-  [ testCase "s1-member" (assertTrue "isMember 3 s1" (AVL.isMember 3 s1Tree))
-  ; testCase
-    "s1-s2-intersection"
-    (assertEqual "intersection s1Tree s2Tree" (intersection s1Tree s2Tree) (fromList [1; 2; 3; 8]))
-  ; testCase
-    "s1-s2-difference"
-    (assertEqual "difference s1Tree s2Tree" (difference s1Tree s2Tree) (fromList [9]))
-  ; testCase
-    "s1-s2-union"
-    (assertEqual "union s1Tree s2Tree" (union s1Tree s2Tree) (fromList [0; 1; 2; 3; 4; 8; 9]))
-  ; testCase
-    "s2-filter"
-    (assertEqual "filter (> 3) s2" [0; 1; 2] (AVL.filter ((>) 3) s2Tree |> AVL.toList))
-  ; testCase "s2-all" (assertTrue "all (> 9) s2" (AVL.all ((>) 9) s2Tree))
-  ; testCase "s2-any" (assertTrue "any (< 3) s2" (AVL.any ((<) 3) s2Tree))
-  ; testCase
-    "s2-partition"
-    (assertEqual
-      "partition (< 3) s2"
-      ([0; 1; 2], [3; 4; 8])
-      (AVL.partition ((>) 3) s2Tree |> both AVL.toList))
-  ; testCase "s2-lookup" (assertJust "lookup 4 s2" (lookup 4 s2Tree))
-  ; testCase "s2-lookup" (assertNothing (const "lookup 5 s2") (lookup 5 s2Tree))
-  ; testCase "s2-lookup" (assertNothing (const "lookup 6 s2") (lookup 6 s2Tree))
-  ; testCase "s1-s2-not-isSubset" (assertFalse "isSubset s1 s2" (isSubset s1Tree s2Tree))
-  ; testCase "s2-s1-not-isSubset" (assertFalse "isSubset s2 s1" (isSubset s2Tree s1Tree))
-  ; testCase
-    "singleton-s2-isSubset"
-    (assertTrue "isSubset (singleton 1) s2" (isSubset (singleton 1) s2Tree))
-  ; testCase "s2-foldr" (assertEqual "foldr (+) 0 s2" 18 (AVL.foldr (+) 0 s2Tree))
-  ; testCase "s2-foldl" (assertEqual "foldl (+) 0 s2" 18 (AVL.foldl (+) 0 s2Tree))
-  ; testCase
-    "s2-map"
-    (assertEqual "map (+ 1) s2" [1; 2; 3; 4; 5; 9] (AVL.map ((+) 1) s2Tree |> AVL.toList))
-  ; testCase "for ascending iteration"
-    <| assertEqual "for iterates in ascending order" [1; 2; 3; 4]
-    <| for (acc := []) (k in fromList [3; 2; 4; 1]) {
-      snoc acc k
-    }
-  ; testCase "rfor ascending iteration"
-    <| assertEqual "rfor iterates in descending order" [4; 3; 2; 1]
-    <| rfor (acc := []) (k in fromList [3; 2; 4; 1]) {
-      snoc acc k
-    }
+  [
+    testCase "s1-member" (assertTrue "isMember 3 s1" (AVL.isMember 3 s1Tree));
+    testCase
+      "s1-s2-intersection"
+      (assertEqual
+        "intersection s1Tree s2Tree"
+        (intersection s1Tree s2Tree)
+        (fromList [1; 2; 3; 8]));
+    testCase
+      "s1-s2-difference"
+      (assertEqual
+        "difference s1Tree s2Tree"
+        (difference s1Tree s2Tree)
+        (fromList [9]));
+    testCase
+      "s1-s2-union"
+      (assertEqual
+        "union s1Tree s2Tree"
+        (union s1Tree s2Tree)
+        (fromList [0; 1; 2; 3; 4; 8; 9]));
+    testCase
+      "s2-filter"
+      (assertEqual
+        "filter (> 3) s2"
+        [0; 1; 2]
+        (AVL.filter ((>) 3) s2Tree |> AVL.toList));
+    testCase "s2-all" (assertTrue "all (> 9) s2" (AVL.all ((>) 9) s2Tree));
+    testCase "s2-any" (assertTrue "any (< 3) s2" (AVL.any ((<) 3) s2Tree));
+    testCase
+      "s2-partition"
+      (assertEqual
+        "partition (< 3) s2"
+        ([0; 1; 2], [3; 4; 8])
+        (AVL.partition ((>) 3) s2Tree |> both AVL.toList));
+    testCase "s2-lookup" (assertJust "lookup 4 s2" (lookup 4 s2Tree));
+    testCase
+      "s2-lookup"
+      (assertNothing (const "lookup 5 s2") (lookup 5 s2Tree));
+    testCase
+      "s2-lookup"
+      (assertNothing (const "lookup 6 s2") (lookup 6 s2Tree));
+    testCase
+      "s1-s2-not-isSubset"
+      (assertFalse "isSubset s1 s2" (isSubset s1Tree s2Tree));
+    testCase
+      "s2-s1-not-isSubset"
+      (assertFalse "isSubset s2 s1" (isSubset s2Tree s1Tree));
+    testCase
+      "singleton-s2-isSubset"
+      (assertTrue "isSubset (singleton 1) s2" (isSubset (singleton 1) s2Tree));
+    testCase
+      "s2-foldr"
+      (assertEqual "foldr (+) 0 s2" 18 (AVL.foldr (+) 0 s2Tree));
+    testCase
+      "s2-foldl"
+      (assertEqual "foldl (+) 0 s2" 18 (AVL.foldl (+) 0 s2Tree));
+    testCase
+      "s2-map"
+      (assertEqual
+        "map (+ 1) s2"
+        [1; 2; 3; 4; 5; 9]
+        (AVL.map ((+) 1) s2Tree |> AVL.toList));
+    testCase "for ascending iteration"
+      <| assertEqual "for iterates in ascending order" [1; 2; 3; 4]
+      <| for (acc := []) (k in fromList [3; 2; 4; 1]) {
+        snoc acc k
+      };
+    testCase "rfor ascending iteration"
+      <| assertEqual "rfor iterates in descending order" [4; 3; 2; 1]
+      <| rfor (acc := []) (k in fromList [3; 2; 4; 1]) {
+        snoc acc k
+      };
   ]
     ++ concatMap mkTests [s1; s2; s3; s4; s2Delete];
 
 suite : TestSuite := testSuite "AVL Set" tests;
 
 main : IO :=
-  printStringLn (pretty s1Tree) >>> printStringLn (prettyDebug s1Tree) >>> runTestSuite suite;
+  printStringLn (pretty s1Tree)
+    >>> printStringLn (prettyDebug s1Tree)
+    >>> runTestSuite suite;

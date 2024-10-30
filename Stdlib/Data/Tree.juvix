@@ -13,7 +13,7 @@ Forest (A : Type) : Type := List (Tree A);
 type Tree (A : Type) :=
   node@{
     element : A;
-    children : List (Tree A)
+    children : List (Tree A);
   };
 
 terminating
@@ -32,4 +32,5 @@ drawForest {A} {{Show A}} (forest : Forest A) : List String :=
 
 treeToString {A} {{Show A}} (tree : Tree A) : String := unlines (draw tree);
 
-forestToString {A} {{Show A}} (forest : Forest A) : String := unlines (drawForest forest);
+forestToString {A} {{Show A}} (forest : Forest A) : String :=
+  unlines (drawForest forest);

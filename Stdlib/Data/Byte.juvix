@@ -17,12 +17,12 @@ eqByteI : Eq Byte := mkEq (Byte.==);
 instance
 showByteI : Show Byte :=
   mkShow@{
-    show (x : Byte) : String := Show.show (Byte.toNat x)
+    show (x : Byte) : String := Show.show (Byte.toNat x);
   };
 
 {-# specialize: true, inline: case #-}
 instance
 fromNaturalByteI : FromNatural Byte :=
   mkFromNatural@{
-    fromNat := Byte.fromNat
+    fromNat := Byte.fromNat;
   };

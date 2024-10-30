@@ -6,7 +6,8 @@ import Test.QuickCheck.Arbitrary open;
 import Test.QuickCheck.Gen open;
 import Data.Random open;
 
-arbitrarySizedList {A} (size : Nat) (arbitraryA : Arbitrary A) : Arbitrary (List A) :=
+arbitrarySizedList
+  {A} (size : Nat) (arbitraryA : Arbitrary A) : Arbitrary (List A) :=
   case arbitraryA of
     mkArbitrary g :=
       mkArbitrary

@@ -37,7 +37,7 @@ showIntI : Show Int := mkShow intToString;
 instance
 fromNaturalIntI : FromNatural Int :=
   mkFromNatural@{
-    fromNat := ofNat
+    fromNat := ofNat;
   };
 
 {-# specialize: true, inline: case #-}
@@ -45,7 +45,7 @@ instance
 naturalIntI : Natural Int :=
   mkNatural@{
     + := (Int.+);
-    * := (Int.*)
+    * := (Int.*);
   };
 
 {-# specialize: true, inline: case #-}
@@ -54,7 +54,7 @@ integralIntI : Integral Int :=
   mkIntegral@{
     naturalI := naturalIntI;
     - := (Int.-);
-    fromInt (x : Int) : Int := x
+    fromInt (x : Int) : Int := x;
   };
 
 {-# specialize: true, inline: case #-}
@@ -62,5 +62,5 @@ instance
 divModIntI : DivMod Int :=
   mkDivMod@{
     div := Int.div;
-    mod := Int.mod
+    mod := Int.mod;
   };

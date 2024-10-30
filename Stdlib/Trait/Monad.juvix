@@ -8,13 +8,21 @@ type Monad (M : Type -> Type) :=
   mkMonad@{
     {{applicative}} : Applicative M;
     builtin monad-bind
-    bind : {A B : Type} -> M A -> (A -> M B) -> M B
+    bind : {A B : Type} -> M A -> (A -> M B) -> M B;
   };
 
 open Monad public;
 
 syntax operator >>= seq;
->>= {A B} {F : Type -> Type} {{Monad F}} (x : F A) (g : A -> F B) : F B := bind x g;
+>>= {A B} {F : Type -> Type} {{Monad F}} (x : F A) (g : A -> F B) : F B :=
+  bind x g;
 
 syntax operator >=> seq;
->=> {A B C} {F : Type -> Type} {{Monad F}} (h : A -> F B) (g : B -> F C) (a : A) : F C := h a >>= g;
+>=>
+  {A B C}
+  {F : Type -> Type}
+  {{Monad F}}
+  (h : A -> F B)
+  (g : B -> F C)
+  (a : A)
+  : F C := h a >>= g;

@@ -8,7 +8,7 @@ type Numeric A :=
   mkNumeric@{
     integralI : Integral A;
     syntax operator / multiplicative;
-    / : A -> A -> A
+    / : A -> A -> A;
   };
 
 open Numeric using {/} public;

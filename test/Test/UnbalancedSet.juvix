@@ -10,21 +10,28 @@ open Set using {UnbalancedSet};
 
 tests : List Test :=
   let
-    s : UnbalancedSet Nat := Set.insert 1 (Set.insert 3 (Set.insert 2 (Set.insert 1 Set.empty)));
+    s : UnbalancedSet Nat :=
+      Set.insert 1 (Set.insert 3 (Set.insert 2 (Set.insert 1 Set.empty)));
     setInSet : UnbalancedSet (UnbalancedSet Nat) := Set.insert s Set.empty;
-  in [ testCase
-       "Set.length computes the expected size"
-       (assertEqual "unexpected size" (Set.length s) 3)
-     ; testCase
-       "Set.to-list computes the expected members"
-       (assertEqual "unexpected memebrs" (quickSort (Set.toList s)) [1; 2; 3])
-     ; testCase
-       "Set.member? computes true for expected member"
-       (assertTrue "expected member is not present" (Set.isMember 1 s))
-     ; testCase
-       "Set.member? computes false for unexpected member"
-       (assertFalse "unexpected member is present" (Set.isMember 0 s))
-     ; testCase "setInSet has length 1" (assertEqual "unexpected size" (Set.length setInSet) 1)
+  in [
+       testCase
+         "Set.length computes the expected size"
+         (assertEqual "unexpected size" (Set.length s) 3);
+       testCase
+         "Set.to-list computes the expected members"
+         (assertEqual
+           "unexpected memebrs"
+           (quickSort (Set.toList s))
+           [1; 2; 3]);
+       testCase
+         "Set.member? computes true for expected member"
+         (assertTrue "expected member is not present" (Set.isMember 1 s));
+       testCase
+         "Set.member? computes false for unexpected member"
+         (assertFalse "unexpected member is present" (Set.isMember 0 s));
+       testCase
+         "setInSet has length 1"
+         (assertEqual "unexpected size" (Set.length setInSet) 1);
      ];
 
 suite : TestSuite := testSuite "UnbalancedSet" tests;

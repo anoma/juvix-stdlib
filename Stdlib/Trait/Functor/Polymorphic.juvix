@@ -9,18 +9,21 @@ type Functor (F : Type -> Type) :=
   mkFunctor@{
     syntax iterator map {init := 0; range := 1};
     {-# specialize: [1] #-}
-    map : {A B : Type} -> (A -> B) -> F A -> F B
+    map : {A B : Type} -> (A -> B) -> F A -> F B;
   };
 
 open Functor public;
 
 syntax operator <$> lapp;
 {-# inline: true #-}
-<$> {F : Type -> Type} {{Functor F}} {A B} (fun : A -> B) (fa : F A) : F B := map fun fa;
+<$> {F : Type -> Type} {{Functor F}} {A B} (fun : A -> B) (fa : F A) : F B :=
+  map fun fa;
 
 syntax operator $> lapp;
 {-# inline: true #-}
-$> {F : Type → Type} {A B : Type} {{Functor F}} (fa : F A) (b : B) : F B := λ{_ := b} <$> fa;
+$> {F : Type → Type} {A B : Type} {{Functor F}} (fa : F A) (b : B) : F B :=
+  λ{_ := b} <$> fa;
 
 {-# inline: true #-}
-void {F : Type → Type} {A : Type} {{Functor F}} (fa : F A) : F Unit := fa $> unit;
+void {F : Type → Type} {A : Type} {{Functor F}} (fa : F A) : F Unit :=
+  fa $> unit;

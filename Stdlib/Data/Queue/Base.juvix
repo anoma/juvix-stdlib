@@ -21,7 +21,7 @@ import Stdlib.Trait.Foldable open;
 type Queue (A : Type) :=
   mkQueue@{
     front : List A;
-    back : List A
+    back : List A;
   };
 
 --- 𝒪(1). The empty ;Queue;.
@@ -76,10 +76,12 @@ fromList {A} (list : List A) : Queue A := pushMany list empty;
 --- toList: O(n). Returns a ;List; of the elements in the ;Queue;.
 --- The elements are in the same order as they appear in the ;Queue;
 --- (i.e. the first element of the ;Queue; is the first element of the ;List;).
-toList {A} (queue : Queue A) : List A := case queue of mkQueue front back := front ++ reverse back;
+toList {A} (queue : Queue A) : List A :=
+  case queue of mkQueue front back := front ++ reverse back;
 
 --- 𝒪(n). Returns the number of elements in the ;Queue;.
-size {A} (queue : Queue A) : Nat := case queue of mkQueue front back := length front + length back;
+size {A} (queue : Queue A) : Nat :=
+  case queue of mkQueue front back := length front + length back;
 
 instance
 eqQueueI {A} {{Eq A}} : Eq (Queue A) := mkEq ((==) on toList);

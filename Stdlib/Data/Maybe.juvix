@@ -21,7 +21,7 @@ eqMaybeI {A} {{Eq A}} : Eq (Maybe A) :=
       case m1, m2 of
         | nothing, nothing := true
         | just a1, just a2 := Eq.eq a1 a2
-        | _ := false
+        | _ := false;
   };
 
 instance
@@ -30,7 +30,7 @@ showMaybeI {A} {{Show A}} : Show (Maybe A) :=
     show (m : Maybe A) : String :=
       case m of
         | nothing := "nothing"
-        | just a := "just " ++str Show.show a
+        | just a := "just " ++str Show.show a;
   };
 
 {-# specialize: true, inline: case #-}
@@ -42,7 +42,7 @@ ordMaybeI {A} {{Ord A}} : Ord (Maybe A) :=
         | nothing, nothing := Equal
         | just a1, just a2 := Ord.cmp a1 a2
         | nothing, just _ := LessThan
-        | just _, nothing := GreaterThan
+        | just _, nothing := GreaterThan;
   };
 
 {-# specialize: true, inline: case #-}
@@ -51,12 +51,13 @@ functorMaybeI : Functor Maybe :=
   mkFunctor@{
     map {A B} (f : A -> B) : Maybe A -> Maybe B
       | nothing := nothing
-      | (just a) := just (f a)
+      | (just a) := just (f a);
   };
 
 {-# specizalize: true, inline: true #-}
 instance
-monomorphicFunctorMaybeI {A} : Monomorphic.Functor (Maybe A) A := fromPolymorphicFunctor;
+monomorphicFunctorMaybeI {A} : Monomorphic.Functor (Maybe A) A :=
+  fromPolymorphicFunctor;
 
 instance
 applicativeMaybeI : Applicative Maybe :=
@@ -65,7 +66,7 @@ applicativeMaybeI : Applicative Maybe :=
     ap {A B} (listOfFuns : Maybe (A -> B)) (list : Maybe A) : Maybe B :=
       case listOfFuns, list of
         | just f, just x := just (f x)
-        | _, _ := nothing
+        | _, _ := nothing;
   };
 
 instance
@@ -74,5 +75,5 @@ monadMaybeI : Monad Maybe :=
     bind {A B} (maybe : Maybe A) (fun : A -> Maybe B) : Maybe B :=
       case maybe of
         | nothing := nothing
-        | just a := fun a
+        | just a := fun a;
   };
