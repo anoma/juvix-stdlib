@@ -146,6 +146,12 @@ tests : List Test :=
       <| rfor (acc := []) (k in fromList [3; 2; 4; 1]) {
         snoc acc k
       };
+    testCase "disjointUnion disjoint"
+      <| assertEqual "disjointUnion for disjoint" (ok (fromList [0; 1; 2; 3]))
+      <| disjointUnion (fromList [0; 3]) (fromList [1; 2]);
+    testCase "disjointUnion not disjoint"
+      <| assertEqual "disjointUnion for non-disjoint" (error 0)
+      <| disjointUnion (fromList [0; 3]) (fromList [0; 1; 2]);
   ]
     ++ concatMap mkTests [s1; s2; s3; s4; s2Delete];
 

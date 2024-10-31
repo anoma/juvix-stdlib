@@ -158,6 +158,20 @@ tests : List Test :=
        testCase
          "Map.difference"
          (assertEqListPair (Map.toList (Map.difference m1 m2)) [4, 5]);
+       testCase
+         "Map.disjointUnion non-disjoint"
+         (assertEqual
+           "Map.disjointUnion non-disjoint"
+           (Map.disjointUnion m1 m2)
+           (error 1));
+       testCase
+         "Map.disjointUnion disjoint"
+         (assertEqual
+           "Map.disjointUnion disjoint"
+           (Map.disjointUnion
+             (Map.fromList [1, 1; 2, 2])
+             (Map.fromList [3, 3; 4, 4]))
+           (ok (Map.fromList [1, 1; 2, 2; 3, 3; 4, 4])));
      ];
 
 suite : TestSuite := testSuite "Map" tests;
