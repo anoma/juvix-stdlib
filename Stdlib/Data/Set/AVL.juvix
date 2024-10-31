@@ -10,6 +10,7 @@ module Stdlib.Data.Set.AVL;
 
 import Stdlib.Data.Tree as Tree open using {Tree; Forest};
 import Stdlib.Data.Maybe open;
+import Stdlib.Data.Result open;
 import Stdlib.Data.Nat open;
 import Stdlib.Data.Int open;
 import Stdlib.Data.Bool open;
@@ -370,6 +371,25 @@ unions
   for (acc := empty) (set in sets) {
     union acc set
   };
+
+--- O(n log n). If `set1` and `set2` are disjoint, then returns `ok set` where
+--- `set` is the union of `set1` and `set2`. If `set1` and `set2` are not
+--- disjoint, then returns `error x` where `x` is a common element.
+{-# specialize: [1] #-}
+disjointUnion {A} {{Ord A}} (set1 set2 : AVLTree A) : Result A (AVLTree A) :=
+  let
+    goUnion (set1 set2 : AVLTree A) : Result A (AVLTree A) :=
+      for (acc := ok set2) (x in set1) {
+        case acc of
+          | error _ := acc
+          | ok set :=
+            if
+              | isMember x set2 := error x
+              | else := ok (insert x set)
+      };
+  in if
+    | height set1 < height set2 := goUnion set1 set2
+    | else := goUnion set2 set1;
 
 syntax iterator all {init := 0; range := 1};
 --- 𝒪(𝓃). Returns ;true; if all elements of `set` satisfy `predicate`.

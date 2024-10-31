@@ -2,6 +2,7 @@ module Stdlib.Data.Map;
 
 import Stdlib.Data.Pair open;
 import Stdlib.Data.Maybe open;
+import Stdlib.Data.Result open;
 import Stdlib.Data.List open;
 import Stdlib.Data.Nat open;
 import Stdlib.Data.Bool open;
@@ -271,6 +272,22 @@ unions
   for (acc := empty) (map in maps) {
     union acc map
   };
+
+--- O(n log n). If `map1` and `map2` are disjoint (have no common keys), then
+--- returns `ok map` where `map` is the union of `map1` and `map2`. If `map1`
+--- and `map2` are not disjoint, then returns `error k` where `k` is a common
+--- key.
+{-# inline: true #-}
+disjointUnion
+  {Key Value}
+  {{Ord Key}}
+  (map1 map2 : Map Key Value)
+  : Result Key (Map Key Value) :=
+  case map1, map2 of
+    mkMap s1, mkMap s2 :=
+      case Set.disjointUnion s1 s2 of
+        | error x := error (key x)
+        | ok s := ok (mkMap s);
 
 syntax iterator all {init := 0; range := 1};
 --- 𝒪(𝓃). Returns ;true; if all key-value pairs in `map` satisfy `predicate`.
