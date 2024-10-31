@@ -32,8 +32,8 @@ poseidonHash2 (x y : Field) : Field :=
 poseidonHashList (list : List Field) : Field :=
   let
     go (acc : PoseidonState) : List Field -> PoseidonState
-      | [] := poseidonHash acc@PoseidonState{s0 := s0 + 1}
-      | [x] := poseidonHash acc@PoseidonState{s0 := s0 + x; s1 := s1 + 1}
+      | [] := poseidonHash acc@PoseidonState{s0 := @s0 + 1}
+      | [x] := poseidonHash acc@PoseidonState{s0 := @s0 + x; s1 := @s1 + 1}
       | (x1 :: x2 :: xs) :=
-        go (poseidonHash acc@PoseidonState{s0 := s0 + x1; s1 := s1 + x2}) xs;
+        go (poseidonHash acc@PoseidonState{s0 := @s0 + x1; s1 := @s1 + x2}) xs;
   in PoseidonState.s0 (go (mkPoseidonState 0 0 0) list);
