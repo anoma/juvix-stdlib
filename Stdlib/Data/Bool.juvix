@@ -15,7 +15,7 @@ eqBoolI : Eq Bool :=
       case x, y of
         | true, true := true
         | false, false := true
-        | _ := false
+        | _ := false;
   };
 
 {-# specialize: true, inline: case #-}
@@ -27,7 +27,7 @@ ordBoolI : Ord Bool :=
         | false, false := Equal
         | false, true := LessThan
         | true, false := GreaterThan
-        | true, true := Equal
+        | true, true := Equal;
   };
 
 instance
@@ -36,5 +36,5 @@ showBoolI : Show Bool :=
     show (x : Bool) : String :=
       if
         | x := "true"
-        | else := "false"
+        | else := "false";
   };

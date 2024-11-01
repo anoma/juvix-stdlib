@@ -12,7 +12,7 @@ type Foldable (Container Elem : Type) :=
     for : {B : Type} -> (B -> Elem -> B) -> B -> Container -> B;
 
     syntax iterator rfor {init := 1; range := 1};
-    rfor : {B : Type} -> (B -> Elem -> B) -> B -> Container -> B
+    rfor : {B : Type} -> (B -> Elem -> B) -> B -> Container -> B;
   };
 
 open Foldable public;
@@ -21,10 +21,13 @@ open Foldable public;
 --- All polymorphic types that are an instance of ;Poly.Foldable; should use this function to create their monomorphic ;Foldable; instance.
 {-# inline: case #-}
 fromPolymorphicFoldable
-  {F : Type -> Type} {{foldable : Poly.Foldable F}} {Elem} : Foldable (F Elem) Elem :=
+  {F : Type -> Type}
+  {{foldable : Poly.Foldable F}}
+  {Elem}
+  : Foldable (F Elem) Elem :=
   mkFoldable@{
     for := Poly.for;
-    rfor := Poly.rfor
+    rfor := Poly.rfor;
   };
 
 {-# inline: true #-}

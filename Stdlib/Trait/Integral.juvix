@@ -12,7 +12,7 @@ type Integral A :=
     {-# isabelle-operator: {name: "-", prec: 65, assoc: left} #-}
     - : A -> A -> A;
     builtin from-int
-    fromInt : Int -> A
+    fromInt : Int -> A;
   };
 
 open Integral using {fromInt; -} public;

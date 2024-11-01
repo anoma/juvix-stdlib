@@ -19,14 +19,14 @@ eqFieldI : Eq Field := mkEq (Field.==);
 instance
 showFieldI : Show Field :=
   mkShow@{
-    show (f : Field) : String := Show.show (Field.toNat f)
+    show (f : Field) : String := Show.show (Field.toNat f);
   };
 
 {-# specialize: true, inline: case #-}
 instance
 fromNaturalFieldI : FromNatural Field :=
   mkFromNatural@{
-    fromNat := Field.fromNat
+    fromNat := Field.fromNat;
   };
 
 {-# specialize: true, inline: case #-}
@@ -34,7 +34,7 @@ instance
 naturalFieldI : Natural Field :=
   mkNatural@{
     + := (Field.+);
-    * := (Field.*)
+    * := (Field.*);
   };
 
 {-# specialize: true, inline: case #-}
@@ -43,7 +43,7 @@ integralFieldI : Integral Field :=
   mkIntegral@{
     naturalI := naturalFieldI;
     - := (Field.-);
-    fromInt := Field.fromInt
+    fromInt := Field.fromInt;
   };
 
 {-# specialize: true, inline: case #-}
@@ -51,5 +51,5 @@ instance
 numericFieldI : Numeric Field :=
   mkNumeric@{
     integralI := integralFieldI;
-    / := (Field./)
+    / := (Field./);
   };

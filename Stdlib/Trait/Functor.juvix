@@ -2,4 +2,6 @@ module Stdlib.Trait.Functor;
 
 import Stdlib.Trait.Functor.Polymorphic open public;
 import Stdlib.Trait.Functor.Monomorphic as Monomorphic public;
-import Stdlib.Trait.Functor.Monomorphic open using {fromPolymorphicFunctor} public;
+import Stdlib.Trait.Functor.Monomorphic open using {
+  fromPolymorphicFunctor;
+} public;

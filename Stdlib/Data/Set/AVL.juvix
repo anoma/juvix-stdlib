@@ -10,6 +10,7 @@ module Stdlib.Data.Set.AVL;
 
 import Stdlib.Data.Tree as Tree open using {Tree; Forest};
 import Stdlib.Data.Maybe open;
+import Stdlib.Data.Result open;
 import Stdlib.Data.Nat open;
 import Stdlib.Data.Int open;
 import Stdlib.Data.Bool open;
@@ -28,7 +29,7 @@ type AVLTree (A : Type) :=
       element : A;
       height : Nat;
       left : AVLTree A;
-      right : AVLTree A
+      right : AVLTree A;
     };
 
 module Internal;
@@ -117,7 +118,8 @@ module Internal;
             }
           | LeanLeft :=
             case balanceFactor left of {
-              | LeanRight := rotateRight (mkNode element (rotateLeft left) right)
+              | LeanRight :=
+                rotateRight (mkNode element (rotateLeft left) right)
               | _ := rotateRight set
             }
           | LeanNone := set;
@@ -126,7 +128,8 @@ module Internal;
   --- every two children do not differ on height by more than 1.
   isBalanced {A} : (set : AVLTree A) -> Bool
     | empty := true
-    | set@node@{left; right} := isBalanced left && isBalanced right && abs (diffFactor set) <= 1;
+    | set@node@{left; right} :=
+      isBalanced left && isBalanced right && abs (diffFactor set) <= 1;
 end;
 
 open Internal;
@@ -134,7 +137,13 @@ open Internal;
 --- 𝒪(log 𝓃). Lookup a member from the set using a projection function.
 --- Ord A, Ord K and fun must be compatible. i.e cmp_k (fun a1) (fun a2) == cmp_a a1 a2
 {-# specialize: [1, 2] #-}
-lookupWith {A K} {{order : Ord K}} (fun : A -> K) (elem : K) (set : AVLTree A) : Maybe A :=
+lookupWith
+  {A K}
+  {{order : Ord K}}
+  (fun : A -> K)
+  (elem : K)
+  (set : AVLTree A)
+  : Maybe A :=
   let
     {-# specialize-by: [order, fun] #-}
     go : AVLTree A -> Maybe A
@@ -148,11 +157,13 @@ lookupWith {A K} {{order : Ord K}} (fun : A -> K) (elem : K) (set : AVLTree A) :
 
 --- 𝒪(log 𝓃). Queries whether `elem` is in `set`.
 {-# specialize: [1] #-}
-lookup {A} {{Ord A}} (elem : A) (set : AVLTree A) : Maybe A := lookupWith id elem set;
+lookup {A} {{Ord A}} (elem : A) (set : AVLTree A) : Maybe A :=
+  lookupWith id elem set;
 
 --- 𝒪(log 𝓃). Queries whether `elem` is in `set`.
 {-# specialize: [1] #-}
-isMember {A} {{Ord A}} (elem : A) (set : AVLTree A) : Bool := isJust (lookupWith id elem set);
+isMember {A} {{Ord A}} (elem : A) (set : AVLTree A) : Bool :=
+  isJust (lookupWith id elem set);
 
 --- 𝒪(log 𝓃). Inserts an element `elem` into `set` using a function to
 --- deduplicate entries.
@@ -160,7 +171,13 @@ isMember {A} {{Ord A}} (elem : A) (set : AVLTree A) : Bool := isJust (lookupWith
 --- Assumption: If a1 == a2 then fun a1 a2 == a1 == a2
 --- where == comes from Ord a.
 {-# specialize: [1, 2] #-}
-insertWith {A} {{order : Ord A}} (fun : A -> A -> A) (elem : A) (set : AVLTree A) : AVLTree A :=
+insertWith
+  {A}
+  {{order : Ord A}}
+  (fun : A -> A -> A)
+  (elem : A)
+  (set : AVLTree A)
+  : AVLTree A :=
   let
     {-# specialize-by: [order, fun] #-}
     go : AVLTree A -> AVLTree A
@@ -174,7 +191,8 @@ insertWith {A} {{order : Ord A}} (fun : A -> A -> A) (elem : A) (set : AVLTree A
 
 --- 𝒪(log 𝓃). Inserts `elem` into `set`.
 {-# specialize: [1] #-}
-insert {A} {{Ord A}} (elem : A) (set : AVLTree A) : AVLTree A := insertWith (flip const) elem set;
+insert {A} {{Ord A}} (elem : A) (set : AVLTree A) : AVLTree A :=
+  insertWith (flip const) elem set;
 
 --- 𝒪(log 𝓃). Removes the minimum element from `set`.
 {-# specialize: [1] #-}
@@ -211,12 +229,14 @@ deleteWith
               | _ :=
                 case deleteMin right of
                   | nothing := left
-                  | just (minRight, right') := balance (mkNode minRight left right');
+                  | just (minRight, right') :=
+                    balance (mkNode minRight left right');
   in go set;
 
 --- 𝒪(log 𝓃). Removes `elem` from `set`.
 {-# specialize: [1] #-}
-delete {A} {{Ord A}} (elem : A) (set : AVLTree A) : AVLTree A := deleteWith id elem set;
+delete {A} {{Ord A}} (elem : A) (set : AVLTree A) : AVLTree A :=
+  deleteWith id elem set;
 
 --- 𝒪(log 𝓃). Returns the minimum element of `set`.
 lookupMin {A} : (set : AVLTree A) -> Maybe A
@@ -242,7 +262,13 @@ deleteMany {A} {{Ord A}} (toDelete : List A) (set : AVLTree A) : AVLTree A :=
 --- Assumption: Ord A and Ord B are compatible, i.e., for a1 a2 in A, we have (fun a1 == fun a2) == (a1 == a2)
 {-# specialize: [1, 2] #-}
 deleteManyWith
-  {A B} {{Ord A}} {{Ord B}} (fun : A -> B) (toDelete : List B) (set : AVLTree A) : AVLTree A :=
+  {A B}
+  {{Ord A}}
+  {{Ord B}}
+  (fun : A -> B)
+  (toDelete : List B)
+  (set : AVLTree A)
+  : AVLTree A :=
   for (acc := set) (x in toDelete) {
     deleteWith fun x acc
   };
@@ -269,21 +295,25 @@ size {A} : (set : AVLTree A) -> Nat
 {-# specialize: [1] #-}
 foldr {A B} (fun : A -> B -> B) (acc : B) : (set : AVLTree A) -> B
   | empty := acc
-  | node@{element; left; right} := foldr fun (fun element (foldr fun acc right)) left;
+  | node@{element; left; right} :=
+    foldr fun (fun element (foldr fun acc right)) left;
 
 {-# specialize: [1] #-}
 foldl {A B} (fun : B -> A -> B) (acc : B) : (set : AVLTree A) -> B
   | empty := acc
-  | node@{element; left; right} := foldl fun (fun (foldl fun acc left) element) right;
+  | node@{element; left; right} :=
+    foldl fun (fun (foldl fun acc left) element) right;
 
 {-# specialize: true, inline: case #-}
 instance
 polymorphicFoldableAVLTreeI : Polymorphic.Foldable AVLTree :=
   Polymorphic.mkFoldable@{
     {-# inline: true #-}
-    for {A B} (f : B -> A -> B) (acc : B) (set : AVLTree A) : B := foldl f acc set;
+    for {A B} (f : B -> A -> B) (acc : B) (set : AVLTree A) : B :=
+      foldl f acc set;
     {-# inline: true #-}
-    rfor {A B} (f : B -> A -> B) (acc : B) (set : AVLTree A) : B := foldr (flip f) acc set
+    rfor {A B} (f : B -> A -> B) (acc : B) (set : AVLTree A) : B :=
+      foldr (flip f) acc set;
   };
 
 {-# specialize: true, inline: true #-}
@@ -314,12 +344,52 @@ difference {A} {{Ord A}} (set1 set2 : AVLTree A) : AVLTree A :=
       | else := insert x acc
   };
 
---- 𝒪(n log n). Returns a set containing the elements that are members of `set1` or `set2`.
+--- 𝒪(n log (m + n)). Returns a set containing the elements that are members of
+--- `set1` or `set2`. This is a left-biased union of `set1` and `set2` which
+--- prefers `set1` when duplicate elements are encountered.
 {-# specialize: [1] #-}
-union {A} {{Ord A}} (set1 set2 : AVLTree A) : AVLTree A :=
-  for (acc := set1) (x in set2) {
+unionLeft {A} {{Ord A}} (set1 set2 : AVLTree A) : AVLTree A :=
+  for (acc := set2) (x in set1) {
     insert x acc
   };
+
+--- 𝒪(min(n,m) log min(n, m)). Returns a set containing the elements that are members of `set1` or `set2`.
+{-# specialize: [1] #-}
+union {A} {{Ord A}} (set1 set2 : AVLTree A) : AVLTree A :=
+  if
+    | height set1 < height set2 := unionLeft set1 set2
+    | else := unionLeft set2 set1;
+
+--- O(n log n). Returns a set containing the elements that are members of some set in `sets`.
+{-# specialize: [1, 2] #-}
+unions
+  {Container Elem}
+  {{Ord Elem}}
+  {{Foldable Container (AVLTree Elem)}}
+  (sets : Container)
+  : AVLTree Elem :=
+  for (acc := empty) (set in sets) {
+    union acc set
+  };
+
+--- O(n log n). If `set1` and `set2` are disjoint, then returns `ok set` where
+--- `set` is the union of `set1` and `set2`. If `set1` and `set2` are not
+--- disjoint, then returns `error x` where `x` is a common element.
+{-# specialize: [1] #-}
+disjointUnion {A} {{Ord A}} (set1 set2 : AVLTree A) : Result A (AVLTree A) :=
+  let
+    goUnion (set1 set2 : AVLTree A) : Result A (AVLTree A) :=
+      for (acc := ok set2) (x in set1) {
+        case acc of
+          | error _ := acc
+          | ok set :=
+            if
+              | isMember x set2 := error x
+              | else := ok (insert x set)
+      };
+  in if
+    | height set1 < height set2 := goUnion set1 set2
+    | else := goUnion set2 set1;
 
 syntax iterator all {init := 0; range := 1};
 --- 𝒪(𝓃). Returns ;true; if all elements of `set` satisfy `predicate`.
@@ -352,7 +422,12 @@ filter {A} {{Ord A}} (predicate : A -> Bool) (set : AVLTree A) : AVLTree A :=
   };
 
 syntax iterator partition {init := 0; range := 1};
-partition {A} {{Ord A}} (predicate : A -> Bool) (set : AVLTree A) : Pair (AVLTree A) (AVLTree A) :=
+partition
+  {A}
+  {{Ord A}}
+  (predicate : A -> Bool)
+  (set : AVLTree A)
+  : Pair (AVLTree A) (AVLTree A) :=
   for (trueSet, falseSet := empty, empty) (x in set) {
     if
       | predicate x := insert x trueSet, falseSet
@@ -398,7 +473,8 @@ toTree {A} : (set : AVLTree A) -> Maybe (Tree A)
     just (Tree.node element (catMaybes (toTree left :: toTree right :: nil)));
 
 --- Returns the textual representation of an ;AVLTree;.
-pretty {A} {{Show A}} (set : AVLTree A) : String := maybe "empty" Tree.treeToString (toTree set);
+pretty {A} {{Show A}} (set : AVLTree A) : String :=
+  maybe "empty" Tree.treeToString (toTree set);
 
 instance
 eqAVLTreeI {A} {{Eq A}} : Eq (AVLTree A) := mkEq (Eq.eq on toList);

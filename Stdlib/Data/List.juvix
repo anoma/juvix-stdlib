@@ -10,7 +10,11 @@ import Stdlib.Trait.Ord open;
 import Stdlib.Trait.Show open;
 import Stdlib.Trait open;
 import Stdlib.Trait.Partial open;
-import Stdlib.Trait.Foldable open using {Foldable; module Polymorphic; fromPolymorphicFoldable};
+import Stdlib.Trait.Foldable open using {
+  Foldable;
+  module Polymorphic;
+  fromPolymorphicFoldable;
+};
 
 --- 𝒪(1). Partial function that returns the first element of a ;List;.
 phead {A} {{Partial}} : List A -> A
@@ -30,7 +34,8 @@ eqListI {A} {{Eq A}} : Eq (List A) :=
           | else := false;
   in mkEq go;
 
-isMember {A} {{Eq A}} (elem : A) (list : List A) : Bool := isElement (Eq.eq) elem list;
+isMember {A} {{Eq A}} (elem : A) (list : List A) : Bool :=
+  isElement (Eq.eq) elem list;
 
 instance
 ordListI {A} {{Ord A}} : Ord (List A) :=
@@ -53,29 +58,30 @@ showListI {A} {{Show A}} : Show (List A) :=
       | nil := "nil"
       | (x :: xs) := Show.show x ++str " :: " ++str go xs;
   in mkShow@{
-    show (list : List A) : String :=
-      case list of
-        | nil := "nil"
-        | s := "(" ++str go s ++str ")"
-  };
+       show (list : List A) : String :=
+         case list of
+           | nil := "nil"
+           | s := "(" ++str go s ++str ")";
+     };
 
 {-# specialize: true, inline: case #-}
 instance
 functorListI : Functor List :=
   mkFunctor@{
-    map := listMap
+    map := listMap;
   };
 
 {-# specialize: true, inline: true #-}
 instance
-monomorphicFunctorListI {A} : Monomorphic.Functor (List A) A := fromPolymorphicFunctor;
+monomorphicFunctorListI {A} : Monomorphic.Functor (List A) A :=
+  fromPolymorphicFunctor;
 
 {-# specialize: true, inline: case #-}
 instance
 polymorphicFoldableListI : Polymorphic.Foldable List :=
   Polymorphic.mkFoldable@{
     for := listFor;
-    rfor := listRfor
+    rfor := listRfor;
   };
 
 {-# specialize: true, inline: true #-}
@@ -88,11 +94,11 @@ applicativeListI : Applicative List :=
     pure {A} (a : A) : List A := [a];
     ap {A B} : (listOfFuns : List (A -> B)) -> (listOfAs : List A) -> List B
       | [] _ := []
-      | (f :: fs) l := map f l ++ ap fs l
+      | (f :: fs) l := map f l ++ ap fs l;
   };
 
 instance
 monadListI : Monad List :=
   mkMonad@{
-    bind := flip concatMap
+    bind := flip concatMap;
   };

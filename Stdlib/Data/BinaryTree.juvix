@@ -8,7 +8,7 @@ type BinaryTree (A : Type) :=
   | node@{
       left : BinaryTree A;
       element : A;
-      right : BinaryTree A
+      right : BinaryTree A;
     };
 
 --- fold a tree in depth-first order
@@ -21,4 +21,5 @@ fold {A B} (f : A -> B -> B -> B) (acc : B) (tree : BinaryTree A) : B :=
 
 length {A} (tree : BinaryTree A) : Nat := fold \{_ l r := 1 + l + r} 0 tree;
 
-toList {A} (tree : BinaryTree A) : List A := fold \{e ls rs := e :: ls ++ rs} nil tree;
+toList {A} (tree : BinaryTree A) : List A :=
+  fold \{e ls rs := e :: ls ++ rs} nil tree;

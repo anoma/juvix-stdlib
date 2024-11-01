@@ -12,14 +12,15 @@ import Stdlib.Trait open;
 
 {-# specialize: true, inline: case #-}
 instance
-ordResultI {Error Value} {{Ord Error}} {{Ord Value}} : Ord (Result Error Value) :=
+ordResultI
+  {Error Value} {{Ord Error}} {{Ord Value}} : Ord (Result Error Value) :=
   mkOrd@{
     cmp (result1 result2 : Result Error Value) : Ordering :=
       case result1, result2 of
         | error a1, error a2 := Ord.cmp a1 a2
         | ok b1, ok b2 := Ord.cmp b1 b2
         | error _, ok _ := LessThan
-        | ok _, error _ := GreaterThan
+        | ok _, error _ := GreaterThan;
   };
 
 {-# specialize: true, inline: case #-}
@@ -30,45 +31,55 @@ eqResultI {Error Value} {{Eq Error}} {{Eq Value}} : Eq (Result Error Value) :=
       case result1, result2 of
         | error a1, error a2 := a1 == a2
         | ok b1, ok b2 := b1 == b2
-        | _, _ := false
+        | _, _ := false;
   };
 
 instance
-showResultI {Error Value} {{Show Error}} {{Show Value}} : Show (Result Error Value) :=
+showResultI
+  {Error Value} {{Show Error}} {{Show Value}} : Show (Result Error Value) :=
   mkShow@{
     show : Result Error Value -> String
       | (error x) := "Error (" ++str Show.show x ++str ")"
-      | (ok x) := "Ok (" ++str Show.show x ++str ")"
+      | (ok x) := "Ok (" ++str Show.show x ++str ")";
   };
 
 {-# specialize: true, inline: case #-}
 instance
 functorResultI {Error} : Functor (Result Error) :=
   mkFunctor@{
-    map := mapOk
+    map := mapOk;
   };
 
 {-# specialize: true, inline: true #-}
 instance
-monomorphicFunctorResultI {Error Value} : Monomorphic.Functor (Result Error Value) Value :=
+monomorphicFunctorResultI
+  {Error Value} : Monomorphic.Functor (Result Error Value) Value :=
   fromPolymorphicFunctor;
 
 instance
 applicativeResultI {Error} : Applicative (Result Error) :=
   mkApplicative@{
     pure := ok;
-    ap {A B} (resultFun : Result Error (A -> B)) (result : Result Error A) : Result Error B :=
+    ap
+      {A B}
+      (resultFun : Result Error (A -> B))
+      (result : Result Error A)
+      : Result Error B :=
       case resultFun, result of
         | ok f, ok x := ok (f x)
         | ok _, error e := error e
-        | error e, _ := error e
+        | error e, _ := error e;
   };
 
 instance
 monadResultI {Error} : Monad (Result Error) :=
   mkMonad@{
-    bind {A B} (result : Result Error A) (fun : A -> Result Error B) : Result Error B :=
+    bind
+      {A B}
+      (result : Result Error A)
+      (fun : A -> Result Error B)
+      : Result Error B :=
       case result of
         | error e := error e
-        | ok a := fun a
+        | ok a := fun a;
   };

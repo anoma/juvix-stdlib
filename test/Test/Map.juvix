@@ -9,82 +9,169 @@ import Stdlib.Data.Set as Set open using {Set};
 tests : List Test :=
   let
     m : Map Nat String := Map.insert 2 "two" (Map.insert 1 "one" Map.empty);
+    m1 : Map Nat Nat := Map.insert 4 5 (Map.insert 1 3 Map.empty);
     m2 : Map Nat Nat := Map.insert 3 4 (Map.insert 1 2 Map.empty);
-    assertEqListPair (actual : List (Pair Nat Nat)) (expected : List (Pair Nat Nat)) : Assertion :=
+    m3 : Map Nat Nat := Map.insert 0 0 Map.empty;
+    assertEqListPair
+      (actual : List (Pair Nat Nat))
+      (expected : List (Pair Nat Nat))
+      : Assertion :=
       assertEqual "lists are not equal" (quickSort actual) expected;
-  in [ testCase
-       "Map.lookup missing key"
-       (assertNothing (const "found a key expected to be missing") (Map.lookup 10 m))
-     ; testCase
-       "Map.lookup available key"
-       (assertJust "could not find expected key" (Map.lookup 2 m))
-     ; testCase
-       "Map.delete exiting key"
-       (assertNothing (const "expected deleted key to be missing") (Map.delete 2 m |> Map.lookup 2))
-     ; testCase
-       "Map.delete missing key"
-       (assertEqual "expected maps to be equal" m (Map.delete 100 m))
-     ; testCase
-       "Map.length computes the number of keys in the map"
-       (assertEqual "expected length 2" (Map.size m) 2)
-     ; testCase
-       "Map.toList computes the expected members"
-       (assertEqListPair (Map.toList m2) [1, 2; 3, 4])
-     ; testCase
-       "Map.insert-with replaces duplicates using merge function"
-       (assertEqListPair (Map.toList (Map.insertWith (+) 1 3 m2)) [1, 5; 3, 4])
-     ; testCase
-       "Map.fromListWith de-duplicates using merge function"
-       (assertEqListPair (Map.toList (Map.fromListWith (+) [1, 1; 1, 2])) [1, 3])
-     ; testCase
-       "Map.fromList can be used to create the empty Map"
-       (assertEqListPair (Map.toList (Map.fromList nil)) (nil))
-     ; testCase
-       "Map.fromList overwrites duplicates"
-       (assertEqListPair (Map.toList (Map.fromList [1, 1; 1, 2])) [1, 2])
-     ; testCase
-       "Map.fromList distinct keys"
-       (assertEqListPair (Map.toList (Map.fromList [1, 1; 2, 2])) [1, 1; 2, 2])
-     ; testCase
-       "Map.fromSet"
-       (assertEqListPair (Map.toList (Map.fromSet id (Set.fromList [1; 2; 3]))) [1, 1; 2, 2; 3, 3])
-     ; testCase "Map.keys" (assertEqual "expected keys" (Map.keys m) [1; 2])
-     ; testCase "Map.values" (assertEqual "expected values" (Map.values m) ["one"; "two"])
-     ; testCase "Map.keySet" (assertEqual "expected key set" (Map.keySet m) (Set.fromList [1; 2]))
-     ; testCase
-       "Map.valueSet"
-       (assertEqual "expected value set" (Map.valueSet m2) (Set.fromList [2; 4]))
-     ; testCase
-       "Map.isEmpty"
-       (assertEqual "expected empty map" (Map.isEmpty (Map.empty {Nat} {Nat})) true)
-     ; testCase "Map.isEmpty" (assertEqual "expected non-empty map" (Map.isEmpty m) false)
-     ; testCase "Map.isMember" (assertEqual "expected member" (Map.isMember 1 m) true)
-     ; testCase "Map.isMember" (assertEqual "expected non-member" (Map.isMember 3 m) false)
-     ; testCase
-       "Map.filter"
-       (assertEqListPair (Map.toList (Map.filter \{k v := k + v > 3} m2)) [3, 4])
-     ; testCase
-       "Map.partition"
-       (assertEqual
-         "expected partition"
-         ([1, 2], [3, 4])
-         (Map.partition \{k v := k < 3} m2 |> both Map.toList))
-     ; testCase
-       "Map.mapValuesWithKey"
-       (assertEqListPair (Map.toList (Map.mapValuesWithKey \{k v := k + v} m2)) [1, 3; 3, 7])
-     ; testCase
-       "Map.mapValues"
-       (assertEqListPair (Map.toList (Map.mapValues ((+) 1) m2)) [1, 3; 3, 5])
-     ; testCase "Map.map" (assertEqListPair (Map.toList (map ((+) 1) m2)) [1, 3; 3, 5])
-     ; testCase "Map.all" (assertTrue "expected all to be true" (Map.all \{_ v := v > 0} m2))
-     ; testCase "Map.any" (assertTrue "expected any to be true" (Map.any \{_ v := v > 3} m2))
-     ; testCase
-       "Map.foldl"
-       (assertEqual "expected foldl" (Map.foldl \{acc k v := acc + k + v} 0 m2) 10)
-     ; testCase
-       "Map.foldr"
-       (assertEqual "expected foldr" (Map.foldr \{acc k v := acc + k + v} 0 m2) 10)
-     ; testCase "Map.singleton" (assertEqListPair (Map.toList (Map.singleton 1 2)) [1, 2])
+  in [
+       testCase
+         "Map.lookup missing key"
+         (assertNothing
+           (const "found a key expected to be missing")
+           (Map.lookup 10 m));
+       testCase
+         "Map.lookup available key"
+         (assertJust "could not find expected key" (Map.lookup 2 m));
+       testCase
+         "Map.delete exiting key"
+         (assertNothing
+           (const "expected deleted key to be missing")
+           (Map.delete 2 m |> Map.lookup 2));
+       testCase
+         "Map.delete missing key"
+         (assertEqual "expected maps to be equal" m (Map.delete 100 m));
+       testCase
+         "Map.length computes the number of keys in the map"
+         (assertEqual "expected length 2" (Map.size m) 2);
+       testCase
+         "Map.toList computes the expected members"
+         (assertEqListPair (Map.toList m2) [1, 2; 3, 4]);
+       testCase
+         "Map.insert-with replaces duplicates using merge function"
+         (assertEqListPair
+           (Map.toList (Map.insertWith (+) 1 3 m2))
+           [1, 5; 3, 4]);
+       testCase
+         "Map.fromListWith de-duplicates using merge function"
+         (assertEqListPair
+           (Map.toList (Map.fromListWith (+) [1, 1; 1, 2]))
+           [1, 3]);
+       testCase
+         "Map.fromList can be used to create the empty Map"
+         (assertEqListPair (Map.toList (Map.fromList nil)) (nil));
+       testCase
+         "Map.fromList overwrites duplicates"
+         (assertEqListPair (Map.toList (Map.fromList [1, 1; 1, 2])) [1, 2]);
+       testCase
+         "Map.fromList distinct keys"
+         (assertEqListPair
+           (Map.toList (Map.fromList [1, 1; 2, 2]))
+           [1, 1; 2, 2]);
+       testCase
+         "Map.fromSetWithFun"
+         (assertEqListPair
+           (Map.toList (Map.fromSetWithFun id (Set.fromList [1; 2; 3])))
+           [1, 1; 2, 2; 3, 3]);
+       testCase
+         "Map.fromSet"
+         (assertEqListPair
+           (Map.toList (Map.fromSet (Set.fromList [1, 1; 2, 2; 3, 3])))
+           [1, 1; 2, 2; 3, 3]);
+       testCase "Map.keys" (assertEqual "expected keys" (Map.keys m) [1; 2]);
+       testCase
+         "Map.values"
+         (assertEqual "expected values" (Map.values m) ["one"; "two"]);
+       testCase
+         "Map.keySet"
+         (assertEqual "expected key set" (Map.keySet m) (Set.fromList [1; 2]));
+       testCase
+         "Map.valueSet"
+         (assertEqual
+           "expected value set"
+           (Map.valueSet m2)
+           (Set.fromList [2; 4]));
+       testCase
+         "Map.isEmpty"
+         (assertEqual
+           "expected empty map"
+           (Map.isEmpty (Map.empty {Nat} {Nat}))
+           true);
+       testCase
+         "Map.isEmpty"
+         (assertEqual "expected non-empty map" (Map.isEmpty m) false);
+       testCase
+         "Map.isMember"
+         (assertEqual "expected member" (Map.isMember 1 m) true);
+       testCase
+         "Map.isMember"
+         (assertEqual "expected non-member" (Map.isMember 3 m) false);
+       testCase
+         "Map.filter"
+         (assertEqListPair
+           (Map.toList (Map.filter \{k v := k + v > 3} m2))
+           [3, 4]);
+       testCase
+         "Map.partition"
+         (assertEqual
+           "expected partition"
+           ([1, 2], [3, 4])
+           (Map.partition \{k v := k < 3} m2 |> both Map.toList));
+       testCase
+         "Map.mapValuesWithKey"
+         (assertEqListPair
+           (Map.toList (Map.mapValuesWithKey \{k v := k + v} m2))
+           [1, 3; 3, 7]);
+       testCase
+         "Map.mapValues"
+         (assertEqListPair
+           (Map.toList (Map.mapValues ((+) 1) m2))
+           [1, 3; 3, 5]);
+       testCase
+         "Map.map"
+         (assertEqListPair (Map.toList (map ((+) 1) m2)) [1, 3; 3, 5]);
+       testCase
+         "Map.all"
+         (assertTrue "expected all to be true" (Map.all \{_ v := v > 0} m2));
+       testCase
+         "Map.any"
+         (assertTrue "expected any to be true" (Map.any \{_ v := v > 3} m2));
+       testCase
+         "Map.foldl"
+         (assertEqual
+           "expected foldl"
+           (Map.foldl \{acc k v := acc + k + v} 0 m2)
+           10);
+       testCase
+         "Map.foldr"
+         (assertEqual
+           "expected foldr"
+           (Map.foldr \{acc k v := acc + k + v} 0 m2)
+           10);
+       testCase
+         "Map.singleton"
+         (assertEqListPair (Map.toList (Map.singleton 1 2)) [1, 2]);
+       testCase
+         "Map.union"
+         (assertEqListPair (Map.toList (Map.union m2 m3)) [0, 0; 1, 2; 3, 4]);
+       testCase
+         "Map.unionLeft"
+         (assertEqListPair
+           (Map.toList (Map.unionLeft m1 m2))
+           [1, 3; 3, 4; 4, 5]);
+       testCase
+         "Map.intersection"
+         (assertEqListPair (Map.toList (Map.intersection m1 m2)) [1, 3]);
+       testCase
+         "Map.difference"
+         (assertEqListPair (Map.toList (Map.difference m1 m2)) [4, 5]);
+       testCase
+         "Map.disjointUnion non-disjoint"
+         (assertEqual
+           "Map.disjointUnion non-disjoint"
+           (Map.disjointUnion m1 m2)
+           (error 1));
+       testCase
+         "Map.disjointUnion disjoint"
+         (assertEqual
+           "Map.disjointUnion disjoint"
+           (Map.disjointUnion
+             (Map.fromList [1, 1; 2, 2])
+             (Map.fromList [3, 3; 4, 4]))
+           (ok (Map.fromList [1, 1; 2, 2; 3, 3; 4, 4])));
      ];
 
 suite : TestSuite := testSuite "Map" tests;

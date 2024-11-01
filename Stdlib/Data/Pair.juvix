@@ -13,7 +13,8 @@ instance
 eqProductI {A B} : {{Eq A}} -> {{Eq B}} -> Eq (Pair A B)
   | {{mkEq eqA}} {{mkEq eqB}} :=
     mkEq@{
-      eq (p1 p2 : Pair A B) : Bool := case p1, p2 of (a1, b1), a2, b2 := eqA a1 a2 && eqB b1 b2
+      eq (p1 p2 : Pair A B) : Bool :=
+        case p1, p2 of (a1, b1), a2, b2 := eqA a1 a2 && eqB b1 b2;
     };
 
 {-# specialize: true, inline: case #-}
@@ -27,7 +28,7 @@ ordProductI {A B} : {{Ord A}} -> {{Ord B}} -> Ord (Pair A B)
             case cmpA a1 a2 of
               | LessThan := LessThan
               | GreaterThan := GreaterThan
-              | Equal := cmpB b1 b2
+              | Equal := cmpB b1 b2;
     };
 
 instance
@@ -35,5 +36,5 @@ showProductI {A B} : {{Show A}} -> {{Show B}} -> Show (Pair A B)
   | {{mkShow showA}} {{mkShow showB}} :=
     mkShow@{
       show (p : Pair A B) : String :=
-        case p of a, b := "(" ++str showA a ++str " , " ++str showB b ++str ")"
+        case p of a, b := "(" ++str showA a ++str " , " ++str showB b ++str ")";
     };

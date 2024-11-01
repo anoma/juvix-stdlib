@@ -10,15 +10,16 @@ type Functor (Container Elem : Type) :=
   mkFunctor@{
     syntax iterator map {init := 0; range := 1};
     {-# specialize: [1] #-}
-    map : (Elem -> Elem) -> Container -> Container
+    map : (Elem -> Elem) -> Container -> Container;
   };
 
 open Functor public;
 
 {-# inline: case #-}
-fromPolymorphicFunctor {F : Type -> Type} {{Poly.Functor F}} {Elem} : Functor (F Elem) Elem :=
+fromPolymorphicFunctor
+  {F : Type -> Type} {{Poly.Functor F}} {Elem} : Functor (F Elem) Elem :=
   mkFunctor@{
-    map := Poly.map
+    map := Poly.map;
   };
 
 syntax operator <$> lapp;

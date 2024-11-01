@@ -10,7 +10,7 @@ open Tree using {BinaryTree; leaf; node};
 type UnbalancedSet (A : Type) :=
   mkUnbalancedSet@{
     order : Ord A;
-    tree : BinaryTree A
+    tree : BinaryTree A;
   };
 
 empty {A} {{order : Ord A}} : UnbalancedSet A := mkUnbalancedSet order leaf;
@@ -41,12 +41,14 @@ insert {A} (elem : A) (set : UnbalancedSet A) : UnbalancedSet A :=
               | Ord.GreaterThan := node l y (go r);
       in mkUnbalancedSet order (go tree);
 
-length {A} (set : UnbalancedSet A) : Nat := Tree.length (UnbalancedSet.tree set);
+length {A} (set : UnbalancedSet A) : Nat :=
+  Tree.length (UnbalancedSet.tree set);
 
-toList {A} (set : UnbalancedSet A) : List A := Tree.toList (UnbalancedSet.tree set);
+toList {A} (set : UnbalancedSet A) : List A :=
+  Tree.toList (UnbalancedSet.tree set);
 
 instance
 ordUnbalancedSetI {A} {{Ord A}} : Ord (UnbalancedSet A) :=
   mkOrd@{
-    cmp (s1 s2 : UnbalancedSet A) : Ordering := Ord.cmp (toList s1) (toList s2)
+    cmp (s1 s2 : UnbalancedSet A) : Ordering := Ord.cmp (toList s1) (toList s2);
   };

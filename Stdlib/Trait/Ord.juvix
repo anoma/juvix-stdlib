@@ -31,7 +31,7 @@ orderingEqI : Eq Ordering :=
       case ordering2 of
         | LessThan := isLessThan ordering1
         | Equal := isEqual ordering1
-        | GreaterThan := isGreaterThan ordering1
+        | GreaterThan := isGreaterThan ordering1;
   };
 
 --- A trait for defining a total order

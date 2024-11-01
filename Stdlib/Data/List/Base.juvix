@@ -34,7 +34,8 @@ listRfor {A B} (fun : B -> A -> B) (acc : B) : (list : List A) -> B
 
 --- Right-associative fold.
 {-# specialize: [1] #-}
-liftFoldr {A B} (fun : A -> B -> B) (acc : B) (list : List A) : B := listRfor (flip fun) acc list;
+liftFoldr {A B} (fun : A -> B -> B) (acc : B) (list : List A) : B :=
+  listRfor (flip fun) acc list;
 
 --- Left-associative and tail-recursive fold.
 {-# specialize: [1] #-}
@@ -138,7 +139,8 @@ snoc {A} (list : List A) (elem : A) : List A := list ++ elem :: nil;
 
 --- Concatenates a ;List; of ;List;s.
 {-# isabelle-function: {name: "concat"} #-}
-flatten {A} (listOfLists : List (List A)) : List A := listFoldl (++) nil listOfLists;
+flatten {A} (listOfLists : List (List A)) : List A :=
+  listFoldl (++) nil listOfLists;
 
 --- 𝒪(𝓃). Inserts the given separator before every element in the given ;List;.
 prependToAll {A} (separator : A) : (list : List A) -> List A
@@ -194,7 +196,8 @@ isEmpty {A} (list : List A) : Bool :=
 --- 𝒪(min(𝓂, 𝓃)). Returns a list containing the results of applying a function
 --- to each pair of elements from the input lists.
 {-# specialize: [1] #-}
-zipWith {A B C} (fun : A -> B -> C) : (list1 : List A) -> (list2 : List B) -> List C
+zipWith
+  {A B C} (fun : A -> B -> C) : (list1 : List A) -> (list2 : List B) -> List C
   | nil _ := nil
   | _ nil := nil
   | (x :: xs) (y :: ys) := fun x y :: zipWith fun xs ys;
@@ -231,7 +234,8 @@ quickSort {A} {{Ord A}} (list : List A) : List A :=
     go : List A -> List A
       | nil := nil
       | xs@(_ :: nil) := xs
-      | (x :: xs) := case partition \{y := y < x} xs of l1, l2 := go l1 ++ x :: go l2;
+      | (x :: xs) :=
+        case partition \{y := y < x} xs of l1, l2 := go l1 ++ x :: go l2;
   in go list;
 
 --- 𝒪(𝓃) Filters out every ;nothing; from a ;List;.
@@ -244,7 +248,8 @@ syntax iterator concatMap {init := 0; range := 1};
 
 --- Applies a function to every item on a ;List; and concatenates the result.
 --- 𝒪(𝓃), where 𝓃 is the number of items in the resulting list.
-concatMap {A B} (fun : A -> List B) (list : List A) : List B := flatten (listMap fun list);
+concatMap {A B} (fun : A -> List B) (list : List A) : List B :=
+  flatten (listMap fun list);
 
 --- 𝒪(𝓃 * 𝓂). Transposes a ;List; of ;List;s interpreted as a matrix.
 transpose {A} : (listOfLists : List (List A)) -> List (List A)

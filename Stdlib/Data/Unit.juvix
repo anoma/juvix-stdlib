@@ -13,19 +13,19 @@ import Stdlib.Trait.Foldable open;
 instance
 eqUnitI : Eq Unit :=
   mkEq@{
-    eq (_ _ : Unit) : Bool := true
+    eq (_ _ : Unit) : Bool := true;
   };
 
 instance
 ordUnitI : Ord Unit :=
   mkOrd@{
-    cmp (_ _ : Unit) : Ordering := Equal
+    cmp (_ _ : Unit) : Ordering := Equal;
   };
 
 instance
 showUnitI : Show Unit :=
   mkShow@{
-    show (_ : Unit) : String := "unit"
+    show (_ : Unit) : String := "unit";
   };
 
 {-# specialize: true, inline: case #-}
@@ -33,9 +33,17 @@ instance
 foldableUnitI : Foldable Unit Unit :=
   mkFoldable@{
     {-# inline: true #-}
-    rfor {Acc : Type} (fun : Acc -> Unit -> Acc) (initialValue : Acc) (_ : Unit) : Acc :=
-      fun initialValue unit;
+    rfor
+      {Acc : Type}
+      (fun : Acc -> Unit -> Acc)
+      (initialValue : Acc)
+      (_ : Unit)
+      : Acc := fun initialValue unit;
     {-# inline: true #-}
-    for {Acc : Type} (fun : Acc -> Unit -> Acc) (initialValue : Acc) (_ : Unit) : Acc :=
-      fun initialValue unit
+    for
+      {Acc : Type}
+      (fun : Acc -> Unit -> Acc)
+      (initialValue : Acc)
+      (_ : Unit)
+      : Acc := fun initialValue unit;
   };

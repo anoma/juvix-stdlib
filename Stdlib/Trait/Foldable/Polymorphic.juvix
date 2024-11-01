@@ -10,7 +10,7 @@ type Foldable (F : Type -> Type) :=
     for : {A B : Type} -> (B -> A -> B) -> B -> F A -> B;
 
     syntax iterator rfor {init := 1; range := 1};
-    rfor : {A B : Type} -> (B -> A -> B) -> B -> F A -> B
+    rfor : {A B : Type} -> (B -> A -> B) -> B -> F A -> B;
   };
 
 open Foldable public;

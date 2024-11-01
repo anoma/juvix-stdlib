@@ -50,13 +50,15 @@ isOk {Error Value} (result : Result Error Value) : Bool :=
     | ok _ := true;
 
 --- Return the contents of an ;error; value, otherwise return defaultError.
-fromError {Error Value} (defaultError : Error) (result : Result Error Value) : Error :=
+fromError
+  {Error Value} (defaultError : Error) (result : Result Error Value) : Error :=
   case result of
     | error a := a
     | ok _ := defaultError;
 
 --- Return the contents of an ;ok; value, otherwise return defaultValue.
-fromOk {Error Value} (defaultValue : Value) (result : Result Error Value) : Value :=
+fromOk
+  {Error Value} (defaultValue : Value) (result : Result Error Value) : Value :=
   case result of
     | error _ := defaultValue
     | ok b := b;
@@ -67,7 +69,10 @@ resultToMaybe {Error Value} (result : Result Error Value) : Maybe Value :=
 
 --- Convert a Maybe to a Result. A ;nothing; value becomes `error defaultError`.
 maybeToResult
-  {Error Value} (defaultError : Error) (maybeValue : Maybe Value) : Result Error Value :=
+  {Error Value}
+  (defaultError : Error)
+  (maybeValue : Maybe Value)
+  : Result Error Value :=
   case maybeValue of
     | nothing := error defaultError
     | just x := ok x;

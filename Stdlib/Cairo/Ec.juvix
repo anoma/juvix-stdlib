@@ -13,20 +13,24 @@ import Stdlib.Data.Pair open;
 module StarkCurve;
   ALPHA : Field := 1;
 
-  BETA : Field := 0x6f21413efbe40de150e596d72f7a8c5609ad26c15c915c1f4cdfcb99cee9e89;
+  BETA : Field :=
+    0x6f21413efbe40de150e596d72f7a8c5609ad26c15c915c1f4cdfcb99cee9e89;
 
-  ORDER : Field := 0x800000000000010ffffffffffffffffb781126dcae7b2321e66a241adc64d2f;
+  ORDER : Field :=
+    0x800000000000010ffffffffffffffffb781126dcae7b2321e66a241adc64d2f;
 
-  GEN_X : Field := 0x1ef15c18599971b7beced415a40f0c7deacfd9b0d1819e03d723d8bc943cfca;
+  GEN_X : Field :=
+    0x1ef15c18599971b7beced415a40f0c7deacfd9b0d1819e03d723d8bc943cfca;
 
-  GEN_Y : Field := 0x5668060aa49730b7be4801df46ec62de53ecd11abe43a32873000c36e8dc1f;
+  GEN_Y : Field :=
+    0x5668060aa49730b7be4801df46ec62de53ecd11abe43a32873000c36e8dc1f;
 end;
 
 builtin ec_point
 type Point :=
   mkPoint@{
     x : Field;
-    y : Field
+    y : Field;
   };
 
 module Internal;
@@ -57,9 +61,9 @@ double (point : Point) : Point :=
             r_x := slope * slope - x - x;
             r_y := slope * (x - r_x) - y;
           in mkPoint@?{
-            x := r_x;
-            y := r_y
-          };
+               x := r_x;
+               y := r_y;
+             };
 
 --- Adds two valid points on the EC.
 add (point1 point2 : Point) : Point :=

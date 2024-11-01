@@ -22,21 +22,27 @@ tests : List Test :=
   let
     checkWithList (q : Queue Nat) (q' : List Nat) : Assertion :=
       assertEqual "Queue should be equal" q (fromList q');
-  in [ testCase "Queue.empty should be empty" (checkWithList q [])
-     ; testCase "Queue.push should add an element" (checkWithList q1 [1])
-     ; testCase "Queue.push first element should be first pushed" (checkWithList q2 [1; 2])
-     ; testCase
-       "Queue.head should return first element"
-       (assertEqual "head of queue q3" (head q3) (just 1))
-     ; testCase
-       "Queue.fromList composes with toList should be the identity"
-       (assertEqual "fromList . toList should be the identity" (toList >> fromList <| q3) q3)
-     ; testCase
-       "Queue.pop should remove first element"
-       (assertEqual "pop of queue q3" (pop q3) (just (1, fromList [2; 3])))
-     ; testCase
-       "Queue.tail should return queue without first element"
-       (assertEqual "tail of queue q3" (tail q3) ((fromList >> just) [2; 3]))
+  in [
+       testCase "Queue.empty should be empty" (checkWithList q []);
+       testCase "Queue.push should add an element" (checkWithList q1 [1]);
+       testCase
+         "Queue.push first element should be first pushed"
+         (checkWithList q2 [1; 2]);
+       testCase
+         "Queue.head should return first element"
+         (assertEqual "head of queue q3" (head q3) (just 1));
+       testCase
+         "Queue.fromList composes with toList should be the identity"
+         (assertEqual
+           "fromList . toList should be the identity"
+           (toList >> fromList <| q3)
+           q3);
+       testCase
+         "Queue.pop should remove first element"
+         (assertEqual "pop of queue q3" (pop q3) (just (1, fromList [2; 3])));
+       testCase
+         "Queue.tail should return queue without first element"
+         (assertEqual "tail of queue q3" (tail q3) ((fromList >> just) [2; 3]));
      ];
 
 suite : TestSuite := testSuite "Queue" tests;
