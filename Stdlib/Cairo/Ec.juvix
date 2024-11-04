@@ -84,7 +84,7 @@ add (point1 point2 : Point) : Point :=
           in mkPoint r_x r_y;
 
 --- Subtracts point2 from point1 on the EC.
-sub (point1 point2 : Point) : Point := add point1 point2@Point{y := 0 - @y};
+sub (point1 point2 : Point) : Point := add point1 point2@Point{y := 0 - Point.y point2};
 
 --- Computes point1 + alpha * point2 on the elliptic curve.
 --- Because the EC operation builtin cannot handle inputs where additions of points with the same x
