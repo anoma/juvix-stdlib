@@ -4,7 +4,15 @@ import Test.JuvixUnit open;
 import Stdlib.Prelude open;
 
 tests : List Test :=
-  [testCase "And" (assertEqual "and works as expected" (and true false) false)];
+  [
+    testCase "And" (assertEqual "and works as expected" (and true false) false);
+    testCase
+      "Xor"
+      (assertEqual "and works as expected" (xor true false) (xor false true));
+    testCase
+      "Xor-2"
+      (assertEqual "and works as expected" (xor false false) (xor true true));
+  ];
 
 suite : TestSuite := testSuite "Prelude" tests;
 
