@@ -10,8 +10,18 @@ Compiler: http://github.com/anoma/juvix
 module index;
 
 import Stdlib.Prelude;
-import Stdlib.Data.Nat.Ord;
-import Stdlib.Data.Int.Ord;
-import Stdlib.Data.String.Ord;
 
+import Stdlib.Data.BinaryTree;
+import Stdlib.Data.Set;
+import Stdlib.Data.Map;
+import Stdlib.Data.UnbalancedSet;
+import Stdlib.Data.Queue;
+import Stdlib.Data.Tree;
+
+import Stdlib.Cairo.Ec;
 import Stdlib.Cairo.Poseidon;
+import Stdlib.Cairo.Pedersen;
+
+import Stdlib.Debug;
+
+import Stdlib.Extra.Gcd;
