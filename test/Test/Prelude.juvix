@@ -1,0 +1,11 @@
+module Test.Prelude;
+
+import Test.JuvixUnit open;
+import Stdlib.Prelude open;
+
+tests : List Test :=
+  [testCase "And" (assertEqual "and works as expected" (and true false) false)];
+
+suite : TestSuite := testSuite "Prelude" tests;
+
+main : IO := runTestSuite suite;
