@@ -7,6 +7,7 @@ import Stdlib.Function open;
 import Stdlib.Data.Nat.Base open;
 import Stdlib.Data.Maybe.Base open;
 import Stdlib.Trait.Ord open;
+import Stdlib.Trait.Partial open;
 import Stdlib.Data.Pair.Base open;
 
 --- 𝒪(𝓃). Returns ;true; if the given object elem is in the ;List;.
@@ -177,6 +178,11 @@ headMaybe {A} : List A -> Maybe A
 --- 𝒪(𝓃). Grabs the last element of the given ;List;.
 last {A} : A -> List A -> A
   | default := reverse >> head default;
+
+--- 𝒪(1). Partial function that returns the first element of a ;List;.
+phead {A} {{Partial}} : List A -> A
+  | (x :: _) := x
+  | nil := fail "head: empty list";
 
 syntax iterator any {init := 0; range := 1};
 
