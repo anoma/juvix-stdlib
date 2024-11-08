@@ -57,6 +57,16 @@ listMap {A B} (fun : A -> B) : (list : List A) -> List B
   | nil := nil
   | (h :: hs) := fun h :: listMap fun hs;
 
+--- 𝒪(𝓃). Maps a function over each element of a ;List; with an index.
+{-# specialize: [1] #-}
+mapi {A B} : (fun : Nat -> A -> B) -> List A -> List B
+  | fun xs :=
+    let
+      go : Nat -> List A -> List B
+        | _ nil := nil
+        | n (x :: xs) := fun n x :: go (suc n) xs;
+    in go zero xs;
+
 syntax iterator filter {init := 0; range := 1};
 
 --- 𝒪(𝓃). Filters a ;List; according to a given predicate, i.e.,
