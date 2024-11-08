@@ -231,6 +231,12 @@ zip {A B} : (list1 : List A) -> (list2 : List B) -> List (Pair A B)
   | _ nil := nil
   | (x :: xs) (y :: ys) := (x, y) :: zip xs ys;
 
+--- 𝒪(n). Transforms a ;List; of ;Pair;s into a ;List; of the first componenet
+--- and a ;List; of second component
+unzip {A B} : List (Pair A B) -> Pair (List A) (List B)
+  -- TODO :: Optimize into a single pass
+  | xs := listMap fst xs, listMap snd xs;
+
 --- 𝒪(𝓃 log 𝓃). Sorts a list of elements in ascending order using the MergeSort
 --- algorithm.
 mergeSort {A} {{Ord A}} (list : List A) : List A :=
