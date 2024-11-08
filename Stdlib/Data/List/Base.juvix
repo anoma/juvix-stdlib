@@ -174,6 +174,10 @@ headMaybe {A} : List A -> Maybe A
   | (x :: _) := just x
   | nil := nothing;
 
+--- 𝒪(𝓃). Grabs the last element of the given ;List;.
+last {A} : A -> List A -> A
+  | default := reverse >> head default;
+
 syntax iterator any {init := 0; range := 1};
 
 --- 𝒪(𝓃). Returns ;true; if at least one element of the ;List; satisfies the predicate.
