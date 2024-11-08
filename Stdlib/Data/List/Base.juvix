@@ -285,3 +285,16 @@ transpose {A} : (listOfLists : List (List A)) -> List (List A)
   | nil := nil
   | (xs :: nil) := listMap λ{x := x :: nil} xs
   | (xs :: xss) := zipWith (::) xs (transpose xss);
+
+--- 𝒪(𝓃). Groups a ;List; given a predicate
+group {A} : (break : A -> A -> Bool) -> List A -> List (List A)
+  | _ nil := nil
+  | break (x :: xs) :=
+    let
+      go : List A -> List (List A) -> Pair A (List A) -> List (List A)
+        | nil acc _ := acc
+        | (x :: xs) acc (prev, prevs) :=
+          if
+            | break prev x := go xs acc (x, prev :: prevs)
+            | else := go xs ((prev :: prevs) :: acc) (x, nil);
+    in go xs nil (x, nil);
