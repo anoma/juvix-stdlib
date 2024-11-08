@@ -75,6 +75,10 @@ length {A} (list : List A) : Nat :=
     suc acc
   };
 
+--- 𝒪(𝓃). Find the number of elements in a ;List;. that satisfy a given predicate.
+count {A} : (A -> Bool) -> List A -> Nat
+  | predicate := filter predicate >> length;
+
 --- 𝒪(𝓃). Returns the given ;List; in reverse order.
 {-# isabelle-function: {name: "rev"} #-}
 reverse {A} (list : List A) : List A :=
