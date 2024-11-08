@@ -139,6 +139,10 @@ syntax operator ++ cons;
   | nil ys := ys
   | (x :: xs) ys := x :: xs ++ ys;
 
+--- 𝒪(1). Cons on an element onto a ;List;.
+cons {A} : A -> List A -> List A
+  | x xs := x :: xs;
+
 --- 𝒪(𝓃). Append an element.
 snoc {A} (list : List A) (elem : A) : List A := list ++ elem :: nil;
 
