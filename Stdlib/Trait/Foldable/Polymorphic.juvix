@@ -1,6 +1,8 @@
 module Stdlib.Trait.Foldable.Polymorphic;
 
 import Stdlib.Function open;
+import Juvix.Builtin.V1.Nat.Base open;
+import Stdlib.Data.Pair.Base open;
 
 --- A trait for combining elements into a single result, processing one element at a time.
 trait
@@ -15,13 +17,28 @@ type Foldable (F : Type -> Type) :=
 
 open Foldable public;
 
+foldli
+  {F : Type -> Type}
+  {{Foldable F}}
+  {Elem Acc : Type}
+  (fun : Nat -> Acc -> Elem -> Acc)
+  (initialValue : Acc)
+  (container : F Elem)
+  : Acc :=
+  let
+    g := λ{(index, acc) ele := suc index, fun index acc ele};
+  in for (acc := zero, initialValue) (x in container) {
+      g acc x
+    }
+    |> snd;
+
 --- Combine the elements of the type using the provided function starting with the element in the left-most position.
 {-# inline: true #-}
 foldl
   {F : Type -> Type}
   {{Foldable F}}
   {Elem Acc : Type}
-  (fun : Acc -> Elem -> Acc)
+  (fun : Acgc -> Elem -> Acc)
   (initialValue : Acc)
   (container : F Elem)
   : Acc :=

@@ -7,6 +7,7 @@ import Stdlib.Function open;
 import Stdlib.Data.Nat.Base open;
 import Stdlib.Data.Maybe.Base open;
 import Stdlib.Trait.Ord open;
+import Stdlib.Trait.Partial open;
 import Stdlib.Data.Pair.Base open;
 
 --- 𝒪(𝓃). Returns ;true; if the given object elem is in the ;List;.
@@ -56,6 +57,16 @@ listMap {A B} (fun : A -> B) : (list : List A) -> List B
   | nil := nil
   | (h :: hs) := fun h :: listMap fun hs;
 
+--- 𝒪(𝓃). Maps a function over each element of a ;List; with an index.
+{-# specialize: [1] #-}
+mapi {A B} : (fun : Nat -> A -> B) -> List A -> List B
+  | fun xs :=
+    let
+      go : Nat -> List A -> List B
+        | _ nil := nil
+        | n (x :: xs) := fun n x :: go (suc n) xs;
+    in go zero xs;
+
 syntax iterator filter {init := 0; range := 1};
 
 --- 𝒪(𝓃). Filters a ;List; according to a given predicate, i.e.,
@@ -73,6 +84,10 @@ length {A} (list : List A) : Nat :=
   listFor (acc := zero) (_ in list) {
     suc acc
   };
+
+--- 𝒪(𝓃). Find the number of elements in a ;List;. that satisfy a given predicate.
+count {A} : (A -> Bool) -> List A -> Nat
+  | predicate := filter predicate >> length;
 
 --- 𝒪(𝓃). Returns the given ;List; in reverse order.
 {-# isabelle-function: {name: "rev"} #-}
@@ -95,6 +110,10 @@ take {A} : (elemsNum : Nat) -> (list : List A) -> List A
 drop {A} : (elemsNum : Nat) -> (list : List A) -> List A
   | (suc n) (x :: xs) := drop n xs
   | _ xs := xs;
+
+--- Take the nth value of a ;List;
+nth {A} : Nat -> List A -> Maybe A
+  | n := drop n >> headMaybe;
 
 --- 𝒪(𝓃). Returns a tuple where first element is the
 --- prefix of the given list of length prefixLength and second element is the
@@ -134,6 +153,10 @@ syntax operator ++ cons;
   | nil ys := ys
   | (x :: xs) ys := x :: xs ++ ys;
 
+--- 𝒪(1). Cons on an element onto a ;List;.
+cons {A} : A -> List A -> List A
+  | x xs := x :: xs;
+
 --- 𝒪(𝓃). Append an element.
 snoc {A} (list : List A) (elem : A) : List A := list ++ elem :: nil;
 
@@ -164,6 +187,20 @@ head {A} (defaultValue : A) (list : List A) : A :=
   case list of
     | x :: _ := x
     | nil := defaultValue;
+
+--- 𝒪(1). Grabs the first element of a ;List;
+headMaybe {A} : List A -> Maybe A
+  | (x :: _) := just x
+  | nil := nothing;
+
+--- 𝒪(𝓃). Grabs the last element of the given ;List;.
+last {A} : A -> List A -> A
+  | default := reverse >> head default;
+
+--- 𝒪(1). Partial function that returns the first element of a ;List;.
+phead {A} {{Partial}} : List A -> A
+  | (x :: _) := x
+  | nil := fail "head: empty list";
 
 syntax iterator any {init := 0; range := 1};
 
@@ -207,6 +244,12 @@ zip {A B} : (list1 : List A) -> (list2 : List B) -> List (Pair A B)
   | nil _ := nil
   | _ nil := nil
   | (x :: xs) (y :: ys) := (x, y) :: zip xs ys;
+
+--- 𝒪(n). Transforms a ;List; of ;Pair;s into a ;List; of the first componenet
+--- and a ;List; of second component
+unzip {A B} : List (Pair A B) -> Pair (List A) (List B)
+  -- TODO :: Optimize into a single pass
+  | xs := listMap fst xs, listMap snd xs;
 
 --- 𝒪(𝓃 log 𝓃). Sorts a list of elements in ascending order using the MergeSort
 --- algorithm.
@@ -256,3 +299,16 @@ transpose {A} : (listOfLists : List (List A)) -> List (List A)
   | nil := nil
   | (xs :: nil) := listMap λ{x := x :: nil} xs
   | (xs :: xss) := zipWith (::) xs (transpose xss);
+
+--- 𝒪(𝓃). Groups a ;List; given a predicate
+group {A} : (break : A -> A -> Bool) -> List A -> List (List A)
+  | _ nil := nil
+  | break (x :: xs) :=
+    let
+      go : List A -> List (List A) -> Pair A (List A) -> List (List A)
+        | nil acc _ := acc
+        | (x :: xs) acc (prev, prevs) :=
+          if
+            | break prev x := go xs acc (x, prev :: prevs)
+            | else := go xs ((prev :: prevs) :: acc) (x, nil);
+    in go xs nil (x, nil);

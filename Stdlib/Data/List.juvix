@@ -16,11 +16,6 @@ import Stdlib.Trait.Foldable open using {
   fromPolymorphicFoldable;
 };
 
---- 𝒪(1). Partial function that returns the first element of a ;List;.
-phead {A} {{Partial}} : List A -> A
-  | (x :: _) := x
-  | nil := fail "head: empty list";
-
 instance
 eqListI {A} {{Eq A}} : Eq (List A) :=
   let

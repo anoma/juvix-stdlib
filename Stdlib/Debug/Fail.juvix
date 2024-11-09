@@ -1,6 +1,6 @@
 module Stdlib.Debug.Fail;
 
-import Stdlib.Data.String.Base open;
+import Juvix.Builtin.V1.String open;
 
 --- Exit the program with an error message.
 builtin fail
