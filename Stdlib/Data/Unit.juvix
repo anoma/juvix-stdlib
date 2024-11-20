@@ -10,11 +10,8 @@ import Stdlib.Trait.Ord open;
 import Stdlib.Trait.Show open;
 import Stdlib.Trait.Foldable open;
 
-instance
-eqUnitI : Eq Unit :=
-  mkEq@{
-    eq (_ _ : Unit) : Bool := true;
-  };
+deriving instance
+eqUnitI : Eq Unit;
 
 instance
 ordUnitI : Ord Unit :=

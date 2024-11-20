@@ -8,15 +8,8 @@ import Stdlib.Trait.Ord open;
 import Stdlib.Trait.Show open;
 
 {-# specialize: true, inline: case #-}
-instance
-eqBoolI : Eq Bool :=
-  mkEq@{
-    eq (x y : Bool) : Bool :=
-      case x, y of
-        | true, true := true
-        | false, false := true
-        | _ := false;
-  };
+deriving instance
+eqBoolI : Eq Bool;
 
 {-# specialize: true, inline: case #-}
 instance
