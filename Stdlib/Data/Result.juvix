@@ -24,15 +24,8 @@ ordResultI
   };
 
 {-# specialize: true, inline: case #-}
-instance
-eqResultI {Error Value} {{Eq Error}} {{Eq Value}} : Eq (Result Error Value) :=
-  mkEq@{
-    eq (result1 result2 : Result Error Value) : Bool :=
-      case result1, result2 of
-        | error a1, error a2 := a1 == a2
-        | ok b1, ok b2 := b1 == b2
-        | _, _ := false;
-  };
+deriving instance
+eqResultI {Error Value} {{Eq Error}} {{Eq Value}} : Eq (Result Error Value);
 
 instance
 showResultI
