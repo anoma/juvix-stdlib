@@ -27,16 +27,8 @@ showMaybeI {A} {{Show A}} : Show (Maybe A) :=
   };
 
 {-# specialize: true, inline: case #-}
-instance
-ordMaybeI {A} {{Ord A}} : Ord (Maybe A) :=
-  mkOrd@{
-    cmp (m1 m2 : Maybe A) : Ordering :=
-      case m1, m2 of
-        | nothing, nothing := Equal
-        | just a1, just a2 := Ord.cmp a1 a2
-        | nothing, just _ := LessThan
-        | just _, nothing := GreaterThan;
-  };
+deriving instance
+ordMaybeI {A} {{Ord A}} : Ord (Maybe A);
 
 {-# specialize: true, inline: case #-}
 instance

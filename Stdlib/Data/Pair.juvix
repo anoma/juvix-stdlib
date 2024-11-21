@@ -13,18 +13,8 @@ deriving instance
 eqProductI {A B} {{Eq A}} {{Eq B}} : Eq (Pair A B);
 
 {-# specialize: true, inline: case #-}
-instance
-ordProductI {A B} : {{Ord A}} -> {{Ord B}} -> Ord (Pair A B)
-  | {{mkOrd cmpA}} {{mkOrd cmpB}} :=
-    mkOrd@{
-      cmp (p1 p2 : Pair A B) : Ordering :=
-        case p1, p2 of
-          (a1, b1), a2, b2 :=
-            case cmpA a1 a2 of
-              | LessThan := LessThan
-              | GreaterThan := GreaterThan
-              | Equal := cmpB b1 b2;
-    };
+deriving instance
+ordProductI {A B} : {{Ord A}} -> {{Ord B}} -> Ord (Pair A B);
 
 instance
 showProductI {A B} : {{Show A}} -> {{Show B}} -> Show (Pair A B)

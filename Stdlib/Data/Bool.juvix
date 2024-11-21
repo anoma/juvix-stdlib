@@ -12,16 +12,8 @@ deriving instance
 eqBoolI : Eq Bool;
 
 {-# specialize: true, inline: case #-}
-instance
-ordBoolI : Ord Bool :=
-  mkOrd@{
-    cmp (x y : Bool) : Ordering :=
-      case x, y of
-        | false, false := Equal
-        | false, true := LessThan
-        | true, false := GreaterThan
-        | true, true := Equal;
-  };
+deriving instance
+ordBoolI : Ord Bool;
 
 instance
 showBoolI : Show Bool :=

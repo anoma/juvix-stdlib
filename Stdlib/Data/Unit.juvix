@@ -13,11 +13,8 @@ import Stdlib.Trait.Foldable open;
 deriving instance
 eqUnitI : Eq Unit;
 
-instance
-ordUnitI : Ord Unit :=
-  mkOrd@{
-    cmp (_ _ : Unit) : Ordering := Equal;
-  };
+deriving instance
+ordUnitI : Ord Unit;
 
 instance
 showUnitI : Show Unit :=
