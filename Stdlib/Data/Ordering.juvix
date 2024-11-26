@@ -1,0 +1,38 @@
+module Stdlib.Data.Ordering;
+
+import Stdlib.Trait.Eq open;
+import Stdlib.Data.Bool.Base open;
+import Stdlib.Trait.Show open;
+
+builtin ordering
+type Ordering :=
+  | LessThan
+  | Equal
+  | GreaterThan;
+
+isLessThan (ordering : Ordering) : Bool :=
+  case ordering of
+    | LessThan := true
+    | _ := false;
+
+isEqual (ordering : Ordering) : Bool :=
+  case ordering of
+    | Equal := true
+    | _ := false;
+
+isGreaterThan (ordering : Ordering) : Bool :=
+  case ordering of
+    | GreaterThan := true
+    | _ := false;
+
+deriving instance
+orderingEqI : Eq Ordering;
+
+instance
+orderingShowI : Show Ordering :=
+  mkShow@{
+    show : Ordering -> String
+      | Equal := "Equal"
+      | LessThan := "LessThan"
+      | GreaterThan := "GreaterThan";
+  };
