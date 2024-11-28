@@ -14,15 +14,8 @@ import Stdlib.Data.String.Base open;
 import Stdlib.Data.Pair.Base open;
 
 {-# specialize: true, inline: case #-}
-instance
-eqMaybeI {A} {{Eq A}} : Eq (Maybe A) :=
-  mkEq@{
-    eq (m1 m2 : Maybe A) : Bool :=
-      case m1, m2 of
-        | nothing, nothing := true
-        | just a1, just a2 := Eq.eq a1 a2
-        | _ := false;
-  };
+deriving instance
+eqMaybeI {A} {{Eq A}} : Eq (Maybe A);
 
 instance
 showMaybeI {A} {{Show A}} : Show (Maybe A) :=

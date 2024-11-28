@@ -9,13 +9,8 @@ import Stdlib.Trait.Ord open;
 import Stdlib.Trait.Show open;
 
 {-# specialize: true, inline: case #-}
-instance
-eqProductI {A B} : {{Eq A}} -> {{Eq B}} -> Eq (Pair A B)
-  | {{mkEq eqA}} {{mkEq eqB}} :=
-    mkEq@{
-      eq (p1 p2 : Pair A B) : Bool :=
-        case p1, p2 of (a1, b1), a2, b2 := eqA a1 a2 && eqB b1 b2;
-    };
+deriving instance
+eqProductI {A B} {{Eq A}} {{Eq B}} : Eq (Pair A B);
 
 {-# specialize: true, inline: case #-}
 instance

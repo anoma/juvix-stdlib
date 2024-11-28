@@ -24,15 +24,8 @@ isGreaterThan (ordering : Ordering) : Bool :=
     | GreaterThan := true
     | _ := false;
 
-instance
-orderingEqI : Eq Ordering :=
-  mkEq@{
-    eq (ordering1 ordering2 : Ordering) : Bool :=
-      case ordering2 of
-        | LessThan := isLessThan ordering1
-        | Equal := isEqual ordering1
-        | GreaterThan := isGreaterThan ordering1;
-  };
+deriving instance
+orderingEqI : Eq Ordering;
 
 --- A trait for defining a total order
 trait
