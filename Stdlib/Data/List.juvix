@@ -21,6 +21,7 @@ phead {A} {{Partial}} : List A -> A
   | (x :: _) := x
   | nil := fail "head: empty list";
 
+{-# specialize: true, inline: case #-}
 instance
 eqListI {A} {{Eq A}} : Eq (List A) :=
   let
@@ -37,6 +38,7 @@ eqListI {A} {{Eq A}} : Eq (List A) :=
 isMember {A} {{Eq A}} (elem : A) (list : List A) : Bool :=
   isElement (Eq.eq) elem list;
 
+{-# specialize: true, inline: case #-}
 instance
 ordListI {A} {{Ord A}} : Ord (List A) :=
   let
@@ -71,7 +73,7 @@ functorListI : Functor List :=
     map := listMap;
   };
 
-{-# specialize: true, inline: true #-}
+{-# specialize: true, inline: case #-}
 instance
 monomorphicFunctorListI {A} : Monomorphic.Functor (List A) A :=
   fromPolymorphicFunctor;
@@ -84,7 +86,7 @@ polymorphicFoldableListI : Polymorphic.Foldable List :=
     rfor := listRfor;
   };
 
-{-# specialize: true, inline: true #-}
+{-# specialize: true, inline: case #-}
 instance
 foldableListI {A} : Foldable (List A) A := fromPolymorphicFoldable;
 
