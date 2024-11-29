@@ -4,7 +4,10 @@ import Stdlib.Data.String.Base open;
 import Stdlib.Debug.Fail as Debug;
 
 trait
-type Partial := mkPartial@{fail : {A : Type} -> String -> A};
+type Partial :=
+  mkPartial@{
+    fail : {A : Type} -> String -> A;
+  };
 
 open Partial public;
 

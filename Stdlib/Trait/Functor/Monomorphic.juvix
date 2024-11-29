@@ -15,7 +15,7 @@ type Functor (Container Elem : Type) :=
 
 open Functor public;
 
-{-# inline: case #-}
+{-# inline: always #-}
 fromPolymorphicFunctor
   {F : Type -> Type} {{Poly.Functor F}} {Elem} : Functor (F Elem) Elem :=
   mkFunctor@{

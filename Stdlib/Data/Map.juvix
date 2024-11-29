@@ -32,6 +32,7 @@ value {Key Value} (binding : Binding Key Value) : Value :=
 toPair {Key Value} (binding : Binding Key Value) : Pair Key Value :=
   key binding, value binding;
 
+{-# specialize: true, inline: case #-}
 instance
 bindingKeyOrdering {Key Value} {{Ord Key}} : Ord (Binding Key Value) :=
   mkOrd@{
