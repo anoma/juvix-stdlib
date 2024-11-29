@@ -8,7 +8,11 @@ import Stdlib.Data.Ordering open public;
 --- A trait for defining a total order
 builtin ord
 trait
-type Ord A := mkOrd@{builtin compare cmp : A -> A -> Ordering};
+type Ord A :=
+  mkOrd@{
+    builtin compare
+    cmp : A -> A -> Ordering;
+  };
 
 deriving instance
 orderingOrdI : Ord Ordering;

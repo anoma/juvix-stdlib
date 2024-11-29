@@ -12,8 +12,7 @@ import Stdlib.Trait open;
 
 {-# specialize: true, inline: case #-}
 deriving instance
-ordResultI
-  {Error Value} {{Ord Error}} {{Ord Value}} : Ord (Result Error Value);
+ordResultI {Error Value} {{Ord Error}} {{Ord Value}} : Ord (Result Error Value);
 
 {-# specialize: true, inline: case #-}
 deriving instance

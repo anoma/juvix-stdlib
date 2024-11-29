@@ -3,4 +3,7 @@ module Stdlib.Trait.Show;
 import Juvix.Builtin.V1.String open public;
 
 trait
-type Show A := mkShow@{show : A -> String};
+type Show A :=
+  mkShow@{
+    show : A -> String;
+  };

@@ -6,7 +6,11 @@ import Stdlib.Data.Fixity open;
 --- A trait defining equality
 builtin eq
 trait
-type Eq A := mkEq@{builtin isEqual eq : A -> A -> Bool};
+type Eq A :=
+  mkEq@{
+    builtin isEqual
+    eq : A -> A -> Bool;
+  };
 
 syntax operator == comparison;
 syntax operator /= comparison;
