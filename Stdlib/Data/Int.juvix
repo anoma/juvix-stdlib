@@ -1,8 +1,13 @@
 module Stdlib.Data.Int;
 
-import Stdlib.Data.Int.Base open hiding {+; -; *; div; mod} public;
--- should be re-exported qualified
-import Stdlib.Data.Int.Base as Int;
+import Stdlib.Data.Int.Base open hiding {module Int; +; -; *; div; mod} public;
+
+module Int;
+  open Stdlib.Data.Int.Base.Int public;
+
+  import Stdlib.Data.Int.Base open public;
+  import Stdlib.Data.Int.Ord open public;
+end;
 
 import Stdlib.Data.String open;
 import Stdlib.Data.Bool open;
@@ -14,9 +19,6 @@ import Stdlib.Trait.Natural open;
 import Stdlib.Trait.FromNatural open;
 import Stdlib.Trait.Integral open;
 import Stdlib.Trait.DivMod open;
-
--- should be re-exported qualified
-import Stdlib.Data.Int.Ord as Int;
 
 --- Converts an ;Int; into ;String;.
 builtin int-to-string
