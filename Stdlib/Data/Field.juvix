@@ -1,7 +1,7 @@
 module Stdlib.Data.Field;
 
 import Stdlib.Data.Field.Base open using {Field} public;
-import Stdlib.Data.Field.Base as Field;
+import Stdlib.Data.Field.Base as Field public;
 import Stdlib.Data.String.Base open;
 import Stdlib.Data.Nat;
 
