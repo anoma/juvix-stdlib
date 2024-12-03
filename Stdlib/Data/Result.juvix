@@ -11,28 +11,12 @@ import Stdlib.Trait.Show open;
 import Stdlib.Trait open;
 
 {-# specialize: true, inline: case #-}
-instance
-ordResultI
-  {Error Value} {{Ord Error}} {{Ord Value}} : Ord (Result Error Value) :=
-  mkOrd@{
-    cmp (result1 result2 : Result Error Value) : Ordering :=
-      case result1, result2 of
-        | error a1, error a2 := Ord.cmp a1 a2
-        | ok b1, ok b2 := Ord.cmp b1 b2
-        | error _, ok _ := LessThan
-        | ok _, error _ := GreaterThan;
-  };
+deriving instance
+ordResultI {Error Value} {{Ord Error}} {{Ord Value}} : Ord (Result Error Value);
 
 {-# specialize: true, inline: case #-}
-instance
-eqResultI {Error Value} {{Eq Error}} {{Eq Value}} : Eq (Result Error Value) :=
-  mkEq@{
-    eq (result1 result2 : Result Error Value) : Bool :=
-      case result1, result2 of
-        | error a1, error a2 := a1 == a2
-        | ok b1, ok b2 := b1 == b2
-        | _, _ := false;
-  };
+deriving instance
+eqResultI {Error Value} {{Eq Error}} {{Eq Value}} : Eq (Result Error Value);
 
 instance
 showResultI

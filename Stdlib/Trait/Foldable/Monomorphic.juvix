@@ -19,7 +19,7 @@ open Foldable public;
 
 --- Make a monomorphic ;Foldable; instance from a polymorphic one.
 --- All polymorphic types that are an instance of ;Poly.Foldable; should use this function to create their monomorphic ;Foldable; instance.
-{-# inline: case #-}
+{-# inline: always #-}
 fromPolymorphicFoldable
   {F : Type -> Type}
   {{foldable : Poly.Foldable F}}
