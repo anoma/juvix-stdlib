@@ -1,9 +1,15 @@
 module Stdlib.Data.Nat;
 
-import Juvix.Builtin.V1.Nat open public;
-import Stdlib.Data.Nat.Base open hiding {+; *; div; mod} public;
--- should be re-exported qualified
-import Stdlib.Data.Nat.Base as Nat;
+import Juvix.Builtin.V1.Nat open hiding {module Nat} public;
+import Stdlib.Data.Nat.Base open hiding {module Nat; +; *; div; mod} public;
+
+module Nat;
+  open Stdlib.Data.Nat.Base.Nat public;
+
+  import Stdlib.Data.Nat.Base open public;
+  import Stdlib.Data.Nat.Ord open public;
+end;
+
 import Stdlib.Data.String.Base open;
 
 import Stdlib.Trait.Eq open public;
@@ -12,9 +18,6 @@ import Stdlib.Trait.Show open public;
 import Stdlib.Trait.Natural open public;
 import Stdlib.Trait.FromNatural open public;
 import Stdlib.Trait.DivMod open public;
-
--- should be re-exported qualified
-import Stdlib.Data.Nat.Ord as Nat;
 
 --- Converts a ;Nat; into a ;String;.
 builtin nat-to-string
