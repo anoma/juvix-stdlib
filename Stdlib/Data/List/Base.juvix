@@ -96,6 +96,10 @@ drop {A} : (elemsNum : Nat) -> (list : List A) -> List A
   | (suc n) (x :: xs) := drop n xs
   | _ xs := xs;
 
+--- Take the nth value of a ;List;
+nth {A} : Nat -> List A -> Maybe A
+  | n := drop n >> headMaybe;
+
 --- 𝒪(𝓃). Returns a tuple where first element is the
 --- prefix of the given list of length prefixLength and second element is the
 --- remainder of the ;List;.
@@ -164,6 +168,11 @@ head {A} (defaultValue : A) (list : List A) : A :=
   case list of
     | x :: _ := x
     | nil := defaultValue;
+
+--- 𝒪(1). Grabs the first element of a ;List;
+headMaybe {A} : List A -> Maybe A
+  | (x :: _) := just x
+  | nil := nothing;
 
 syntax iterator any {init := 0; range := 1};
 
