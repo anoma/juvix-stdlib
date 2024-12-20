@@ -6,7 +6,10 @@ import Stdlib.Debug as Debug;
 
 import Stdlib.Data.Set.AVL as AVL open;
 
-type Box := mkBox@{b : Nat};
+type Box :=
+  mkBox@{
+    b : Nat;
+  };
 
 instance
 ordBoxI : Ord Box := mkOrd (Ord.cmp on Box.b);
