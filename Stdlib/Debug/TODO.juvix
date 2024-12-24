@@ -1,0 +1,3 @@
+module Stdlib.Debug.TODO;
+
+axiom TODO {A : Type} : A;

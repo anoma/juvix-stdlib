@@ -17,5 +17,6 @@ import Stdlib.Data.Result open public;
 import Stdlib.Data.Range open public;
 import Stdlib.Function open public;
 import Stdlib.System.IO open public;
+import Stdlib.Debug.TODO open public;
 
 import Stdlib.Trait open public;
