@@ -8,6 +8,7 @@ import Stdlib.Trait.Show open;
 import Stdlib.Trait.Functor open;
 import Stdlib.Trait.Applicative open;
 import Stdlib.Trait.Monad open;
+import Stdlib.Trait.Traversable open;
 
 import Stdlib.Data.Bool.Base open;
 import Stdlib.Data.String.Base open;
@@ -61,4 +62,13 @@ monadMaybeI : Monad Maybe :=
       case maybe of
         | nothing := nothing
         | just a := fun a;
+  };
+
+instance
+traversableMaybeI : Traversable Maybe :=
+  mkTraversable@{
+    sequenceA {F : Type -> Type} {{_ : Applicative F}} {A} : Maybe (F A) -> F (Maybe A)
+      | nothing := pure nothing
+      | (just x) := map just x;
+    traverse := defaultTraverse sequenceA;
   };

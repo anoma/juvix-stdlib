@@ -1,0 +1,27 @@
+module Stdlib.Trait.Traversable.Monomorphic;
+
+import Stdlib.Function open;
+import Stdlib.Trait.Traversable.Polymorphic as Poly;
+import Stdlib.Trait.Functor.Monomorphic open;
+import Stdlib.Trait.Applicative open;
+
+trait
+type Traversable (Container Elem : Type) :=
+  mkTraversable@{
+    {{functorI}} : Functor Container Elem;
+    traverse : {F : Type -> Type} -> {{Applicative F}} ->
+               (Elem -> F Elem) -> Container -> F Container;
+  };
+
+open Traversable public;
+
+--- Make a monomorphic Traversable instance from a polymorphic one.
+fromPolymorphicTraversable
+  {T : Type -> Type}
+  {{traversable : Poly.Traversable T}}
+  {Elem}
+  : Traversable (T Elem) Elem :=
+  mkTraversable@{
+    functorI := fromPolymorphicFunctor;
+    traverse := \{f ta := Poly.traverse f ta};
+  };

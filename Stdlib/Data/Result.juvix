@@ -8,6 +8,7 @@ import Stdlib.Data.Pair.Base open;
 import Stdlib.Trait.Eq open;
 import Stdlib.Trait.Ord open;
 import Stdlib.Trait.Show open;
+import Stdlib.Trait.Traversable open;
 import Stdlib.Trait open;
 
 {-# specialize: true, inline: case #-}
@@ -66,4 +67,13 @@ monadResultI {Error} : Monad (Result Error) :=
       case result of
         | error e := error e
         | ok a := fun a;
+  };
+
+instance
+traversableResultI {E} : Traversable (Result E) :=
+  mkTraversable@{
+    sequenceA {F : Type -> Type} {{_ : Applicative F}} {A} : Result E (F A) -> F (Result E A)
+      | (error e) := pure (error e)
+      | (ok x) := map ok x;
+    traverse := defaultTraverse sequenceA;
   };
