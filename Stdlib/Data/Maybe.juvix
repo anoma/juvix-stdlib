@@ -67,7 +67,8 @@ monadMaybeI : Monad Maybe :=
 instance
 traversableMaybeI : Traversable Maybe :=
   mkTraversable@{
-    sequenceA {F : Type -> Type} {{_ : Applicative F}} {A} : Maybe (F A) -> F (Maybe A)
+    sequenceA
+      {F : Type -> Type} {{_ : Applicative F}} {A} : Maybe (F A) -> F (Maybe A)
       | nothing := pure nothing
       | (just x) := map just x;
     traverse := defaultTraverse sequenceA;

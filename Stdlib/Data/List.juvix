@@ -104,9 +104,14 @@ instance
 traversableListI : Traversable List :=
   mkTraversable@{
     terminating
-    sequenceA {F : Type -> Type} {{_ : Applicative F}} {A} (xs : List (F A)) : F (List A) :=
+    sequenceA
+      {F : Type -> Type}
+      {{_ : Applicative F}}
+      {A}
+      (xs : List (F A))
+      : F (List A) :=
       case xs of
         | nil := pure nil
-        | (x :: xs) := liftA2 (::) x (sequenceA xs);
+        | x :: xs := liftA2 (::) x (sequenceA xs);
     traverse := defaultTraverse sequenceA;
   };

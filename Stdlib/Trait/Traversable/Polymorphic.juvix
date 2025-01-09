@@ -6,28 +6,55 @@ import Stdlib.Trait.Applicative open;
 
 --- A trait for traversing a structure while performing applicative effects
 trait
-type Traversable (T : Type -> Type) := 
+type Traversable (T : Type -> Type) :=
   mkTraversable@{
     {{functorI}} : Functor T;
-    traverse : {F : Type -> Type} -> {{Applicative F}} -> 
-               {A B : Type} -> (A -> F B) -> T A -> F (T B);
-    sequenceA : {F : Type -> Type} -> {{Applicative F}} ->
-                {A : Type} -> T (F A) -> F (T A);
+    traverse
+      : {F : Type -> Type}
+        -> {{Applicative F}}
+        -> {A B : Type}
+        -> (A -> F B)
+        -> T A
+        -> F (T B);
+    sequenceA
+      : {F : Type -> Type}
+        -> {{Applicative F}}
+        -> {A : Type}
+        -> T (F A)
+        -> F (T A);
   };
 
 open Traversable public;
 
 -- Default implementation of sequenceA using traverse
-defaultSequenceA 
-  {T : Type -> Type} {F : Type -> Type} {{Applicative F}} {A : Type}
-  (trav : {F : Type -> Type} -> {{Applicative F}} -> 
-          {A B : Type} -> (A -> F B) -> T A -> F (T B))
-  (tfa : T (F A)) : F (T A) := trav id tfa;
+{-# inline: true #-}
+defaultSequenceA
+  {T : Type -> Type}
+  {F : Type -> Type}
+  {{Applicative F}}
+  {A : Type}
+  (trav : {F : Type -> Type}
+    -> {{Applicative F}}
+    -> {A B : Type}
+    -> (A -> F B)
+    -> T A
+    -> F (T B))
+  (tfa : T (F A))
+  : F (T A) := trav id tfa;
 
--- Default implementation of traverse using sequenceA  
+-- Default implementation of traverse using sequenceA
+{-# inline: true #-}
 defaultTraverse
-  {T : Type -> Type} {{Functor T}} {F : Type -> Type} {{Applicative F}} {A B : Type}
-  (seqA : {F : Type -> Type} -> {{Applicative F}} ->
-          {A : Type} -> T (F A) -> F (T A))
-  (f : A -> F B) (ta : T A) : F (T B) := 
-  seqA (map f ta);
+  {T : Type -> Type}
+  {{Functor T}}
+  {F : Type -> Type}
+  {{Applicative F}}
+  {A B : Type}
+  (seqA : {F : Type -> Type}
+    -> {{Applicative F}}
+    -> {A : Type}
+    -> T (F A)
+    -> F (T A))
+  (f : A -> F B)
+  (ta : T A)
+  : F (T B) := seqA (map f ta);

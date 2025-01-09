@@ -9,13 +9,18 @@ trait
 type Traversable (Container Elem : Type) :=
   mkTraversable@{
     {{functorI}} : Functor Container Elem;
-    traverse : {F : Type -> Type} -> {{Applicative F}} ->
-               (Elem -> F Elem) -> Container -> F Container;
+    traverse
+      : {F : Type -> Type}
+        -> {{Applicative F}}
+        -> (Elem -> F Elem)
+        -> Container
+        -> F Container;
   };
 
 open Traversable public;
 
 --- Make a monomorphic Traversable instance from a polymorphic one.
+{-# inline: always #-}
 fromPolymorphicTraversable
   {T : Type -> Type}
   {{traversable : Poly.Traversable T}}

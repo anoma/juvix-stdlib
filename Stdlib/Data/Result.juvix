@@ -72,7 +72,11 @@ monadResultI {Error} : Monad (Result Error) :=
 instance
 traversableResultI {E} : Traversable (Result E) :=
   mkTraversable@{
-    sequenceA {F : Type -> Type} {{_ : Applicative F}} {A} : Result E (F A) -> F (Result E A)
+    sequenceA
+      {F : Type -> Type}
+      {{_ : Applicative F}}
+      {A}
+      : Result E (F A) -> F (Result E A)
       | (error e) := pure (error e)
       | (ok x) := map ok x;
     traverse := defaultTraverse sequenceA;
