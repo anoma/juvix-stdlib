@@ -34,7 +34,7 @@ listRfor {A B} (fun : B -> A -> B) (acc : B) : (list : List A) -> B
 
 --- Right-associative fold.
 {-# specialize: [1] #-}
-liftFoldr {A B} (fun : A -> B -> B) (acc : B) (list : List A) : B :=
+listFoldr {A B} (fun : A -> B -> B) (acc : B) (list : List A) : B :=
   listRfor (flip fun) acc list;
 
 --- Left-associative and tail-recursive fold.
@@ -140,7 +140,7 @@ snoc {A} (list : List A) (elem : A) : List A := list ++ elem :: nil;
 --- Concatenates a ;List; of ;List;s.
 {-# isabelle-function: {name: "concat"} #-}
 flatten {A} (listOfLists : List (List A)) : List A :=
-  listFoldl (++) nil listOfLists;
+  listFoldr (++) nil listOfLists;
 
 --- 𝒪(𝓃). Inserts the given separator before every element in the given ;List;.
 prependToAll {A} (separator : A) : (list : List A) -> List A
