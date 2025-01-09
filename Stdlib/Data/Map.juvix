@@ -14,7 +14,6 @@ import Stdlib.Trait.Ord open;
 import Stdlib.Function open;
 
 import Stdlib.Data.Set as Set open using {Set};
-import Stdlib.Data.Set.AVL as AVL open using {AVLTree};
 
 import Stdlib.Data.BinaryTree as Tree;
 
@@ -40,9 +39,9 @@ bindingKeyOrdering {Key Value} {{Ord Key}} : Ord (Binding Key Value) :=
     cmp (b1 b2 : Binding Key Value) : Ordering := Ord.cmp (key b1) (key b2);
   };
 
-type Map Key Value := mkMap (AVLTree (Binding Key Value));
+type Map Key Value := mkMap (Set (Binding Key Value));
 
-empty {Key Value} : Map Key Value := mkMap AVL.empty;
+empty {Key Value} : Map Key Value := mkMap Set.empty;
 
 {-# specialize: [1, fun] #-}
 insertWith
