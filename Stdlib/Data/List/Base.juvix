@@ -134,9 +134,6 @@ syntax operator ++ cons;
   | nil ys := ys
   | (x :: xs) ys := x :: xs ++ ys;
 
---- 𝒪(𝓃). Append an element.
-snoc {A} (list : List A) (elem : A) : List A := list ++ elem :: nil;
-
 --- Concatenates a ;List; of ;List;s.
 {-# isabelle-function: {name: "concat"} #-}
 flatten {A} (listOfLists : List (List A)) : List A :=

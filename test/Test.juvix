@@ -82,11 +82,6 @@ propZipWith (f : Int -> Int -> Int) (xs ys : List Int) : Bool :=
     && eqListInt zs zsFlip
     && eqListInt (map λ{x := f x x} xs) (zipWith f xs xs);
 
-propSnoc (xs : List Int) (x : Int) : Bool :=
-  let
-    snoc-x : List Int := snoc xs x;
-  in eqListInt snoc-x (reverse (x :: reverse xs));
-
 propDrop (n : Nat) (xs : List Int) : Bool :=
   let
     drop-n : List Int := drop n xs;
@@ -203,8 +198,6 @@ sortTest (sortName : String) (sort : List Int -> List Int) : QC.Test :=
   QC.mkTest ("sort properties: " ++str sortName) (propSort sort);
 
 dropTest : QC.Test := QC.mkTest "drop properties" propDrop;
-
-snocTest : QC.Test := QC.mkTest "snoc properties" propSnoc;
 
 zipTest : QC.Test := QC.mkTest "zip properties" propZip;
 
@@ -333,7 +326,6 @@ main : IO :=
               equalCompareToEqTest;
               zipTest;
               zipWithTest;
-              snocTest;
               dropTest;
               sortTest "mergeSort" mergeSort;
               sortTest "quickSort" quickSort;

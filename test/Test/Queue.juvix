@@ -4,6 +4,7 @@ import Juvix.Builtin.V1 open;
 import Stdlib.System.IO.Base open;
 import Stdlib.Function open;
 import Stdlib.Data.Pair open;
+import Stdlib.Data.Nat open;
 import Test.JuvixUnit open;
 
 import Stdlib.Data.Queue open;
