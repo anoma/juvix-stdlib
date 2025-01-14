@@ -106,7 +106,7 @@ traversableListI : Traversable List :=
     terminating
     sequenceA
       {F : Type -> Type}
-      {{_ : Applicative F}}
+      {{Applicative F}}
       {A}
       (xs : List (F A))
       : F (List A) :=
