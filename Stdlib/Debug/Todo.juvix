@@ -1,0 +1,4 @@
+module Stdlib.Debug.Todo;
+
+--- Something that hasn't yet been implemented
+axiom todo {A : Type} : A;
