@@ -9,6 +9,6 @@ package : Package :=
       [
         path "../";
         github "anoma" "juvix-quickcheck" "v0.18.0";
-        github "anoma" "juvix-test" "v0.17.0";
+        github "anoma" "juvix-test" "9295218c06e69f5cc747ea650a7ab4442639b8bc";
       ];
   };
