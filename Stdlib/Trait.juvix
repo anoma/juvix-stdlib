@@ -7,6 +7,7 @@ import Stdlib.Trait.Functor open public;
 import Stdlib.Trait.Applicative open public;
 import Stdlib.Trait.Monad open public;
 import Stdlib.Trait.Foldable open public;
+import Stdlib.Trait.Traversable open public;
 import Stdlib.Trait.Partial open public;
 import Stdlib.Trait.Natural open public;
 import Stdlib.Trait.FromNatural open public;

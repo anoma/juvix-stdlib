@@ -1,0 +1,4 @@
+module Stdlib.Trait.Traversable;
+
+import Stdlib.Trait.Traversable.Polymorphic open public;
+import Stdlib.Trait.Traversable.Monomorphic as MonoTraversable public;
