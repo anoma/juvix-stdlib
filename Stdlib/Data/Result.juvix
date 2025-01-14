@@ -74,7 +74,7 @@ traversableResultI {E} : Traversable (Result E) :=
   mkTraversable@{
     sequenceA
       {F : Type -> Type}
-      {{_ : Applicative F}}
+      {{Applicative F}}
       {A}
       : Result E (F A) -> F (Result E A)
       | (error e) := pure (error e)
