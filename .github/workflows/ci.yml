@@ -30,7 +30,7 @@ jobs:
           path: juvix
           submodules: false
 
-      - name: Set bundled stdlib to CI branch commit
+      - name: Set bundled stdlib to PR branch commit
         run: |
           cd juvix
           git submodule update --init --recursive
