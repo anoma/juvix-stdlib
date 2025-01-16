@@ -23,9 +23,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Std Library
-        uses: actions/checkout@v3
-
       - name: Checkout Juvix
         uses: actions/checkout@v3
         with:
@@ -37,7 +34,7 @@ jobs:
         run: |
           cd juvix/juvix-stdlib
           git remote -v
-          git pull
+          git remote update
           git checkout ${{ github.event.pull_request.head.sha }}
 
       - name: install LLVM
@@ -62,6 +59,9 @@ jobs:
           cd juvix
           echo "$GITHUB_WORKSPACE/.local/bin" >> $GITHUB_PATH
           stack install
+
+      - name: Checkout Std Library
+        uses: actions/checkout@v3
 
       - name : Typecheck library code
         run : make check
