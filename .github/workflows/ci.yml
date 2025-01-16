@@ -39,6 +39,11 @@ jobs:
           cd juvix
           make runtime
 
+      - name: Set bundled stdlib to CI branch commit
+        run: |
+          cd juvix/juvix-stdlib
+          git checkout $GITHUB_SHA
+
       - name: Stack setup
         id: stack
         uses: freckle/stack-action@v4
@@ -46,7 +51,7 @@ jobs:
           working-directory: juvix
           test: false
           fast: false
-      
+
       - name: Install Juvix
         run: |
           cd juvix
@@ -55,7 +60,7 @@ jobs:
 
       - name: Checkout Std Library
         uses: actions/checkout@v3
- 
+
       - name : Typecheck library code
         run : make check
 
