@@ -35,8 +35,6 @@ jobs:
           cd juvix
           git submodule update --init --recursive
           cd juvix-stdlib
-          git remote -v
-          git remote update
           git checkout ${{ github.event.pull_request.head.sha }}
 
       - name: install LLVM
