@@ -28,14 +28,16 @@ jobs:
         with:
           repository: anoma/juvix
           path: juvix
-          submodules: true
+          submodules: false
 
       - name: Set bundled stdlib to CI branch commit
         run: |
-          cd juvix/juvix-stdlib
+          cd juvix
+          git submodule update --init --recursive
+          cd juvix-stdlib
           git remote -v
           git remote update
-          git checkout $GITHUB_REF
+          git checkout ${{ github.event.pull_request.head.sha }}
 
       - name: install LLVM
         run: |
