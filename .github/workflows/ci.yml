@@ -35,7 +35,7 @@ jobs:
           cd juvix
           git submodule update --init --recursive
           cd juvix-stdlib
-          git checkout $GITHUB_SHA
+          git checkout $GITHUB_REF
 
       - name: install LLVM
         run: |
