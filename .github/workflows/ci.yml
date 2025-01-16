@@ -23,6 +23,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Std Library
+        uses: actions/checkout@v3
+
       - name: Checkout Juvix
         uses: actions/checkout@v3
         with:
@@ -38,11 +41,6 @@ jobs:
         run: |
           cd juvix
           make runtime
-
-      - name: Update submodule
-        run: |
-          cd juvix
-          git submodule update --init --recursive
 
       - name: Set bundled stdlib to CI branch commit
         run: |
@@ -63,9 +61,6 @@ jobs:
           cd juvix
           echo "$GITHUB_WORKSPACE/.local/bin" >> $GITHUB_PATH
           stack install
-
-      - name: Checkout Std Library
-        uses: actions/checkout@v3
 
       - name : Typecheck library code
         run : make check
