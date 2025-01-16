@@ -138,12 +138,7 @@ open Internal;
 --- Ord A, Ord K and fun must be compatible. i.e cmp_k (fun a1) (fun a2) == cmp_a a1 a2
 {-# specialize: [1, 2] #-}
 lookupWith
-  {A K}
-  {{order : Ord K}}
-  (fun : A -> K)
-  (elem : K)
-  (set : Set A)
-  : Maybe A :=
+  {A K} {{order : Ord K}} (fun : A -> K) (elem : K) (set : Set A) : Maybe A :=
   let
     {-# specialize-by: [order, fun] #-}
     go : Set A -> Maybe A
@@ -172,12 +167,7 @@ isMember {A} {{Ord A}} (elem : A) (set : Set A) : Bool :=
 --- where == comes from Ord a.
 {-# specialize: [1, 2] #-}
 insertWith
-  {A}
-  {{order : Ord A}}
-  (fun : A -> A -> A)
-  (elem : A)
-  (set : Set A)
-  : Set A :=
+  {A} {{order : Ord A}} (fun : A -> A -> A) (elem : A) (set : Set A) : Set A :=
   let
     {-# specialize-by: [order, fun] #-}
     go : Set A -> Set A
@@ -235,8 +225,7 @@ deleteWith
 
 --- 𝒪(log 𝓃). Removes `elem` from `set`.
 {-# specialize: [1] #-}
-delete {A} {{Ord A}} (elem : A) (set : Set A) : Set A :=
-  deleteWith id elem set;
+delete {A} {{Ord A}} (elem : A) (set : Set A) : Set A := deleteWith id elem set;
 
 --- 𝒪(log 𝓃). Returns the minimum element of `set`.
 lookupMin {A} : (set : Set A) -> Maybe A
@@ -309,8 +298,7 @@ instance
 polymorphicFoldableSetI : Polymorphic.Foldable Set :=
   Polymorphic.mkFoldable@{
     {-# inline: true #-}
-    for {A B} (f : B -> A -> B) (acc : B) (set : Set A) : B :=
-      foldl f acc set;
+    for {A B} (f : B -> A -> B) (acc : B) (set : Set A) : B := foldl f acc set;
     {-# inline: true #-}
     rfor {A B} (f : B -> A -> B) (acc : B) (set : Set A) : B :=
       foldr (flip f) acc set;
@@ -423,11 +411,7 @@ filter {A} {{Ord A}} (predicate : A -> Bool) (set : Set A) : Set A :=
 
 syntax iterator partition {init := 0; range := 1};
 partition
-  {A}
-  {{Ord A}}
-  (predicate : A -> Bool)
-  (set : Set A)
-  : Pair (Set A) (Set A) :=
+  {A} {{Ord A}} (predicate : A -> Bool) (set : Set A) : Pair (Set A) (Set A) :=
   for (trueSet, falseSet := empty, empty) (x in set) {
     if
       | predicate x := insert x trueSet, falseSet
