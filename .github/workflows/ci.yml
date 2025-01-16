@@ -39,6 +39,11 @@ jobs:
           cd juvix
           make runtime
 
+      - name: Update submodule
+        run: |
+          cd juvix
+          git submodule update --init --recursive
+
       - name: Set bundled stdlib to CI branch commit
         run: |
           cd juvix/juvix-stdlib
