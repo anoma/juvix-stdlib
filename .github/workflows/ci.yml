@@ -35,7 +35,7 @@ jobs:
           cd juvix/juvix-stdlib
           git remote -v
           git remote update
-          git checkout ${{ github.event.pull_request.head.sha }}
+          git checkout $GITHUB_REF
 
       - name: install LLVM
         run: |
