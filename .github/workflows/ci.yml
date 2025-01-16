@@ -28,7 +28,14 @@ jobs:
         with:
           repository: anoma/juvix
           path: juvix
-          submodules: true
+          submodules: false
+
+      - name: Set bundled stdlib to PR branch commit
+        run: |
+          cd juvix
+          git submodule update --init --recursive
+          cd juvix-stdlib
+          git checkout $GITHUB_SHA || git checkout ${{ github.event.pull_request.head.sha }}
 
       - name: install LLVM
         run: |
@@ -46,7 +53,7 @@ jobs:
           working-directory: juvix
           test: false
           fast: false
-      
+
       - name: Install Juvix
         run: |
           cd juvix
@@ -55,7 +62,7 @@ jobs:
 
       - name: Checkout Std Library
         uses: actions/checkout@v3
- 
+
       - name : Typecheck library code
         run : make check
 
