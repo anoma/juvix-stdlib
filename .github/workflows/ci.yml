@@ -39,15 +39,10 @@ jobs:
           cd juvix
           make runtime
 
-      - name: Update submodule
-        run: |
-          cd juvix
-          git submodule update --init --recursive
-
       - name: Set bundled stdlib to CI branch commit
         run: |
           cd juvix/juvix-stdlib
-          git checkout $GITHUB_SHA
+          git checkout ${{ github.event.pull_request.head.sha }}
 
       - name: Stack setup
         id: stack
