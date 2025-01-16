@@ -33,6 +33,13 @@ jobs:
           path: juvix
           submodules: true
 
+      - name: Set bundled stdlib to CI branch commit
+        run: |
+          cd juvix/juvix-stdlib
+          git remote -v
+          git pull
+          git checkout ${{ github.event.pull_request.head.sha }}
+
       - name: install LLVM
         run: |
           sudo apt install llvm
@@ -41,12 +48,6 @@ jobs:
         run: |
           cd juvix
           make runtime
-
-      - name: Set bundled stdlib to CI branch commit
-        run: |
-          cd juvix/juvix-stdlib
-          git pull
-          git checkout ${{ github.event.pull_request.head.sha }}
 
       - name: Stack setup
         id: stack
