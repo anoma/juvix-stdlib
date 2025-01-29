@@ -1,8 +1,8 @@
 module Stdlib.Data.Field.Base;
 
 import Stdlib.Data.Fixity open;
-import Stdlib.Data.Nat.Base open;
-import Stdlib.Data.Int.Base open hiding {toNat};
+import Stdlib.Data.Nat.Base open hiding {+; *};
+import Stdlib.Data.Int.Base open hiding {toNat; +; -; *};
 import Stdlib.Data.Bool.Base open;
 
 builtin field
