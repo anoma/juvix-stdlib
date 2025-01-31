@@ -33,14 +33,14 @@ type Set (A : Type) :=
     };
 
 module Internal;
-  --- 𝒪(1) Retrieves the height of an ;Set;. The height is the distance from
+  --- 𝒪(1) Retrieves the height of a ;Set;. The height is the distance from
   --- the root to the deepest child.
   height {A} (set : Set A) : Nat :=
     case set of
       | empty := 0
       | node@{height} := height;
 
-  --- 𝒪(n). Maps a function over an ;Set;. Does not check if
+  --- 𝒪(n). Maps a function over a ;Set;. Does not check if
   --- after mapping the order of the elements is preserved. It is the
   --- responsibility of the caller to ensure that `f` preserves the ordering.
   unsafeMap {A B} (f : A -> B) (set : Set A) : Set B :=

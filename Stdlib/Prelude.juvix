@@ -18,5 +18,16 @@ import Stdlib.Data.Range open public;
 import Stdlib.Function open public;
 import Stdlib.System.IO open public;
 import Stdlib.Debug.Todo open public;
-
 import Stdlib.Trait open public;
+
+module Map;
+  import Stdlib.Data.Map open public;
+end;
+
+open Map using {Map} public;
+
+module Set;
+  import Stdlib.Data.Set open public;
+end;
+
+open Set using {Set} public;
