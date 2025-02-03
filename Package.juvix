@@ -5,6 +5,6 @@ import PackageDescription.V2 open;
 package : Package :=
   defaultPackage@{
     name := "stdlib";
-    version := mkVersion 0 10 1;
+    version := mkVersion 0 10 2;
     dependencies := []
   };
