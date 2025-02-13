@@ -144,7 +144,7 @@ lookupWith
     go : Set A -> Maybe A
       | empty := nothing
       | node@{element; left; right} :=
-        case Ord.cmp elem (fun element) of
+        case Ord.compare elem (fun element) of
           | LessThan := go left
           | GreaterThan := go right
           | Equal := just element;
@@ -173,7 +173,7 @@ insertWith
     go : Set A -> Set A
       | empty := mkNode elem empty empty
       | node@{element; height; left; right} :=
-        case Ord.cmp elem element of
+        case Ord.compare elem element of
           | LessThan := balance (mkNode element (go left) right)
           | GreaterThan := balance (mkNode element left (go right))
           | Equal := node (fun element elem) height left right;
@@ -210,7 +210,7 @@ deleteWith
     go : Set A -> Set A
       | empty := empty
       | node@{element; left; right} :=
-        case Ord.cmp elem (fun element) of
+        case Ord.compare elem (fun element) of
           | LessThan := balance (mkNode element (go left) right)
           | GreaterThan := balance (mkNode element left (go right))
           | Equal :=
@@ -461,7 +461,7 @@ pretty {A} {{Show A}} (set : Set A) : String :=
   maybe "empty" Tree.treeToString (toTree set);
 
 instance
-eqSetI {A} {{Eq A}} : Eq (Set A) := mkEq (Eq.eq on toList);
+eqSetI {A} {{Eq A}} : Eq (Set A) := mkEq (Eq.isEqual on toList);
 
 instance
-ordSetI {A} {{Ord A}} : Ord (Set A) := mkOrd (Ord.cmp on toList);
+ordSetI {A} {{Ord A}} : Ord (Set A) := mkOrd (Ord.compare on toList);

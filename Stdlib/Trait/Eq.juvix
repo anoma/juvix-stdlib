@@ -9,14 +9,14 @@ trait
 type Eq A :=
   mkEq@{
     builtin isEqual
-    eq : A -> A -> Bool;
+    isEqual : A -> A -> Bool;
   };
 
 syntax operator == comparison;
 syntax operator /= comparison;
 
 {-# inline: always, isabelle-operator: {name: "=", prec: 50, assoc: none} #-}
-== {A} {{Eq A}} : A -> A -> Bool := Eq.eq;
+== {A} {{Eq A}} : A -> A -> Bool := Eq.isEqual;
 
 --- Test for inequality.
 {-# inline: always, isabelle-operator: {name: "\\<noteq>", prec: 50, assoc: none} #-}

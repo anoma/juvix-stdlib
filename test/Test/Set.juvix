@@ -12,7 +12,7 @@ type Box :=
   };
 
 instance
-ordBoxI : Ord Box := mkOrd (Ord.cmp on Box.b);
+ordBoxI : Ord Box := mkOrd (Ord.compare on Box.b);
 
 --- Test for size and balance.
 mkTests {A} (descr : TestDescr A) : List Test :=

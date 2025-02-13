@@ -11,7 +11,7 @@ syntax operator == comparison;
 
 {-# isabelle-operator: {name: "=", prec: 50, assoc: none} #-}
 == {A} {{Ord A}} (x y : A) : Bool :=
-  case Ord.cmp x y of
+  case Ord.compare x y of
     | Equal := true
     | _ := false;
 

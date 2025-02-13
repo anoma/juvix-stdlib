@@ -52,7 +52,7 @@ propAddSubBad (a b : Int) : Bool := a == ofNat 2;
 
 propGcdBad (a b : Int) : Bool := gcd a b > ofNat 1;
 
-propEqualCompareToEq (a : Nat) : Bool := Ord.isEqual (Ord.cmp a a);
+propEqualCompareToEq (a : Nat) : Bool := Ord.isEqual (Ord.compare a a);
 
 propSort (sort : List Int -> List Int) (xs : List Int) : Bool :=
   let
@@ -90,7 +90,7 @@ propDrop (n : Nat) (xs : List Int) : Bool :=
 
 -- Assumption: The input list represents a rectangular matrix
 propTransposeMatrixId (xs : List (List Int)) : Bool :=
-  Eq.eq xs (transpose (transpose xs));
+  Eq.isEqual xs (transpose (transpose xs));
 
 -- Assumption: The input list represents a rectangular matrix
 propTransposeMatrixDimensions (xs : List (List Int)) : Bool :=

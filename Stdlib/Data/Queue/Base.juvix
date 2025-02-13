@@ -90,4 +90,4 @@ instance
 showQueueI {A} {{Show A}} : Show (Queue A) := mkShow (toList >> Show.show);
 
 instance
-ordQueueI {A} {{Ord A}} : Ord (Queue A) := mkOrd (Ord.cmp on toList);
+ordQueueI {A} {{Ord A}} : Ord (Queue A) := mkOrd (Ord.compare on toList);
