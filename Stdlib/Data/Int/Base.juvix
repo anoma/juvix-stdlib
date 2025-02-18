@@ -13,83 +13,86 @@ type Int :=
   | --- ofNat n represents the integer n
     ofNat Nat
   | --- negSuc n represents the integer -(n + 1)
-    negSuc Nat;
+    negSuc Nat
+with
+  fromNat : Nat -> Int := ofNat;
 
---- Converts an ;Int; to a ;Nat;. If the ;Int; is negative, it returns ;zero;.
-toNat (int : Int) : Nat :=
-  case int of
-    | ofNat n := n
-    | negSuc _ := zero;
+  --- Converts an ;Int; to a ;Nat;. If the ;Int; is negative, it returns ;zero;.
+  toNat (int : Int) : Nat :=
+    case int of
+      | ofNat n := n
+      | negSuc _ := zero;
 
---- Non-negative predicate for ;Int;s.
-builtin int-nonneg
-nonNeg : Int -> Bool
-  | (ofNat n) := true
-  | (negSuc _) := false;
+  --- Subtraction for ;Nat;s.
+  builtin int-sub-nat
+  subNat (n m : Nat) : Int :=
+    case sub n m of
+      | zero := ofNat (Nat.sub m n)
+      | suc k := negSuc k;
 
---- Subtraction for ;Nat;s.
-builtin int-sub-nat
-intSubNat (n m : Nat) : Int :=
-  case sub n m of
-    | zero := ofNat (Nat.sub m n)
-    | suc k := negSuc k;
+  syntax operator + additive;
 
-syntax operator + additive;
+  --- Addition for ;Int;s.
+  builtin int-plus
+  + : Int -> Int -> Int
+    | (ofNat m) (ofNat n) := ofNat (m Nat.+ n)
+    | (ofNat m) (negSuc n) := subNat m (suc n)
+    | (negSuc m) (ofNat n) := subNat n (suc m)
+    | (negSuc m) (negSuc n) := negSuc (suc (m Nat.+ n));
 
---- Addition for ;Int;s.
-builtin int-plus
-+ : Int -> Int -> Int
-  | (ofNat m) (ofNat n) := ofNat (m Nat.+ n)
-  | (ofNat m) (negSuc n) := intSubNat m (suc n)
-  | (negSuc m) (ofNat n) := intSubNat n (suc m)
-  | (negSuc m) (negSuc n) := negSuc (suc (m Nat.+ n));
+  --- Negation for ;Int;s.
+  builtin int-neg
+  neg : Int -> Int
+    | (ofNat n) := negNat n
+    | (negSuc n) := ofNat (suc n);
 
---- Negation for ;Nat;s.
-builtin int-neg-nat
-negNat : Nat -> Int
-  | zero := ofNat zero
-  | (suc n) := negSuc n;
+  syntax operator * multiplicative;
 
---- Negation for ;Int;s.
-builtin int-neg
-neg : Int -> Int
-  | (ofNat n) := negNat n
-  | (negSuc n) := ofNat (suc n);
+  --- Multiplication for ;Int;s.
+  builtin int-mul
+  * : Int -> Int -> Int
+    | (ofNat m) (ofNat n) := ofNat (m Nat.* n)
+    | (ofNat m) (negSuc n) := negNat (m Nat.* suc n)
+    | (negSuc m) (ofNat n) := negNat (suc m Nat.* n)
+    | (negSuc m) (negSuc n) := ofNat (suc m Nat.* suc n);
 
-syntax operator * multiplicative;
+  syntax operator - additive;
 
---- Multiplication for ;Int;s.
-builtin int-mul
-* : Int -> Int -> Int
-  | (ofNat m) (ofNat n) := ofNat (m Nat.* n)
-  | (ofNat m) (negSuc n) := negNat (m Nat.* suc n)
-  | (negSuc m) (ofNat n) := negNat (suc m Nat.* n)
-  | (negSuc m) (negSuc n) := ofNat (suc m Nat.* suc n);
+  --- Subtraction for ;Int;s.
+  builtin int-sub
+  - (n m : Int) : Int := m + neg n;
 
-syntax operator - additive;
+  --- Division for ;Int;s.
+  builtin int-div
+  div : Int -> Int -> Int
+    | (ofNat m) (ofNat n) := ofNat (Nat.div m n)
+    | (ofNat m) (negSuc n) := negNat (Nat.div m (suc n))
+    | (negSuc m) (ofNat n) := negNat (Nat.div (suc m) n)
+    | (negSuc m) (negSuc n) := ofNat (Nat.div (suc m) (suc n));
 
---- Subtraction for ;Int;s.
-builtin int-sub
-- (n m : Int) : Int := m + neg n;
+  --- Modulo for ;Int;s.
+  builtin int-mod
+  mod : Int -> Int -> Int
+    | (ofNat m) (ofNat n) := ofNat (Nat.mod m n)
+    | (ofNat m) (negSuc n) := ofNat (Nat.mod m (suc n))
+    | (negSuc m) (ofNat n) := negNat (Nat.mod (suc m) n)
+    | (negSuc m) (negSuc n) := negNat (Nat.mod (suc m) (suc n));
 
---- Division for ;Int;s.
-builtin int-div
-div : Int -> Int -> Int
-  | (ofNat m) (ofNat n) := ofNat (Nat.div m n)
-  | (ofNat m) (negSuc n) := negNat (Nat.div m (suc n))
-  | (negSuc m) (ofNat n) := negNat (Nat.div (suc m) n)
-  | (negSuc m) (negSuc n) := ofNat (Nat.div (suc m) (suc n));
+  --- Absolute value
+  abs (int : Int) : Nat :=
+    case int of
+      | ofNat n := n
+      | negSuc n := suc n;
 
---- Modulo for ;Int;s.
-builtin int-mod
-mod : Int -> Int -> Int
-  | (ofNat m) (ofNat n) := ofNat (Nat.mod m n)
-  | (ofNat m) (negSuc n) := ofNat (Nat.mod m (suc n))
-  | (negSuc m) (ofNat n) := negNat (Nat.mod (suc m) n)
-  | (negSuc m) (negSuc n) := negNat (Nat.mod (suc m) (suc n));
+  --- Non-negative predicate for ;Int;s.
+  builtin int-nonneg
+  nonNeg : Int -> Bool
+    | (ofNat n) := true
+    | (negSuc _) := false;
 
---- Absolute value
-abs (int : Int) : Nat :=
-  case int of
-    | ofNat n := n
-    | negSuc n := suc n;
+  --- Negation for ;Nat;s.
+  builtin int-neg-nat
+  negNat : Nat -> Int
+    | zero := ofNat zero
+    | (suc n) := negSuc n;
+end;

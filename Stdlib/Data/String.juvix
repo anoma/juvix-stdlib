@@ -8,10 +8,10 @@ import Stdlib.Trait.Show open;
 import Stdlib.Data.String.Ord as String;
 
 instance
-eqStringI : Eq String := mkEq (String.==);
+eqStringI : Eq String := Eq.mk (String.==);
 
 instance
 showStringI : Show String :=
   let
     go (s : String) : String := "\"" ++str s ++str "\"";
-  in mkShow go;
+  in Show.mk go;

@@ -18,7 +18,7 @@ ordUnitI : Ord Unit;
 
 instance
 showUnitI : Show Unit :=
-  mkShow@{
+  Show.mk@{
     show (_ : Unit) : String := "unit";
   };
 

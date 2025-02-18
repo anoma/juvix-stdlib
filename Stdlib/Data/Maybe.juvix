@@ -20,7 +20,7 @@ eqMaybeI {A} {{Eq A}} : Eq (Maybe A);
 
 instance
 showMaybeI {A} {{Show A}} : Show (Maybe A) :=
-  mkShow@{
+  Show.mk@{
     show (m : Maybe A) : String :=
       case m of
         | nothing := "nothing"

@@ -1,6 +1,6 @@
 module Stdlib.Data.Int;
 
-import Stdlib.Data.Int.Base open hiding {module Int; +; -; *; div; mod} public;
+import Stdlib.Data.Int.Base open hiding {module Int} public;
 
 module Int;
   open Stdlib.Data.Int.Base.Int public;
@@ -26,20 +26,20 @@ axiom intToString : Int -> String;
 
 {-# specialize: true, inline: case #-}
 instance
-eqIntI : Eq Int := mkEq (Int.==);
+eqIntI : Eq Int := Eq.mk (Int.==);
 
 {-# specialize: true, inline: case #-}
 instance
-ordIntI : Ord Int := mkOrd Int.compare;
+ordIntI : Ord Int := Ord.mk Int.compare;
 
 instance
-showIntI : Show Int := mkShow intToString;
+showIntI : Show Int := Show.mk intToString;
 
 {-# specialize: true, inline: case #-}
 instance
 fromNaturalIntI : FromNatural Int :=
   mkFromNatural@{
-    fromNat := ofNat;
+    fromNat := Int.fromNat;
   };
 
 {-# specialize: true, inline: case #-}
@@ -53,7 +53,7 @@ naturalIntI : Natural Int :=
 {-# specialize: true, inline: case #-}
 instance
 integralIntI : Integral Int :=
-  mkIntegral@{
+  Integral.mk@{
     naturalI := naturalIntI;
     - := (Int.-);
     fromInt (x : Int) : Int := x;
@@ -62,7 +62,7 @@ integralIntI : Integral Int :=
 {-# specialize: true, inline: case #-}
 instance
 divModIntI : DivMod Int :=
-  mkDivMod@{
+  DivMod.mk@{
     div := Int.div;
     mod := Int.mod;
   };

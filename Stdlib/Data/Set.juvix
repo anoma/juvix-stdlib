@@ -8,7 +8,7 @@
 --- constructing, modifying, and querying AVL trees.
 module Stdlib.Data.Set;
 
-import Stdlib.Data.Tree as Tree open using {Tree; Forest};
+import Stdlib.Data.Tree as Tree open using {Tree; module Tree; Forest};
 import Stdlib.Data.Maybe open;
 import Stdlib.Data.Result open;
 import Stdlib.Data.Nat open;
@@ -31,6 +31,7 @@ type Set (A : Type) :=
       left : Set A;
       right : Set A;
     };
+    open Set;
 
 module Internal;
   --- 𝒪(1) Retrieves the height of a ;Set;. The height is the distance from
@@ -65,11 +66,12 @@ module Internal;
       LeanNone
     | --- Right child is higher.
       LeanRight;
+      open BalanceFactor;
 
   diffFactor {A} (set : Set A) : Int :=
     case set of
       | empty := 0
-      | node@{left; right} := intSubNat (height right) (height left);
+      | node@{left; right} := Int.subNat (height right) (height left);
 
   {-# inline: true #-}
   balanceFactor' {A} (left right : Set A) : BalanceFactor :=
@@ -129,7 +131,7 @@ module Internal;
   isBalanced {A} : (set : Set A) -> Bool
     | empty := true
     | set@node@{left; right} :=
-      isBalanced left && isBalanced right && abs (diffFactor set) <= 1;
+      isBalanced left && isBalanced right && Int.abs (diffFactor set) <= 1;
 end;
 
 open Internal;
@@ -461,7 +463,7 @@ pretty {A} {{Show A}} (set : Set A) : String :=
   maybe "empty" Tree.treeToString (toTree set);
 
 instance
-eqSetI {A} {{Eq A}} : Eq (Set A) := mkEq (Eq.isEqual on toList);
+eqSetI {A} {{Eq A}} : Eq (Set A) := Eq.mk (Eq.isEqual on toList);
 
 instance
-ordSetI {A} {{Ord A}} : Ord (Set A) := mkOrd (Ord.compare on toList);
+ordSetI {A} {{Ord A}} : Ord (Set A) := Ord.mk (Ord.compare on toList);

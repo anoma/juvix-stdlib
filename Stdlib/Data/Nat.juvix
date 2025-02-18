@@ -29,19 +29,19 @@ axiom stringToNat : String -> Nat;
 
 {-# specialize: true, inline: case #-}
 instance
-eqNatI : Eq Nat := mkEq (Nat.==);
+eqNatI : Eq Nat := Eq.mk (Nat.==);
 
 {-# specialize: true, inline: case #-}
 instance
-ordNatI : Ord Nat := mkOrd Nat.compare;
+ordNatI : Ord Nat := Ord.mk Nat.compare;
 
 instance
-showNatI : Show Nat := mkShow natToString;
+showNatI : Show Nat := Show.mk natToString;
 
 {-# specialize: true, inline: case #-}
 instance
 divModNatI : DivMod Nat :=
-  mkDivMod@{
+  DivMod.mk@{
     div := Nat.div;
     mod := Nat.mod;
   };

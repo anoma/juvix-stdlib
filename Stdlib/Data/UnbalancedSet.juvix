@@ -2,22 +2,23 @@ module Stdlib.Data.UnbalancedSet;
 
 import Stdlib.Prelude open;
 
-import Stdlib.Trait.Ord as Ord open using {Ord; mkOrd; module Ord};
+import Stdlib.Trait.Ord as Ord open using {Ord; module Ord};
 
 import Stdlib.Data.BinaryTree as Tree;
-open Tree using {BinaryTree; leaf; node};
+open Tree using {BinaryTree; module BinaryTree};
+open BinaryTree using {leaf; node};
 
 type UnbalancedSet (A : Type) :=
-  mkUnbalancedSet@{
+  mk@{
     order : Ord A;
     tree : BinaryTree A;
   };
 
-empty {A} {{order : Ord A}} : UnbalancedSet A := mkUnbalancedSet order leaf;
+empty {A} {{order : Ord A}} : UnbalancedSet A := UnbalancedSet.mk order leaf;
 
 isMember {A} (elem : A) (set : UnbalancedSet A) : Bool :=
   case set of
-    mkUnbalancedSet@{tree} :=
+    UnbalancedSet.mk@{tree} :=
       let
         go : BinaryTree A -> Bool
           | leaf := false
@@ -30,7 +31,7 @@ isMember {A} (elem : A) (set : UnbalancedSet A) : Bool :=
 
 insert {A} (elem : A) (set : UnbalancedSet A) : UnbalancedSet A :=
   case set of
-    mkUnbalancedSet@{order; tree} :=
+    UnbalancedSet.mk@{order; tree} :=
       let
         go : BinaryTree A -> BinaryTree A
           | leaf := node leaf elem leaf
@@ -39,17 +40,17 @@ insert {A} (elem : A) (set : UnbalancedSet A) : UnbalancedSet A :=
               | Ord.LessThan := node (go l) y r
               | Ord.Equal := tree
               | Ord.GreaterThan := node l y (go r);
-      in mkUnbalancedSet order (go tree);
+      in UnbalancedSet.mk order (go tree);
 
 length {A} (set : UnbalancedSet A) : Nat :=
-  Tree.length (UnbalancedSet.tree set);
+  BinaryTree.length (UnbalancedSet.tree set);
 
 toList {A} (set : UnbalancedSet A) : List A :=
-  Tree.toList (UnbalancedSet.tree set);
+  BinaryTree.toList (UnbalancedSet.tree set);
 
 instance
 ordUnbalancedSetI {A} {{Ord A}} : Ord (UnbalancedSet A) :=
-  mkOrd@{
+  Ord.mk@{
     compare (s1 s2 : UnbalancedSet A) : Ordering :=
       Ord.compare (toList s1) (toList s2);
   };

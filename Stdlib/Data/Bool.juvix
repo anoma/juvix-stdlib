@@ -17,7 +17,7 @@ ordBoolI : Ord Bool;
 
 instance
 showBoolI : Show Bool :=
-  mkShow@{
+  Show.mk@{
     show (x : Bool) : String :=
       if
         | x := "true"

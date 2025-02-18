@@ -11,6 +11,8 @@ import Stdlib.Data.Nat.Ord as Nat;
 
 syntax operator == comparison;
 
+open Int using {ofNat; negSuc; -; +};
+
 --- Tests for equality.
 builtin int-eq
 == : Int -> Int -> Bool
@@ -27,7 +29,7 @@ syntax operator <= comparison;
 
 --- Returns ;true; iff the first element is less than or equal to the second.
 builtin int-le
-<= (m n : Int) : Bool := nonNeg (n - m);
+<= (m n : Int) : Bool := Int.nonNeg (n - m);
 
 syntax operator < comparison;
 

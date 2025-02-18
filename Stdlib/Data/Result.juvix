@@ -22,7 +22,7 @@ eqResultI {Error Value} {{Eq Error}} {{Eq Value}} : Eq (Result Error Value);
 instance
 showResultI
   {Error Value} {{Show Error}} {{Show Value}} : Show (Result Error Value) :=
-  mkShow@{
+  Show.mk@{
     show : Result Error Value -> String
       | (error x) := "Error (" ++str Show.show x ++str ")"
       | (ok x) := "Ok (" ++str Show.show x ++str ")";

@@ -2,7 +2,7 @@ module Stdlib.Data.Field.Base;
 
 import Stdlib.Data.Fixity open;
 import Stdlib.Data.Nat.Base open hiding {+; *};
-import Stdlib.Data.Int.Base open hiding {toNat; +; -; *};
+import Stdlib.Data.Int.Base open;
 import Stdlib.Data.Bool.Base open;
 
 builtin field
@@ -39,6 +39,6 @@ axiom fromInt : Int -> Field;
 builtin field-to-nat
 axiom toNat : Field -> Nat;
 
-fromNat (n : Nat) : Field := fromInt (ofNat n);
+fromNat (n : Nat) : Field := fromInt (Int.fromNat n);
 
-toInt (f : Field) : Int := ofNat (toNat f);
+toInt (f : Field) : Int := Int.fromNat (toNat f);

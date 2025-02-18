@@ -7,7 +7,7 @@ import Stdlib.Data.Fixity open;
 builtin eq
 trait
 type Eq A :=
-  mkEq@{
+  mk@{
     builtin isEqual
     isEqual : A -> A -> Bool;
   };

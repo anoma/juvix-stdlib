@@ -28,7 +28,7 @@ eqListI {A} {{Eq A}} : Eq (List A) :=
         if
           | Eq.isEqual x y := go xs ys
           | else := false;
-  in mkEq go;
+  in Eq.mk go;
 
 isMember {A} {{Eq A}} (elem : A) (list : List A) : Bool :=
   isElement Eq.isEqual elem list;
@@ -46,7 +46,7 @@ ordListI {A} {{Ord A}} : Ord (List A) :=
           | LessThan := LessThan
           | GreaterThan := GreaterThan
           | Equal := go xs ys;
-  in mkOrd go;
+  in Ord.mk go;
 
 instance
 showListI {A} {{Show A}} : Show (List A) :=
@@ -54,7 +54,7 @@ showListI {A} {{Show A}} : Show (List A) :=
     go : List A -> String
       | nil := "nil"
       | (x :: xs) := Show.show x ++str " :: " ++str go xs;
-  in mkShow@{
+  in Show.mk@{
        show (list : List A) : String :=
          case list of
            | nil := "nil"

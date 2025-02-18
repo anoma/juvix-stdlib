@@ -18,8 +18,8 @@ ordProductI {A B} : {{Ord A}} -> {{Ord B}} -> Ord (Pair A B);
 
 instance
 showProductI {A B} : {{Show A}} -> {{Show B}} -> Show (Pair A B)
-  | {{mkShow showA}} {{mkShow showB}} :=
-    mkShow@{
+  | {{Show.mk showA}} {{Show.mk showB}} :=
+    Show.mk@{
       show (p : Pair A B) : String :=
         case p of a, b := "(" ++str showA a ++str " , " ++str showB b ++str ")";
     };

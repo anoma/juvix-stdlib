@@ -4,6 +4,6 @@ import Juvix.Builtin.V1.String open public;
 
 trait
 type Show A :=
-  mkShow@{
+  mk@{
     show : A -> String;
   };
