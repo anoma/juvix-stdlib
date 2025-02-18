@@ -22,7 +22,7 @@ isMember {A} (elem : A) (set : UnbalancedSet A) : Bool :=
         go : BinaryTree A -> Bool
           | leaf := false
           | node@{element; left; right} :=
-            case Ord.cmp elem element of
+            case Ord.compare elem element of
               | Ord.LessThan := go left
               | Ord.GreaterThan := go right
               | Ord.Equal := true;
@@ -35,7 +35,7 @@ insert {A} (elem : A) (set : UnbalancedSet A) : UnbalancedSet A :=
         go : BinaryTree A -> BinaryTree A
           | leaf := node leaf elem leaf
           | tree@(node l y r) :=
-            case Ord.cmp elem y of
+            case Ord.compare elem y of
               | Ord.LessThan := node (go l) y r
               | Ord.Equal := tree
               | Ord.GreaterThan := node l y (go r);
@@ -50,5 +50,6 @@ toList {A} (set : UnbalancedSet A) : List A :=
 instance
 ordUnbalancedSetI {A} {{Ord A}} : Ord (UnbalancedSet A) :=
   mkOrd@{
-    cmp (s1 s2 : UnbalancedSet A) : Ordering := Ord.cmp (toList s1) (toList s2);
+    compare (s1 s2 : UnbalancedSet A) : Ordering :=
+      Ord.compare (toList s1) (toList s2);
   };

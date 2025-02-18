@@ -26,12 +26,12 @@ eqListI {A} {{Eq A}} : Eq (List A) :=
       | _ nil := false
       | (x :: xs) (y :: ys) :=
         if
-          | Eq.eq x y := go xs ys
+          | Eq.isEqual x y := go xs ys
           | else := false;
   in mkEq go;
 
 isMember {A} {{Eq A}} (elem : A) (list : List A) : Bool :=
-  isElement (Eq.eq) elem list;
+  isElement Eq.isEqual elem list;
 
 {-# specialize: true, inline: case #-}
 instance
@@ -42,7 +42,7 @@ ordListI {A} {{Ord A}} : Ord (List A) :=
       | nil _ := LessThan
       | _ nil := GreaterThan
       | (x :: xs) (y :: ys) :=
-        case Ord.cmp x y of
+        case Ord.compare x y of
           | LessThan := LessThan
           | GreaterThan := GreaterThan
           | Equal := go xs ys;
