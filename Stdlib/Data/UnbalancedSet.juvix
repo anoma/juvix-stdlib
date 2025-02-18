@@ -50,5 +50,6 @@ toList {A} (set : UnbalancedSet A) : List A :=
 instance
 ordUnbalancedSetI {A} {{Ord A}} : Ord (UnbalancedSet A) :=
   mkOrd@{
-    compare (s1 s2 : UnbalancedSet A) : Ordering := Ord.compare (toList s1) (toList s2);
+    compare (s1 s2 : UnbalancedSet A) : Ordering :=
+      Ord.compare (toList s1) (toList s2);
   };

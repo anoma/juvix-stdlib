@@ -36,7 +36,8 @@ instance
 bindingKeyOrdering {Key Value} {{Ord Key}} : Ord (Binding Key Value) :=
   mkOrd@{
     {-# inline: true #-}
-    compare (b1 b2 : Binding Key Value) : Ordering := Ord.compare (key b1) (key b2);
+    compare (b1 b2 : Binding Key Value) : Ordering :=
+      Ord.compare (key b1) (key b2);
   };
 
 type Map Key Value := mkMap (Set (Binding Key Value));
@@ -371,4 +372,5 @@ instance
 eqMapI {A B} {{Eq A}} {{Eq B}} : Eq (Map A B) := mkEq (Eq.isEqual on toList);
 
 instance
-ordMapI {A B} {{Ord A}} {{Ord B}} : Ord (Map A B) := mkOrd (Ord.compare on toList);
+ordMapI {A B} {{Ord A}} {{Ord B}} : Ord (Map A B) :=
+  mkOrd (Ord.compare on toList);
