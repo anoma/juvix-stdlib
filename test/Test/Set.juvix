@@ -7,7 +7,7 @@ import Stdlib.Debug as Debug;
 import Stdlib.Data.Set as Set open;
 
 type Box :=
-  mkBox@{
+  mk@{
     b : Nat;
   };
 
@@ -17,7 +17,7 @@ ordBoxI : Ord Box := Ord.mk (Ord.compare on Box.b);
 --- Test for size and balance.
 mkTests {A} (descr : TestDescr A) : List Test :=
   case descr of
-    mkTestDescr@{testTitle; testLen; testSet} :=
+    TestDescr.mk@{testTitle; testLen; testSet} :=
       let
         mkTitle : String -> String
           | m := testTitle ++str " " ++str m;
@@ -33,7 +33,7 @@ mkTests {A} (descr : TestDescr A) : List Test :=
          ];
 
 type TestDescr (A : Type) :=
-  mkTestDescr@{
+  mk@{
     testTitle : String;
     testLen : Nat;
     testSet : Set A;
@@ -43,34 +43,34 @@ s1Tree : Set Nat := fromList [1; 2; 8; 3; 3; 2; 9];
 
 s2Tree : Set Nat := fromList [1; 3; 0; 4; 4; 8; 2];
 
-s1 : TestDescr Nat := mkTestDescr "s1" 5 s1Tree;
+s1 : TestDescr Nat := TestDescr.mk "s1" 5 s1Tree;
 
-s2 : TestDescr Nat := mkTestDescr "s2" 6 s2Tree;
+s2 : TestDescr Nat := TestDescr.mk "s2" 6 s2Tree;
 
 s2Delete : TestDescr Nat :=
-  mkTestDescr@{
+  TestDescr.mk@{
     testTitle := TestDescr.testTitle s2 ++str "-delete";
     testLen := sub (TestDescr.testLen s2) 2;
     testSet := deleteMany [1; 8] (TestDescr.testSet s2);
   };
 
 s2DeleteWith : TestDescr Box :=
-  mkTestDescr@{
+  TestDescr.mk@{
     testTitle := TestDescr.testTitle s2 ++str "-delete-with";
     testLen := sub (TestDescr.testLen s2) 2;
     testSet :=
-      deleteManyWith Box.b [1; 8] (TestDescr.testSet s2 |> Set.map mkBox);
+      deleteManyWith Box.b [1; 8] (TestDescr.testSet s2 |> Set.map Box.mk);
   };
 
 s3 : TestDescr Nat :=
-  mkTestDescr@{
+  TestDescr.mk@{
     testTitle := "s3";
     testLen := 6;
     testSet := fromList [5; 4; 3; 2; 1; 0];
   };
 
 s4 : TestDescr Nat :=
-  mkTestDescr@{
+  TestDescr.mk@{
     testTitle := "s4";
     testLen := 5;
     testSet := fromList [1; 2; 3; 4; 5];

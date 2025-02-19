@@ -9,9 +9,9 @@ import Data.Random open;
 arbitrarySizedList
   {A} (size : Nat) (arbitraryA : Arbitrary A) : Arbitrary (List A) :=
   case arbitraryA of
-    mkArbitrary g :=
-      mkArbitrary
-        (mkGen
+    Arbitrary.mk g :=
+      Arbitrary.mk
+        (Gen.mk
           \{rand :=
             let
               randList : StdGen -> Nat -> List A
@@ -26,8 +26,8 @@ arbitrarySizedList
 
 --- Generate an arbitrary rectangular matrix
 arbitraryMatrix {A} {{arbA : Arbitrary A}} : Arbitrary (List (List A)) :=
-  mkArbitrary
-    (mkGen
+  Arbitrary.mk
+    (Gen.mk
       \{rand :=
         let
           randSplit : Pair StdGen StdGen := stdSplit rand;

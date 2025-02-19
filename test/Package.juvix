@@ -8,7 +8,10 @@ package : Package :=
     dependencies :=
       [
         path "../";
-        github "anoma" "juvix-quickcheck" "v0.18.0";
-        github "anoma" "juvix-test" "9295218c06e69f5cc747ea650a7ab4442639b8bc";
+        github
+          "anoma"
+          "juvix-quickcheck"
+          "a78bf8da2e14f639f57e2f5e73f6a82fd3a8ff86";
+        github "anoma" "juvix-test" "d093e3dcc3caaea48433059810b671e38cfb02f7";
       ];
   };
