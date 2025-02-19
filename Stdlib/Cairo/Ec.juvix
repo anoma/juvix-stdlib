@@ -116,7 +116,8 @@ addMul (point1 : Point) (alpha : Field) (point2 : Point) : Point :=
       in sub r s;
 
 --- Computes alpha * point on the elliptic curve.
-mul (alpha : Field) (point : Point) : Point := addMul (Point.mk 0 0) alpha point;
+mul (alpha : Field) (point : Point) : Point :=
+  addMul (Point.mk 0 0) alpha point;
 
 module Operators;
   import Stdlib.Data.Fixity open;

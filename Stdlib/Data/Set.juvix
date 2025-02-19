@@ -31,7 +31,8 @@ type Set (A : Type) :=
       left : Set A;
       right : Set A;
     };
-    open Set;
+
+open Set;
 
 module Internal;
   --- 𝒪(1) Retrieves the height of a ;Set;. The height is the distance from
@@ -66,7 +67,8 @@ module Internal;
       LeanNone
     | --- Right child is higher.
       LeanRight;
-      open BalanceFactor;
+
+  open BalanceFactor;
 
   diffFactor {A} (set : Set A) : Int :=
     case set of

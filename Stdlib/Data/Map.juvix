@@ -199,7 +199,9 @@ mapValuesWithKey
   case map of
     Map.mk s :=
       Map.mk
-        (Set.Internal.unsafeMap \{(Binding.mk k v) := Binding.mk k (fun k v)} s);
+        (Set.Internal.unsafeMap
+          \{(Binding.mk k v) := Binding.mk k (fun k v)}
+          s);
 
 {-# inline: true #-}
 mapValues
