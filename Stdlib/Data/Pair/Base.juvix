@@ -2,13 +2,13 @@ module Stdlib.Data.Pair.Base;
 
 import Stdlib.Data.Fixity open;
 
-syntax operator Pair., pair;
-
 --- Inductive pair. I.e. a tuple with two components.
 builtin pair
 type Pair (A B : Type) := , : A → B → Pair A B;
 
 open Pair using {,} public;
+
+syntax operator , pair;
 
 --- Converts a function f of two arguments to a function with a product argument.
 uncurry {A B C} (fun : A -> B -> C) (pair : Pair A B) : C :=
