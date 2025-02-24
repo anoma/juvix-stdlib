@@ -6,13 +6,13 @@ import Stdlib.Data.Unit open;
 {-# specialize: true #-}
 trait
 type Functor (F : Type -> Type) :=
-  mkFunctor@{
+  mk@{
     syntax iterator map {init := 0; range := 1};
     {-# specialize: [1] #-}
     map : {A B : Type} -> (A -> B) -> F A -> F B;
   };
 
-open Functor public;
+open Functor hiding {mk} public;
 
 syntax operator <$> lapp;
 {-# inline: true #-}

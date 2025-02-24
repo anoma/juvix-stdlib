@@ -64,7 +64,7 @@ showListI {A} {{Show A}} : Show (List A) :=
 {-# specialize: true, inline: case #-}
 instance
 functorListI : Functor List :=
-  mkFunctor@{
+  Functor.mk@{
     map := listMap;
   };
 
@@ -76,7 +76,7 @@ monomorphicFunctorListI {A} : Monomorphic.Functor (List A) A :=
 {-# specialize: true, inline: case #-}
 instance
 polymorphicFoldableListI : Polymorphic.Foldable List :=
-  Polymorphic.mkFoldable@{
+  Polymorphic.Foldable.mk@{
     for := listFor;
     rfor := listRfor;
   };
@@ -87,7 +87,7 @@ foldableListI {A} : Foldable (List A) A := fromPolymorphicFoldable;
 
 instance
 applicativeListI : Applicative List :=
-  mkApplicative@{
+  Applicative.mk@{
     pure {A} (a : A) : List A := [a];
     ap {A B} : (listOfFuns : List (A -> B)) -> (listOfAs : List A) -> List B
       | [] _ := []
@@ -96,13 +96,13 @@ applicativeListI : Applicative List :=
 
 instance
 monadListI : Monad List :=
-  mkMonad@{
+  Monad.mk@{
     bind := flip concatMap;
   };
 
 instance
 traversableListI : Traversable List :=
-  mkTraversable@{
+  Traversable.mk@{
     terminating
     sequenceA
       {F : Type -> Type} {{Applicative F}} {A} (xs : List (F A)) : F (List A) :=

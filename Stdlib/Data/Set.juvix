@@ -300,7 +300,7 @@ foldl {A B} (fun : B -> A -> B) (acc : B) : (set : Set A) -> B
 {-# specialize: true, inline: case #-}
 instance
 polymorphicFoldableSetI : Polymorphic.Foldable Set :=
-  Polymorphic.mkFoldable@{
+  Polymorphic.Foldable.mk@{
     {-# inline: true #-}
     for {A B} (f : B -> A -> B) (acc : B) (set : Set A) : B := foldl f acc set;
     {-# inline: true #-}

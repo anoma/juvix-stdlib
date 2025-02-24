@@ -25,7 +25,7 @@ showUnitI : Show Unit :=
 {-# specialize: true, inline: case #-}
 instance
 foldableUnitI : Foldable Unit Unit :=
-  mkFoldable@{
+  Foldable.mk@{
     {-# inline: true #-}
     rfor
       {Acc : Type}

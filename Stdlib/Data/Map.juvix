@@ -7,7 +7,7 @@ import Stdlib.Data.List open hiding {all; any; filter; partition};
 import Stdlib.Data.Nat open;
 import Stdlib.Data.Bool open;
 
-import Stdlib.Trait.Functor open using {Functor; mkFunctor; map as fmap};
+import Stdlib.Trait.Functor open using {Functor; module Functor; map as fmap};
 import Stdlib.Trait.Foldable open hiding {foldr; foldl};
 import Stdlib.Trait.Ord open;
 
@@ -350,7 +350,7 @@ partition
 {-# specialize: true, inline: case #-}
 instance
 functorMapI {Key} : Functor (Map Key) :=
-  mkFunctor@{
+  Functor.mk@{
     map {A B} (fun : A -> B) (container : Map Key A) : Map Key B :=
       mapValues fun container;
   };
@@ -358,7 +358,7 @@ functorMapI {Key} : Functor (Map Key) :=
 {-# specialize: true, inline: case #-}
 instance
 foldableMapI {Key Value} : Foldable (Map Key Value) (Pair Key Value) :=
-  mkFoldable@{
+  Foldable.mk@{
     {-# inline: true #-}
     for
       {B} (f : B -> Pair Key Value -> B) (acc : B) (map : Map Key Value) : B :=

@@ -7,18 +7,18 @@ import Stdlib.Trait.Functor.Polymorphic as Poly;
 {-# specialize: true #-}
 trait
 type Functor (Container Elem : Type) :=
-  mkFunctor@{
+  mk@{
     syntax iterator map {init := 0; range := 1};
     {-# specialize: [1] #-}
     map : (Elem -> Elem) -> Container -> Container;
   };
 
-open Functor public;
+open Functor hiding {mk} public;
 
 {-# inline: always #-}
 fromPolymorphicFunctor
   {F : Type -> Type} {{Poly.Functor F}} {Elem} : Functor (F Elem) Elem :=
-  mkFunctor@{
+  Functor.mk@{
     map := Poly.map;
   };
 

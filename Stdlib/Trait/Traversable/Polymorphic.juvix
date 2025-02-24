@@ -7,7 +7,7 @@ import Stdlib.Trait.Applicative open;
 --- A trait for traversing a structure while performing applicative effects
 trait
 type Traversable (T : Type -> Type) :=
-  mkTraversable@{
+  mk@{
     {{functorI}} : Functor T;
     traverse
       : {F : Type -> Type}
@@ -24,7 +24,7 @@ type Traversable (T : Type -> Type) :=
         -> F (T A);
   };
 
-open Traversable public;
+open Traversable hiding {mk} public;
 
 -- Default implementation of sequenceA using traverse
 {-# inline: true #-}
