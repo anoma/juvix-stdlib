@@ -9,4 +9,4 @@ type DivMod A :=
     mod : A -> A -> A;
   };
 
-open DivMod public;
+open DivMod hiding {mk} public;
