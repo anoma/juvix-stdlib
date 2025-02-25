@@ -8,9 +8,9 @@ package : Package :=
     version :=
       mkVersion@{
         major := 0;
-        minor := 3;
+        minor := 11;
         patch := 0;
-        release := just "rc.4";
+        release := just "rc.5";
       };
     dependencies := [];
   };
