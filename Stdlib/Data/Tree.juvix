@@ -16,6 +16,8 @@ type Tree (A : Type) :=
     children : List (Tree A);
   };
 
+open Tree using {node} public;
+
 terminating
 draw {A} {{Show A}} (tree : Tree A) : List String :=
   Show.show (Tree.element tree) :: drawForest (Tree.children tree);

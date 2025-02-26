@@ -15,6 +15,8 @@ type Int :=
   | --- negSuc n represents the integer -(n + 1)
     negSuc Nat;
 
+open Int using {ofNat; negSuc} public;
+
 --- Converts an ;Int; to a ;Nat;. If the ;Int; is negative, it returns ;zero;.
 toNat (int : Int) : Nat :=
   case int of

@@ -12,6 +12,8 @@ type Eq A :=
     isEqual : A -> A -> Bool;
   };
 
+open Eq using {mkEq} public;
+
 syntax operator == comparison;
 syntax operator /= comparison;
 

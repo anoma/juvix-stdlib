@@ -11,6 +11,8 @@ type BinaryTree (A : Type) :=
       right : BinaryTree A;
     };
 
+open BinaryTree using {leaf; node} public;
+
 --- fold a tree in depth-first order
 fold {A B} (f : A -> B -> B -> B) (acc : B) (tree : BinaryTree A) : B :=
   let

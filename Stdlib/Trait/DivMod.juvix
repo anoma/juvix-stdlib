@@ -9,4 +9,6 @@ type DivMod A :=
     mod : A -> A -> A;
   };
 
+open DivMod using {mkDivMod} public;
+
 open DivMod public;

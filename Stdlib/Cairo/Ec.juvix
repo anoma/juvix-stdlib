@@ -33,6 +33,8 @@ type Point :=
     y : Field;
   };
 
+open Point using {mkPoint} public;
+
 module Internal;
   builtin ec_op
   axiom ecOp : Point -> Field -> Point -> Point;

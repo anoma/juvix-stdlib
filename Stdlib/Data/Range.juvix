@@ -15,11 +15,15 @@ type Range N :=
     high : N;
   };
 
+open Range using {mkRange} public;
+
 type StepRange N :=
   mkStepRange@{
     range : Range N;
     step : N;
   };
+
+open StepRange using {mkStepRange} public;
 
 syntax operator to range;
 

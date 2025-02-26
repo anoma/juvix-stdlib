@@ -18,6 +18,8 @@ type Applicative (F : Type -> Type) :=
     ap : {A B : Type} -> F (A -> B) -> F A -> F B;
   };
 
+open Applicative using {mkApplicative} public;
+
 open Applicative public;
 
 --- Sequences computations.

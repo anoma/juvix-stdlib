@@ -11,4 +11,6 @@ type Numeric A :=
     / : A -> A -> A;
   };
 
+open Numeric using {mkNumeric} public;
+
 open Numeric using {/} public;

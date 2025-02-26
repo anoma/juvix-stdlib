@@ -12,6 +12,8 @@ type Functor (F : Type -> Type) :=
     map : {A B : Type} -> (A -> B) -> F A -> F B;
   };
 
+open Functor using {mkFunctor} public;
+
 open Functor public;
 
 syntax operator <$> lapp;

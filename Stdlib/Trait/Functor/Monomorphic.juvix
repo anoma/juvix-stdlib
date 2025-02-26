@@ -13,6 +13,8 @@ type Functor (Container Elem : Type) :=
     map : (Elem -> Elem) -> Container -> Container;
   };
 
+open Functor using {mkFunctor} public;
+
 open Functor public;
 
 {-# inline: always #-}

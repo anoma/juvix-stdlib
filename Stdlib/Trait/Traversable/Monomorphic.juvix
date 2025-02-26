@@ -17,6 +17,8 @@ type Traversable (Container Elem : Type) :=
         -> F Container;
   };
 
+open Traversable using {mkTraversable} public;
+
 open Traversable public;
 
 --- Make a monomorphic Traversable instance from a polymorphic one.

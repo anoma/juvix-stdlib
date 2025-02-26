@@ -24,6 +24,8 @@ type Queue (A : Type) :=
     back : List A;
   };
 
+open Queue using {mkQueue} public;
+
 --- 𝒪(1). The empty ;Queue;.
 empty {A} : Queue A := mkQueue nil nil;
 

@@ -15,4 +15,6 @@ type Integral A :=
     fromInt : Int -> A;
   };
 
+open Integral using {mkIntegral} public;
+
 open Integral using {fromInt; -} public;

@@ -11,6 +11,8 @@ type Monad (M : Type -> Type) :=
     bind : {A B : Type} -> M A -> (A -> M B) -> M B;
   };
 
+open Monad using {mkMonad} public;
+
 open Monad public;
 
 syntax operator >>= seq;

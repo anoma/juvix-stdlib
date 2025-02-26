@@ -23,6 +23,8 @@ type Binding Key Value :=
     value : Value;
   };
 
+open Binding using {mkBinding} public;
+
 key {Key Value} (binding : Binding Key Value) : Key := Binding.key binding;
 
 value {Key Value} (binding : Binding Key Value) : Value :=
@@ -41,6 +43,8 @@ bindingKeyOrdering {Key Value} {{Ord Key}} : Ord (Binding Key Value) :=
   };
 
 type Map Key Value := mkMap (Set (Binding Key Value));
+
+open Map using {mkMap} public;
 
 empty {Key Value} : Map Key Value := mkMap Set.empty;
 

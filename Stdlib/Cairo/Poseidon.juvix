@@ -11,6 +11,8 @@ type PoseidonState :=
     s2 : Field;
   };
 
+open PoseidonState using {mkPoseidonState} public;
+
 builtin poseidon
 axiom poseidonHash : PoseidonState -> PoseidonState;
 

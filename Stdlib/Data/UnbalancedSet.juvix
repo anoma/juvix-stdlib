@@ -13,6 +13,8 @@ type UnbalancedSet (A : Type) :=
     tree : BinaryTree A;
   };
 
+open UnbalancedSet using {mkUnbalancedSet} public;
+
 empty {A} {{order : Ord A}} : UnbalancedSet A := mkUnbalancedSet order leaf;
 
 isMember {A} (elem : A) (set : UnbalancedSet A) : Bool :=

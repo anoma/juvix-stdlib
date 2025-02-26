@@ -9,6 +9,8 @@ type Partial :=
     fail : {A : Type} -> String -> A;
   };
 
+open Partial using {mkPartial} public;
+
 open Partial public;
 
 runPartial {A} (f : {{Partial}} -> A) : A := f {{mkPartial Debug.failwith}};

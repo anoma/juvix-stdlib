@@ -13,6 +13,8 @@ type Foldable (F : Type -> Type) :=
     rfor : {A B : Type} -> (B -> A -> B) -> B -> F A -> B;
   };
 
+open Foldable using {mkFoldable} public;
+
 open Foldable public;
 
 --- Combine the elements of the type using the provided function starting with the element in the left-most position.

@@ -14,6 +14,8 @@ type Ord A :=
     compare : A -> A -> Ordering;
   };
 
+open Ord using {mkOrd} public;
+
 deriving instance
 orderingOrdI : Ord Ordering;
 

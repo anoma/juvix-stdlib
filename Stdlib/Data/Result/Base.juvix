@@ -10,6 +10,8 @@ type Result Error Value :=
   | error Error
   | ok Value;
 
+open Result using {error; ok} public;
+
 --- Apply the onError function if the value is ;error; or apply the
 --- onOk function if the value is ;ok;.
 {-# inline: true #-}

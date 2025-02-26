@@ -24,6 +24,8 @@ type Traversable (T : Type -> Type) :=
         -> F (T A);
   };
 
+open Traversable using {mkTraversable} public;
+
 open Traversable public;
 
 -- Default implementation of sequenceA using traverse

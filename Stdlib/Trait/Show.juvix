@@ -7,3 +7,5 @@ type Show A :=
   mkShow@{
     show : A -> String;
   };
+
+open Show using {mkShow} public;
