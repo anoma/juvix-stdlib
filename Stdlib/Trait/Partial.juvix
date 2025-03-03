@@ -5,10 +5,10 @@ import Stdlib.Debug.Fail as Debug;
 
 trait
 type Partial :=
-  mkPartial@{
+  mk@{
     fail : {A : Type} -> String -> A;
   };
 
-open Partial public;
+open Partial hiding {mk} public;
 
-runPartial {A} (f : {{Partial}} -> A) : A := f {{mkPartial Debug.failwith}};
+runPartial {A} (f : {{Partial}} -> A) : A := f {{Partial.mk Debug.failwith}};

@@ -2,11 +2,11 @@ module Stdlib.Trait.DivMod;
 
 trait
 type DivMod A :=
-  mkDivMod@{
+  mk@{
     {-# isabelle-operator: {name: "div", prec: 70, assoc: left} #-}
     div : A -> A -> A;
     {-# isabelle-operator: {name: "mod", prec: 70, assoc: left} #-}
     mod : A -> A -> A;
   };
 
-open DivMod public;
+open DivMod hiding {mk} public;

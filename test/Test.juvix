@@ -24,13 +24,13 @@ propReverseReverseIsIdentity (xs : List Int) : Bool :=
   eqListInt xs (reverse (reverse xs));
 
 propTailLengthOneLess (xs : List Int) : Bool :=
-  isEmpty xs || ofNat (length (tail xs)) == intSubNat (length xs) 1;
+  isEmpty xs || fromNat (length (tail xs)) == Int.subNat (length xs) 1;
 
 propSplitAtRecombine (n : Nat) (xs : List Int) : Bool :=
   case splitAt n xs of lhs, rhs := eqListInt xs (lhs ++ rhs);
 
 propSplitAtLength (n : Nat) (xs : List Int) : Bool :=
-  case splitAt n (xs ++ replicate (sub n (length xs)) (ofNat 0)) of
+  case splitAt n (xs ++ replicate (sub n (length xs)) 0) of
     lhs, rhs := length lhs == n && length rhs == sub (length xs) n;
 -- Make sure the list has length at least n (TODO: make sure where?)
 
@@ -48,9 +48,9 @@ propDistributive (a b : Int) (f : Int -> Int) : Bool := f (a + b) == f a + f b;
 
 propAddSub (a b : Int) : Bool := a == a + b - b;
 
-propAddSubBad (a b : Int) : Bool := a == ofNat 2;
+propAddSubBad (a b : Int) : Bool := a == 2;
 
-propGcdBad (a b : Int) : Bool := gcd a b > ofNat 1;
+propGcdBad (a b : Int) : Bool := gcd a b > 1;
 
 propEqualCompareToEq (a : Nat) : Bool := Ord.isEqual (Ord.compare a a);
 
@@ -166,23 +166,23 @@ propResultIsOk (result : Result Int Bool) : Bool :=
 propResultFromErrorDefault
   (defaultError : Int) (result : Result Int Bool) : Bool :=
   case result of
-    | error x := fromError defaultError result == x
-    | ok _ := fromError defaultError result == defaultError;
+    | error x := Result.fromError defaultError result == x
+    | ok _ := Result.fromError defaultError result == defaultError;
 
 propResultFromOkDefault (defaultOk : Bool) (result : Result Int Bool) : Bool :=
   case result of
-    | error _ := fromOk defaultOk result == defaultOk
-    | ok x := fromOk defaultOk result == x;
+    | error _ := Result.fromOk defaultOk result == defaultOk
+    | ok x := Result.fromOk defaultOk result == x;
 
 propResultToMaybe (result : Result Int Bool) : Bool :=
   case result of
-    | error _ := resultToMaybe result == nothing
-    | ok x := resultToMaybe result == just x;
+    | error _ := Result.toMaybe result == nothing
+    | ok x := Result.toMaybe result == just x;
 
 propMaybeToResult (def : Int) (maybe : Maybe Bool) : Bool :=
   case maybe of
-    | just x := maybeToResult def maybe == ok x
-    | nothing := maybeToResult def maybe == error def;
+    | just x := Result.fromMaybe def maybe == ok x
+    | nothing := Result.fromMaybe def maybe == error def;
 
 propResultMapError (f : Int -> Int) (result : Result Int Int) : Bool :=
   case result of

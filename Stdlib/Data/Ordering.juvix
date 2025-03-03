@@ -10,6 +10,8 @@ type Ordering :=
   | Equal
   | GreaterThan;
 
+open Ordering using {LessThan; Equal; GreaterThan} public;
+
 isLessThan (ordering : Ordering) : Bool :=
   case ordering of
     | LessThan := true
@@ -30,7 +32,7 @@ orderingEqI : Eq Ordering;
 
 instance
 orderingShowI : Show Ordering :=
-  mkShow@{
+  Show.mk@{
     show : Ordering -> String
       | Equal := "Equal"
       | LessThan := "LessThan"

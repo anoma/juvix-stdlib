@@ -8,7 +8,44 @@ import Stdlib.Function open;
 --- with value `error`.
 type Result Error Value :=
   | error Error
-  | ok Value;
+  | ok Value
+with
+  --- Convert a Result to a Maybe. An ;error; value becomes `nothing`.
+  toMaybe {Error Value} (result : Result Error Value) : Maybe Value :=
+    handleResult (const nothing) just result;
+
+  --- Convert a Maybe to a Result. A ;nothing; value becomes `error defaultError`.
+  fromMaybe
+    {Error Value}
+    (defaultError : Error)
+    (maybeValue : Maybe Value)
+    : Result Error Value :=
+    case maybeValue of
+      | nothing := error defaultError
+      | just x := ok x;
+
+  --- Return the contents of an ;error; value, otherwise return defaultError.
+  fromError
+    {Error Value}
+    (defaultError : Error)
+    (result : Result Error Value)
+    : Error :=
+    case result of
+      | error a := a
+      | ok _ := defaultError;
+
+  --- Return the contents of an ;ok; value, otherwise return defaultValue.
+  fromOk
+    {Error Value}
+    (defaultValue : Value)
+    (result : Result Error Value)
+    : Value :=
+    case result of
+      | error _ := defaultValue
+      | ok b := b;
+end;
+
+open Result using {error; ok} public;
 
 --- Apply the onError function if the value is ;error; or apply the
 --- onOk function if the value is ;ok;.
@@ -48,31 +85,3 @@ isOk {Error Value} (result : Result Error Value) : Bool :=
   case result of
     | error _ := false
     | ok _ := true;
-
---- Return the contents of an ;error; value, otherwise return defaultError.
-fromError
-  {Error Value} (defaultError : Error) (result : Result Error Value) : Error :=
-  case result of
-    | error a := a
-    | ok _ := defaultError;
-
---- Return the contents of an ;ok; value, otherwise return defaultValue.
-fromOk
-  {Error Value} (defaultValue : Value) (result : Result Error Value) : Value :=
-  case result of
-    | error _ := defaultValue
-    | ok b := b;
-
---- Convert a Result to a Maybe. An ;error; value becomes `nothing`.
-resultToMaybe {Error Value} (result : Result Error Value) : Maybe Value :=
-  handleResult (const nothing) just result;
-
---- Convert a Maybe to a Result. A ;nothing; value becomes `error defaultError`.
-maybeToResult
-  {Error Value}
-  (defaultError : Error)
-  (maybeValue : Maybe Value)
-  : Result Error Value :=
-  case maybeValue of
-    | nothing := error defaultError
-    | just x := ok x;

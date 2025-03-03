@@ -5,7 +5,7 @@ import Stdlib.Function open;
 --- A trait for combining elements into a single result, processing one element at a time.
 trait
 type Foldable (F : Type -> Type) :=
-  mkFoldable@{
+  mk@{
     syntax iterator for {init := 1; range := 1};
     for : {A B : Type} -> (B -> A -> B) -> B -> F A -> B;
 
@@ -13,7 +13,7 @@ type Foldable (F : Type -> Type) :=
     rfor : {A B : Type} -> (B -> A -> B) -> B -> F A -> B;
   };
 
-open Foldable public;
+open Foldable hiding {mk} public;
 
 --- Combine the elements of the type using the provided function starting with the element in the left-most position.
 {-# inline: true #-}

@@ -20,7 +20,7 @@ eqMaybeI {A} {{Eq A}} : Eq (Maybe A);
 
 instance
 showMaybeI {A} {{Show A}} : Show (Maybe A) :=
-  mkShow@{
+  Show.mk@{
     show (m : Maybe A) : String :=
       case m of
         | nothing := "nothing"
@@ -34,7 +34,7 @@ ordMaybeI {A} {{Ord A}} : Ord (Maybe A);
 {-# specialize: true, inline: case #-}
 instance
 functorMaybeI : Functor Maybe :=
-  mkFunctor@{
+  Functor.mk@{
     map {A B} (f : A -> B) : Maybe A -> Maybe B
       | nothing := nothing
       | (just a) := just (f a);
@@ -47,7 +47,7 @@ monomorphicFunctorMaybeI {A} : Monomorphic.Functor (Maybe A) A :=
 
 instance
 applicativeMaybeI : Applicative Maybe :=
-  mkApplicative@{
+  Applicative.mk@{
     pure := just;
     ap {A B} (listOfFuns : Maybe (A -> B)) (list : Maybe A) : Maybe B :=
       case listOfFuns, list of
@@ -57,7 +57,7 @@ applicativeMaybeI : Applicative Maybe :=
 
 instance
 monadMaybeI : Monad Maybe :=
-  mkMonad@{
+  Monad.mk@{
     bind {A B} (maybe : Maybe A) (fun : A -> Maybe B) : Maybe B :=
       case maybe of
         | nothing := nothing
@@ -66,7 +66,7 @@ monadMaybeI : Monad Maybe :=
 
 instance
 traversableMaybeI : Traversable Maybe :=
-  mkTraversable@{
+  Traversable.mk@{
     sequenceA
       {F : Type -> Type} {{Applicative F}} {A} : Maybe (F A) -> F (Maybe A)
       | nothing := pure nothing

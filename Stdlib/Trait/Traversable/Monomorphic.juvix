@@ -7,7 +7,7 @@ import Stdlib.Trait.Applicative open;
 
 trait
 type Traversable (Container Elem : Type) :=
-  mkTraversable@{
+  mk@{
     {{functorI}} : Functor Container Elem;
     traverse
       : {F : Type -> Type}
@@ -17,7 +17,7 @@ type Traversable (Container Elem : Type) :=
         -> F Container;
   };
 
-open Traversable public;
+open Traversable hiding {mk} public;
 
 --- Make a monomorphic Traversable instance from a polymorphic one.
 {-# inline: always #-}
@@ -26,7 +26,7 @@ fromPolymorphicTraversable
   {{traversable : Poly.Traversable T}}
   {Elem}
   : Traversable (T Elem) Elem :=
-  mkTraversable@{
+  Traversable.mk@{
     functorI := fromPolymorphicFunctor;
     traverse := \{f ta := Poly.traverse f ta};
   };

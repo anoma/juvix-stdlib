@@ -7,18 +7,18 @@ import Stdlib.Data.List open hiding {all; any; filter; partition};
 import Stdlib.Data.Nat open;
 import Stdlib.Data.Bool open;
 
-import Stdlib.Trait.Functor open using {Functor; mkFunctor; map as fmap};
+import Stdlib.Trait.Functor open using {Functor; module Functor; map as fmap};
 import Stdlib.Trait.Foldable open hiding {foldr; foldl};
 import Stdlib.Trait.Ord open;
 
 import Stdlib.Function open;
 
-import Stdlib.Data.Set as Set open using {Set};
+import Stdlib.Data.Set as Set open using {Set; module Set};
 
 import Stdlib.Data.BinaryTree as Tree;
 
 type Binding Key Value :=
-  mkBinding@{
+  mk@{
     key : Key;
     value : Value;
   };
@@ -34,15 +34,15 @@ toPair {Key Value} (binding : Binding Key Value) : Pair Key Value :=
 {-# specialize: true, inline: case #-}
 instance
 bindingKeyOrdering {Key Value} {{Ord Key}} : Ord (Binding Key Value) :=
-  mkOrd@{
+  Ord.mk@{
     {-# inline: true #-}
     compare (b1 b2 : Binding Key Value) : Ordering :=
       Ord.compare (key b1) (key b2);
   };
 
-type Map Key Value := mkMap (Set (Binding Key Value));
+type Map Key Value := mk (Set (Binding Key Value));
 
-empty {Key Value} : Map Key Value := mkMap Set.empty;
+empty {Key Value} : Map Key Value := Map.mk Set.empty;
 
 {-# specialize: [1, fun] #-}
 insertWith
@@ -54,13 +54,13 @@ insertWith
   (map : Map Key Value)
   : Map Key Value :=
   case map of
-    mkMap tree :=
+    Map.mk tree :=
       let
         fun' (binding1 binding2 : Binding Key Value) : Binding Key Value :=
           case binding1, binding2 of
-            mkBinding k b1, mkBinding _ b2 := mkBinding k (fun b1 b2);
-        binding := mkBinding key value;
-      in mkMap (Set.insertWith fun' binding tree);
+            Binding.mk k b1, Binding.mk _ b2 := Binding.mk k (fun b1 b2);
+        binding := Binding.mk key value;
+      in Map.mk (Set.insertWith fun' binding tree);
 
 --- 𝒪(log 𝓃). Inserts a new `key` and `value` into `map`. If `key` is already
 --- present in `map`, the associated value is replaced with the supplied
@@ -78,7 +78,7 @@ insert
 {-# specialize: [1] #-}
 lookup
   {Key Value} {{Ord Key}} (key : Key) (map : Map Key Value) : Maybe Value :=
-  case map of mkMap s := fmap value (Set.lookupWith Binding.key key s);
+  case map of Map.mk s := fmap value (Set.lookupWith Binding.key key s);
 
 --- 𝒪(log 𝓃). Queries whether a given `key` is in `map`.
 {-# specialize: [1] #-}
@@ -111,7 +111,7 @@ fromList
 
 toList {Key Value} (map : Map Key Value) : List (Pair Key Value) :=
   case map of
-    mkMap s :=
+    Map.mk s :=
       fmap (x in Set.toList s) {
         toPair x
       };
@@ -141,7 +141,7 @@ toSet
   (map : Map Key Value)
   : Set (Pair Key Value) :=
   case map of
-    mkMap s :=
+    Map.mk s :=
       Set.map (x in s) {
         toPair x
       };
@@ -149,43 +149,43 @@ toSet
 --- 𝒪(1). Checks if a ;Map; is empty.
 {-# inline: true #-}
 isEmpty {Key Value} (map : Map Key Value) : Bool :=
-  case map of mkMap s := Set.isEmpty s;
+  case map of Map.mk s := Set.isEmpty s;
 
 --- 𝒪(𝓃). Returns the number of elements of a ;Map;.
 {-# inline: true #-}
 size {Key Value} (map : Map Key Value) : Nat :=
-  case map of mkMap s := Set.size s;
+  case map of Map.mk s := Set.size s;
 
 --- 𝒪(log 𝓃). Removes `key` assignment from `map`.
 {-# inline: true #-}
 delete
   {Key Value} {{Ord Key}} (key : Key) (map : Map Key Value) : Map Key Value :=
-  case map of mkMap s := mkMap (Set.deleteWith Binding.key key s);
+  case map of Map.mk s := Map.mk (Set.deleteWith Binding.key key s);
 
 keys {Key Value} (map : Map Key Value) : List Key :=
   case map of
-    mkMap s :=
+    Map.mk s :=
       fmap (x in Set.toList s) {
         key x
       };
 
 values {Key Value} (map : Map Key Value) : List Value :=
   case map of
-    mkMap s :=
+    Map.mk s :=
       fmap (x in Set.toList s) {
         value x
       };
 
 keySet {Key Value} {{Ord Key}} (map : Map Key Value) : Set Key :=
   case map of
-    mkMap s :=
+    Map.mk s :=
       Set.map (x in s) {
         key x
       };
 
 valueSet {Key Value} {{Ord Value}} (map : Map Key Value) : Set Value :=
   case map of
-    mkMap s :=
+    Map.mk s :=
       Set.map (x in s) {
         value x
       };
@@ -197,9 +197,11 @@ mapValuesWithKey
   (map : Map Key Value1)
   : Map Key Value2 :=
   case map of
-    mkMap s :=
-      mkMap
-        (Set.Internal.unsafeMap \{(mkBinding k v) := mkBinding k (fun k v)} s);
+    Map.mk s :=
+      Map.mk
+        (Set.Internal.unsafeMap
+          \{(Binding.mk k v) := Binding.mk k (fun k v)}
+          s);
 
 {-# inline: true #-}
 mapValues
@@ -220,7 +222,7 @@ foldr
   (map : Map Key Value)
   : Acc :=
   case map of
-    mkMap s :=
+    Map.mk s :=
       rfor (acc := acc) (x in s) {
         fun (key x) (value x) acc
       };
@@ -233,7 +235,7 @@ foldl
   (map : Map Key Value)
   : Acc :=
   case map of
-    mkMap s :=
+    Map.mk s :=
       for (acc := acc) (x in s) {
         fun acc (key x) (value x)
       };
@@ -243,25 +245,25 @@ foldl
 {-# inline: true #-}
 intersection
   {Key Value} {{Ord Key}} (map1 map2 : Map Key Value) : Map Key Value :=
-  case map1, map2 of mkMap s1, mkMap s2 := mkMap (Set.intersection s1 s2);
+  case map1, map2 of Map.mk s1, Map.mk s2 := Map.mk (Set.intersection s1 s2);
 
 --- 𝒪(n log n). Return elements of `map1` with keys not existing in `map2`.
 {-# inline: true #-}
 difference
   {Key Value} {{Ord Key}} (map1 map2 : Map Key Value) : Map Key Value :=
-  case map1, map2 of mkMap s1, mkMap s2 := mkMap (Set.difference s1 s2);
+  case map1, map2 of Map.mk s1, Map.mk s2 := Map.mk (Set.difference s1 s2);
 
 --- 𝒪(n log n). Returns a ;Map; containing the elements that are in `map1` or
 --- `map2`. This is a left-biased union of `map1` and `map2` which prefers
 --- `map1` when duplicate keys are encountered.
 {-# inline: true #-}
 unionLeft {Key Value} {{Ord Key}} (map1 map2 : Map Key Value) : Map Key Value :=
-  case map1, map2 of mkMap s1, mkMap s2 := mkMap (Set.unionLeft s1 s2);
+  case map1, map2 of Map.mk s1, Map.mk s2 := Map.mk (Set.unionLeft s1 s2);
 
 --- 𝒪(n log n). Returns a ;Map; containing the elements that are in `map1` or `map2`.
 {-# inline: true #-}
 union {Key Value} {{Ord Key}} (map1 map2 : Map Key Value) : Map Key Value :=
-  case map1, map2 of mkMap s1, mkMap s2 := mkMap (Set.union s1 s2);
+  case map1, map2 of Map.mk s1, Map.mk s2 := Map.mk (Set.union s1 s2);
 
 {-# specialize: [1, 2] #-}
 unions
@@ -285,10 +287,10 @@ disjointUnion
   (map1 map2 : Map Key Value)
   : Result Key (Map Key Value) :=
   case map1, map2 of
-    mkMap s1, mkMap s2 :=
+    Map.mk s1, Map.mk s2 :=
       case Set.disjointUnion s1 s2 of
         | error x := error (key x)
-        | ok s := ok (mkMap s);
+        | ok s := ok (Map.mk s);
 
 syntax iterator all {init := 0; range := 1};
 --- 𝒪(𝓃). Returns ;true; if all key-value pairs in `map` satisfy `predicate`.
@@ -296,7 +298,7 @@ syntax iterator all {init := 0; range := 1};
 all
   {Key Value} (predicate : Key -> Value -> Bool) (map : Map Key Value) : Bool :=
   case map of
-    mkMap s :=
+    Map.mk s :=
       Set.all (x in s) {
         predicate (key x) (value x)
       };
@@ -307,7 +309,7 @@ syntax iterator any {init := 0; range := 1};
 any
   {Key Value} (predicate : Key -> Value -> Bool) (map : Map Key Value) : Bool :=
   case map of
-    mkMap s :=
+    Map.mk s :=
       Set.any (x in s) {
         predicate (key x) (value x)
       };
@@ -323,8 +325,8 @@ filter
   (map : Map Key Value)
   : Map Key Value :=
   case map of
-    mkMap s :=
-      mkMap
+    Map.mk s :=
+      Map.mk
         (Set.filter (x in s) {
           predicate (key x) (value x)
         });
@@ -338,17 +340,17 @@ partition
   (map : Map Key Value)
   : Pair (Map Key Value) (Map Key Value) :=
   case map of
-    mkMap s :=
+    Map.mk s :=
       case
         Set.partition (x in s) {
           predicate (key x) (value x)
         }
-      of left, right := mkMap left, mkMap right;
+      of left, right := Map.mk left, Map.mk right;
 
 {-# specialize: true, inline: case #-}
 instance
 functorMapI {Key} : Functor (Map Key) :=
-  mkFunctor@{
+  Functor.mk@{
     map {A B} (fun : A -> B) (container : Map Key A) : Map Key B :=
       mapValues fun container;
   };
@@ -356,7 +358,7 @@ functorMapI {Key} : Functor (Map Key) :=
 {-# specialize: true, inline: case #-}
 instance
 foldableMapI {Key Value} : Foldable (Map Key Value) (Pair Key Value) :=
-  mkFoldable@{
+  Foldable.mk@{
     {-# inline: true #-}
     for
       {B} (f : B -> Pair Key Value -> B) (acc : B) (map : Map Key Value) : B :=
@@ -369,8 +371,8 @@ foldableMapI {Key Value} : Foldable (Map Key Value) (Pair Key Value) :=
   };
 
 instance
-eqMapI {A B} {{Eq A}} {{Eq B}} : Eq (Map A B) := mkEq (Eq.isEqual on toList);
+eqMapI {A B} {{Eq A}} {{Eq B}} : Eq (Map A B) := Eq.mk (Eq.isEqual on toList);
 
 instance
 ordMapI {A B} {{Ord A}} {{Ord B}} : Ord (Map A B) :=
-  mkOrd (Ord.compare on toList);
+  Ord.mk (Ord.compare on toList);

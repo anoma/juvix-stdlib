@@ -12,13 +12,13 @@ import Stdlib.Data.Unit.Base open;
 
 trait
 type Applicative (F : Type -> Type) :=
-  mkApplicative@{
+  mk@{
     {{functor}} : Functor F;
     pure : {A : Type} -> A -> F A;
     ap : {A B : Type} -> F (A -> B) -> F A -> F B;
   };
 
-open Applicative public;
+open Applicative hiding {mk} public;
 
 --- Sequences computations.
 --- Note that this function will be renamed to >>> once IO becomses a polymorphic type and can be given an Applicative instance.

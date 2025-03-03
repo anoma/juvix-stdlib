@@ -9,7 +9,7 @@ import Stdlib.Data.Ordering open public;
 builtin ord
 trait
 type Ord A :=
-  mkOrd@{
+  mk@{
     builtin compare
     compare : A -> A -> Ordering;
   };

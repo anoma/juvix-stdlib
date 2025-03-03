@@ -5,13 +5,13 @@ import Stdlib.Trait.Applicative open;
 
 trait
 type Monad (M : Type -> Type) :=
-  mkMonad@{
+  mk@{
     {{applicative}} : Applicative M;
     builtin monad-bind
     bind : {A B : Type} -> M A -> (A -> M B) -> M B;
   };
 
-open Monad public;
+open Monad hiding {mk} public;
 
 syntax operator >>= seq;
 >>= {A B} {F : Type -> Type} {{Monad F}} (x : F A) (g : A -> F B) : F B :=

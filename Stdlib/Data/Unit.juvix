@@ -18,14 +18,14 @@ ordUnitI : Ord Unit;
 
 instance
 showUnitI : Show Unit :=
-  mkShow@{
+  Show.mk@{
     show (_ : Unit) : String := "unit";
   };
 
 {-# specialize: true, inline: case #-}
 instance
 foldableUnitI : Foldable Unit Unit :=
-  mkFoldable@{
+  Foldable.mk@{
     {-# inline: true #-}
     rfor
       {Acc : Type}

@@ -6,7 +6,7 @@ import Stdlib.Trait.Natural open;
 
 trait
 type Integral A :=
-  mkIntegral@{
+  mk@{
     naturalI : Natural A;
     syntax operator - additive;
     {-# isabelle-operator: {name: "-", prec: 65, assoc: left} #-}

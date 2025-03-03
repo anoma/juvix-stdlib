@@ -10,13 +10,13 @@ import Stdlib.Data.Nat open;
 
 --- An inclusive range of naturals
 type Range N :=
-  mkRange@{
+  mk@{
     low : N;
     high : N;
   };
 
 type StepRange N :=
-  mkStepRange@{
+  mk@{
     range : Range N;
     step : N;
   };
@@ -25,22 +25,22 @@ syntax operator to range;
 
 --- `x to y` is the range [x..y]
 {-# inline: always #-}
-to {N} {{Natural N}} (low high : N) : Range N := mkRange low high;
+to {N} {{Natural N}} (low high : N) : Range N := Range.mk low high;
 
 syntax operator step step;
 
 --- `x to y step s` is the range [x, x + s, ..., y]
 {-# inline: always #-}
-step {N} (range : Range N) (step : N) : StepRange N := mkStepRange range step;
+step {N} (range : Range N) (step : N) : StepRange N := StepRange.mk range step;
 
 -- This instance assumes that `low <= high`.
 {-# specialize: true, inline: case #-}
 instance
 foldableRangeI {N} {{Eq N}} {{Natural N}} : Foldable (Range N) N :=
-  mkFoldable@{
+  Foldable.mk@{
     {-# specialize: [1, 3] #-}
     for {B : Type} (fun : B -> N -> B) (initialValue : B) : Range N -> B
-      | (mkRange low high) :=
+      | (Range.mk low high) :=
         let
           {-# specialize-by: [fun, high] #-}
           terminating
@@ -51,7 +51,7 @@ foldableRangeI {N} {{Eq N}} {{Natural N}} : Foldable (Range N) N :=
         in go initialValue low;
     {-# specialize: [1, 3] #-}
     rfor {B : Type} (fun : B -> N -> B) (initialValue : B) : Range N -> B
-      | (mkRange low high) :=
+      | (Range.mk low high) :=
         let
           {-# specialize-by: [fun, high] #-}
           terminating
@@ -66,10 +66,10 @@ foldableRangeI {N} {{Eq N}} {{Natural N}} : Foldable (Range N) N :=
 {-# specialize: true, inline: case #-}
 instance
 foldableStepRangeI {N} {{Ord N}} {{Natural N}} : Foldable (StepRange N) N :=
-  mkFoldable@{
+  Foldable.mk@{
     {-# specialize: [1, 3] #-}
     for {B : Type} (fun : B -> N -> B) (initialValue : B) : StepRange N -> B
-      | (mkStepRange (mkRange low high) step) :=
+      | (StepRange.mk (Range.mk low high) step) :=
         let
           {-# specialize-by: [fun, high, step] #-}
           terminating
@@ -80,7 +80,7 @@ foldableStepRangeI {N} {{Ord N}} {{Natural N}} : Foldable (StepRange N) N :=
         in go initialValue low;
     {-# specialize: [1, 3] #-}
     rfor {B : Type} (fun : B -> N -> B) (initialValue : B) : StepRange N -> B
-      | (mkStepRange (mkRange low high) step) :=
+      | (StepRange.mk (Range.mk low high) step) :=
         let
           {-# specialize-by: [fun, high, step] #-}
           terminating

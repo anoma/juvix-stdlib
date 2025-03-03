@@ -7,7 +7,7 @@ import Stdlib.Trait.Foldable.Polymorphic as Poly;
 {-# specialize: true #-}
 trait
 type Foldable (Container Elem : Type) :=
-  mkFoldable@{
+  mk@{
     syntax iterator for {init := 1; range := 1};
     for : {B : Type} -> (B -> Elem -> B) -> B -> Container -> B;
 
@@ -15,7 +15,7 @@ type Foldable (Container Elem : Type) :=
     rfor : {B : Type} -> (B -> Elem -> B) -> B -> Container -> B;
   };
 
-open Foldable public;
+open Foldable hiding {mk} public;
 
 --- Make a monomorphic ;Foldable; instance from a polymorphic one.
 --- All polymorphic types that are an instance of ;Poly.Foldable; should use this function to create their monomorphic ;Foldable; instance.
@@ -25,7 +25,7 @@ fromPolymorphicFoldable
   {{foldable : Poly.Foldable F}}
   {Elem}
   : Foldable (F Elem) Elem :=
-  mkFoldable@{
+  Foldable.mk@{
     for := Poly.for;
     rfor := Poly.rfor;
   };

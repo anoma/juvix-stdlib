@@ -22,7 +22,7 @@ eqResultI {Error Value} {{Eq Error}} {{Eq Value}} : Eq (Result Error Value);
 instance
 showResultI
   {Error Value} {{Show Error}} {{Show Value}} : Show (Result Error Value) :=
-  mkShow@{
+  Show.mk@{
     show : Result Error Value -> String
       | (error x) := "Error (" ++str Show.show x ++str ")"
       | (ok x) := "Ok (" ++str Show.show x ++str ")";
@@ -31,7 +31,7 @@ showResultI
 {-# specialize: true, inline: case #-}
 instance
 functorResultI {Error} : Functor (Result Error) :=
-  mkFunctor@{
+  Functor.mk@{
     map := mapOk;
   };
 
@@ -43,7 +43,7 @@ monomorphicFunctorResultI
 
 instance
 applicativeResultI {Error} : Applicative (Result Error) :=
-  mkApplicative@{
+  Applicative.mk@{
     pure := ok;
     ap
       {A B}
@@ -58,7 +58,7 @@ applicativeResultI {Error} : Applicative (Result Error) :=
 
 instance
 monadResultI {Error} : Monad (Result Error) :=
-  mkMonad@{
+  Monad.mk@{
     bind
       {A B}
       (result : Result Error A)
@@ -71,7 +71,7 @@ monadResultI {Error} : Monad (Result Error) :=
 
 instance
 traversableResultI {E} : Traversable (Result E) :=
-  mkTraversable@{
+  Traversable.mk@{
     sequenceA
       {F : Type -> Type}
       {{Applicative F}}

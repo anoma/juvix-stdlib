@@ -9,17 +9,19 @@ type BinaryTree (A : Type) :=
       left : BinaryTree A;
       element : A;
       right : BinaryTree A;
-    };
+    }
 
---- fold a tree in depth-first order
-fold {A B} (f : A -> B -> B -> B) (acc : B) (tree : BinaryTree A) : B :=
-  let
-    go (acc : B) : BinaryTree A -> B
-      | leaf := acc
-      | (node l a r) := f a (go acc l) (go acc r);
-  in go acc tree;
+with
+  --- fold a tree in depth-first order
+  fold {A B} (f : A -> B -> B -> B) (acc : B) (tree : BinaryTree A) : B :=
+    let
+      go (acc : B) : BinaryTree A -> B
+        | leaf := acc
+        | (node l a r) := f a (go acc l) (go acc r);
+    in go acc tree;
 
-length {A} (tree : BinaryTree A) : Nat := fold \{_ l r := 1 + l + r} 0 tree;
+  length {A} (tree : BinaryTree A) : Nat := fold \{_ l r := 1 + l + r} 0 tree;
 
-toList {A} (tree : BinaryTree A) : List A :=
-  fold \{e ls rs := e :: ls ++ rs} nil tree;
+  toList {A} (tree : BinaryTree A) : List A :=
+    fold \{e ls rs := e :: ls ++ rs} nil tree;
+end;

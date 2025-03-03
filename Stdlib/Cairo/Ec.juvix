@@ -28,7 +28,7 @@ end;
 
 builtin ec_point
 type Point :=
-  mkPoint@{
+  mk@{
     x : Field;
     y : Field;
   };
@@ -44,7 +44,7 @@ end;
 --- Checks if an EC point is on the STARK curve.
 isOnCurve (point : Point) : Bool :=
   case point of
-    mkPoint x y :=
+    Point.mk x y :=
       if
         | y == 0 := x == 0
         | else := y * y == (x * x + StarkCurve.ALPHA) * x + StarkCurve.BETA;
@@ -52,7 +52,7 @@ isOnCurve (point : Point) : Bool :=
 --- Doubles a valid `point` (computes point + point) on the elliptic curve.
 double (point : Point) : Point :=
   case point of
-    mkPoint x y :=
+    Point.mk x y :=
       if
         | y == 0 := point
         | else :=
@@ -60,7 +60,7 @@ double (point : Point) : Point :=
             slope := (3 * x * x + StarkCurve.ALPHA) / (2 * y);
             r_x := slope * slope - x - x;
             r_y := slope * (x - r_x) - y;
-          in mkPoint@{
+          in Point.mk@{
                x := r_x;
                y := r_y;
              };
@@ -68,20 +68,20 @@ double (point : Point) : Point :=
 --- Adds two valid points on the EC.
 add (point1 point2 : Point) : Point :=
   case point1, point2 of
-    mkPoint x1 y1, mkPoint x2 y2 :=
+    Point.mk x1 y1, Point.mk x2 y2 :=
       if
         | y1 == 0 := point2
         | y2 == 0 := point1
         | x1 == x2 :=
           if
             | y1 == y2 := double point1
-            | else := mkPoint 0 0
+            | else := Point.mk 0 0
         | else :=
           let
             slope := (y1 - y2) / (x1 - x2);
             r_x := slope * slope - x1 - x2;
             r_y := slope * (x1 - r_x) - y1;
-          in mkPoint r_x r_y;
+          in Point.mk r_x r_y;
 
 --- Subtracts point2 from point1 on the EC.
 sub (point1 point2 : Point) : Point :=
@@ -116,7 +116,8 @@ addMul (point1 : Point) (alpha : Field) (point2 : Point) : Point :=
       in sub r s;
 
 --- Computes alpha * point on the elliptic curve.
-mul (alpha : Field) (point : Point) : Point := addMul (mkPoint 0 0) alpha point;
+mul (alpha : Field) (point : Point) : Point :=
+  addMul (Point.mk 0 0) alpha point;
 
 module Operators;
   import Stdlib.Data.Fixity open;

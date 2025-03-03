@@ -5,7 +5,7 @@ import Stdlib.Data.List open;
 
 builtin poseidon_state
 type PoseidonState :=
-  mkPoseidonState@{
+  mk@{
     s0 : Field;
     s1 : Field;
     s2 : Field;
@@ -20,12 +20,12 @@ axiom poseidonHash : PoseidonState -> PoseidonState;
 --- Hashes one element and retrieves a single field element output.
 {-# eval: false #-}
 poseidonHash1 (x : Field) : Field :=
-  PoseidonState.s0 (poseidonHash (mkPoseidonState x 0 1));
+  PoseidonState.s0 (poseidonHash (PoseidonState.mk x 0 1));
 
 --- Hashes two elements and retrieves a single field element output.
 {-# eval: false #-}
 poseidonHash2 (x y : Field) : Field :=
-  PoseidonState.s0 (poseidonHash (mkPoseidonState x y 2));
+  PoseidonState.s0 (poseidonHash (PoseidonState.mk x y 2));
 
 --- Hashes n elements and retrieves a single field element output.
 {-# eval: false #-}
@@ -47,4 +47,4 @@ poseidonHashList (list : List Field) : Field :=
               s1 := PoseidonState.s1 acc + x2;
             })
           xs;
-  in PoseidonState.s0 (go (mkPoseidonState 0 0 0) list);
+  in PoseidonState.s0 (go (PoseidonState.mk 0 0 0) list);

@@ -12,11 +12,11 @@ import Stdlib.Trait.Show open public;
 
 {-# specialize: true, inline: case #-}
 instance
-eqByteI : Eq Byte := mkEq (Byte.==);
+eqByteI : Eq Byte := Eq.mk (Byte.==);
 
 instance
 showByteI : Show Byte :=
-  mkShow@{
+  Show.mk@{
     show (x : Byte) : String := Show.show (Byte.toNat x);
   };
 
