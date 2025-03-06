@@ -10,7 +10,7 @@ package : Package :=
         major := 0;
         minor := 11;
         patch := 0;
-        release := just "rc.5";
+        release := nothing;
       };
     dependencies := [];
   };
