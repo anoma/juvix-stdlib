@@ -37,5 +37,11 @@ or (a b : Bool) : Bool := a || b;
 --- Logical conjunction.
 and (a b : Bool) : Bool := a && b;
 
+--- Logical exclusive or.
+xor : Bool -> Bool -> Bool
+  | true true := false
+  | false flase := false
+  | _ _ := true;
+
 builtin assert
 assert (x : Bool) : Bool := x;
