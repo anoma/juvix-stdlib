@@ -1,0 +1,7 @@
+module Stdlib.Cairo.RangeCheck;
+
+import Stdlib.Data.Field open;
+import Stdlib.Data.Bool open;
+
+builtin range-check
+axiom rangeCheck : Field -> Field -> Bool;
