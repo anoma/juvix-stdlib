@@ -3,8 +3,9 @@ module Stdlib.Data.Byte;
 import Stdlib.Data.Byte.Base open using {Byte} public;
 import Stdlib.Data.Byte.Base as Byte public;
 import Stdlib.Function open;
-import Stdlib.Data.Nat;
+import Stdlib.Data.Nat open;
 import Stdlib.Data.String.Base open;
+import Stdlib.Debug.Fail open;
 
 import Stdlib.Trait.Eq open public;
 import Stdlib.Trait.FromNatural open;
@@ -17,7 +18,20 @@ eqByteI : Eq Byte := Eq.mk (Byte.==);
 instance
 showByteI : Show Byte :=
   Show.mk@{
-    show (x : Byte) : String := Show.show (Byte.toNat x);
+    show (x : Byte) : String :=
+      let
+        nibble (n : Nat) : String :=
+          if
+            | n <= 9 := Show.show n
+            | n == 10 := "A"
+            | n == 11 := "B"
+            | n == 12 := "C"
+            | n == 13 := "D"
+            | n == 14 := "E"
+            | n == 15 := "F"
+            | else := impossible;
+        nat := Byte.toNat x;
+      in "0x" ++str nibble (div nat 16) ++str nibble (mod nat 16);
   };
 
 {-# specialize: true, inline: case #-}
