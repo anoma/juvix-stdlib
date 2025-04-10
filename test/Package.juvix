@@ -12,6 +12,6 @@ package : Package :=
           "anoma"
           "juvix-quickcheck"
           "a78bf8da2e14f639f57e2f5e73f6a82fd3a8ff86";
-        github "anoma" "juvix-test" "d093e3dcc3caaea48433059810b671e38cfb02f7";
+        github "anoma" "juvix-test" "81a1ee5176055c1002eca0b5f9dcba665986f3ec";
       ];
   };
