@@ -5,3 +5,5 @@ import Stdlib.Data.String.Base open;
 --- Exit the program with an error message.
 builtin fail
 axiom failwith : {A : Type} -> (message : String) -> A;
+
+impossible {A} : A := failwith "impossible";
