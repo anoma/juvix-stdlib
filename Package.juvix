@@ -9,7 +9,7 @@ package : Package :=
       mkVersion@{
         major := 0;
         minor := 11;
-        patch := 0;
+        patch := 1;
         release := nothing;
       };
     dependencies := [];
