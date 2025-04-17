@@ -1,0 +1,16 @@
+module Stdlib.Data.AppendList;
+
+import Stdlib.Data.List open public;
+import Stdlib.Data.Nat open public;
+import Stdlib.Data.AppendList.Base open public;
+import Stdlib.Data.Bool.Base open;
+import Stdlib.Data.String.Base open;
+import Stdlib.Function open;
+import Stdlib.Trait open;
+
+instance
+showAppendListI {A} {{Show A}} : Show (AppendList A) :=
+  Show.mk (AppendList.toList >> Show.show);
+
+instance
+functorAppendListI : Functor AppendList := Functor.mk AppendList.map;
