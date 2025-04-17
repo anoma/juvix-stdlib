@@ -7,7 +7,17 @@ import Stdlib.Function open;
 import Stdlib.Data.Nat.Base open;
 import Stdlib.Data.Maybe.Base open;
 import Stdlib.Trait.Ord open;
+import Stdlib.Trait.Semigroup open;
 import Stdlib.Data.Pair.Base open;
+
+{-# specialize: true, inline: case #-}
+instance
+SemigroupListI {A} : Semigroup (List A) :=
+  Semigroup.mk@{
+    append : {A : Type} -> (list1 : List A) -> (list2 : List A) -> List A
+      | nil ys := ys
+      | (x :: xs) ys := x :: append xs ys;
+  };
 
 --- 𝒪(𝓃). Returns ;true; if the given object elem is in the ;List;.
 {-# specialize: [1] #-}
@@ -127,13 +137,6 @@ partition {A} (predicate : A → Bool) : (list : List A) -> Pair (List A) (List 
           | predicate x := x :: l1, l2
           | else := l1, x :: l2;
 
-syntax operator ++ cons;
-
---- Concatenates two ;List;s.
-++ : {A : Type} -> (list1 : List A) -> (list2 : List A) -> List A
-  | nil ys := ys
-  | (x :: xs) ys := x :: xs ++ ys;
-
 --- Concatenates a ;List; of ;List;s.
 {-# isabelle-function: {name: "concat"} #-}
 flatten {A} (listOfLists : List (List A)) : List A :=
@@ -232,7 +235,7 @@ quickSort {A} {{Ord A}} (list : List A) : List A :=
       | nil := nil
       | xs@(_ :: nil) := xs
       | (x :: xs) :=
-        case partition \{y := y < x} xs of l1, l2 := go l1 ++ x :: go l2;
+        case partition \{y := y < x} xs of l1, l2 := go l1 ++ (x :: go l2);
   in go list;
 
 --- 𝒪(𝓃) Filters out every ;nothing; from a ;List;.
