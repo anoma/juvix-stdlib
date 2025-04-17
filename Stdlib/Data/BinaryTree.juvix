@@ -23,5 +23,5 @@ with
   length {A} (tree : BinaryTree A) : Nat := fold \{_ l r := 1 + l + r} 0 tree;
 
   toList {A} (tree : BinaryTree A) : List A :=
-    fold \{e ls rs := e :: ls ++ rs} nil tree;
+    fold \{e ls rs := e :: (ls ++ rs)} nil tree;
 end;
