@@ -1,0 +1,24 @@
+module Stdlib.Trait.Semigroup;
+
+import Stdlib.Data.Fixity open;
+import Stdlib.Data.Bool.Base open;
+import Stdlib.Trait.Eq open;
+
+trait
+type Semigroup A :=
+  mk@{
+    --- Associative operation
+    append : A -> A -> A;
+  }
+with
+  syntax operator ++ additive;
+
+  ++ {A} {{Semigroup A}} : A -> A -> A := append;
+
+  module Properties;
+    assoc {A} {{Eq A}} {{Semigroup A}} (a b c : A) : Bool :=
+      a ++ b ++ c == a ++ (b ++ c);
+  end;
+end;
+
+open Semigroup hiding {mk} public;
