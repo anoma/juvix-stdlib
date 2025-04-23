@@ -4,8 +4,12 @@ import Stdlib.Data.String.Base open public;
 
 import Stdlib.Trait.Eq open;
 import Stdlib.Trait.Show open;
+import Stdlib.Trait.Semigroup open;
 
 import Stdlib.Data.String.Ord as String;
+
+instance
+semigroupStringI : Semigroup String := Semigroup.mk (++str);
 
 instance
 eqStringI : Eq String := Eq.mk (String.==);
