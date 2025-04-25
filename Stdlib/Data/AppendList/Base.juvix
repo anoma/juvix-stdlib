@@ -13,27 +13,28 @@ type AppendList A :=
   }
 with
   instance
-  semigroupAppendListI {A} : Semigroup (AppendList A) :=
-    Semigroup.mk@{
-      append : AppendList A -> AppendList A -> AppendList A
-        | (privateMk l1) (privateMk l2) := privateMk (l1 >> l2);
-    };
+  semigroupAppendListI {A} : Semigroup (AppendList A) := Semigroup.mk append;
+
+  append {A} : AppendList A -> AppendList A -> AppendList A
+    | (privateMk l1) (privateMk l2) := privateMk (l2 >> l1);
 
   --- 𝒪(𝓃)
   toList {A} : AppendList A -> List A
     | (privateMk l) := l [];
 
   --- 𝒪(1)
-  fromList {A} (l : List A) : AppendList A := privateMk \{l' := l' ++ l};
+  fromList {A} (l : List A) : AppendList A := privateMk \{l' := l ++ l'};
 
   empty {A} : AppendList A := fromList [];
 
+  singleton {A} (x : A) : AppendList A := privateMk \{l' := x :: l'};
+
   --- 𝒪(1) Append an element at the start
-  cons {A} (x : A) : AppendList A -> AppendList A
-    | (privateMk l) := privateMk \{l' := x :: l'};
+  cons {A} (x : A) : AppendList A -> AppendList A := append (singleton x);
 
   --- 𝒪(1) Append an element to the end
-  consEnd {A} (l : AppendList A) (x : A) : AppendList A := fromList [x] ++ l;
+  consEnd {A} (l : AppendList A) (x : A) : AppendList A :=
+    append l (singleton x);
 
   --- 𝒪(𝓃)
   length {A} : AppendList A -> Nat := toList >> List.length;
