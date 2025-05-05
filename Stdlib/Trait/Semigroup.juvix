@@ -21,4 +21,4 @@ with
   end;
 end;
 
-open Semigroup hiding {mk} public;
+open Semigroup using {++} public;

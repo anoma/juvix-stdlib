@@ -1,0 +1,55 @@
+module Stdlib.Data.AppendList.Base;
+
+import Stdlib.Data.List.Base as List open;
+import Stdlib.Data.Bool.Base open;
+import Stdlib.Function open;
+import Stdlib.Data.Nat.Base open;
+import Stdlib.Trait.Semigroup open public;
+
+--- A list-like structure with 𝒪(1) concatenation
+type AppendList A :=
+  privateMk@{
+    unwrap : List A -> List A;
+  }
+with
+  instance
+  semigroupAppendListI {A} : Semigroup (AppendList A) := Semigroup.mk append;
+
+  --- 𝒪(1)
+  {-# inline: true #-}
+  append {A} : AppendList A -> AppendList A -> AppendList A
+    | (privateMk l1) (privateMk l2) := privateMk (l2 >> l1);
+
+  --- 𝒪(𝓃)
+  {-# inline: true #-}
+  toList {A} : AppendList A -> List A
+    | (privateMk l) := l [];
+
+  --- 𝒪(1)
+  {-# inline: true #-}
+  fromList {A} (l : List A) : AppendList A := privateMk \{l' := l ++ l'};
+
+  {-# inline: true #-}
+  empty {A} : AppendList A := fromList [];
+
+  {-# inline: true #-}
+  singleton {A} (x : A) : AppendList A := privateMk \{l' := x :: l'};
+
+  --- 𝒪(1) Append an element at the start
+  {-# inline: true #-}
+  cons {A} (x : A) : AppendList A -> AppendList A := append (singleton x);
+
+  --- 𝒪(1) Append an element to the end
+  {-# inline: true #-}
+  consEnd {A} (l : AppendList A) (x : A) : AppendList A :=
+    append l (singleton x);
+
+  --- 𝒪(𝓃)
+  {-# inline: true #-}
+  length {A} : AppendList A -> Nat := toList >> List.length;
+
+  --- 𝒪(𝓃)
+  {-# inline: true #-}
+  map {A} {B} (f : A -> B) (l : AppendList A) : AppendList B :=
+    privateMk \{tail := listMap f (toList l) ++ tail};
+end;

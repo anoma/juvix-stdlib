@@ -1,0 +1,23 @@
+module Stdlib.Data.AppendList;
+
+import Stdlib.Data.List open public;
+import Stdlib.Data.Nat open public;
+import Stdlib.Data.AppendList.Base open public;
+import Stdlib.Data.Bool.Base open;
+import Stdlib.Data.String.Base open;
+import Stdlib.Function open;
+import Stdlib.Trait open;
+
+instance
+showAppendListI {A} {{Show A}} : Show (AppendList A) :=
+  Show.mk (AppendList.toList >> Show.show);
+
+instance
+eqAppendListI {A} {{Eq A}} : Eq (AppendList A) :=
+  Eq.mk@{
+    isEqual (a b : AppendList A) : Bool :=
+      Eq.isEqual (AppendList.toList a) (AppendList.toList b);
+  };
+
+instance
+functorAppendListI : Functor AppendList := Functor.mk AppendList.map;
