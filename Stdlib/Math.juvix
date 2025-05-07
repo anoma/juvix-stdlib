@@ -1,0 +1,27 @@
+module Stdlib.Math;
+
+import Stdlib.Trait.DivMod open;
+import Stdlib.Trait.Natural open;
+import Stdlib.Trait.Eq open;
+import Stdlib.Data.Nat open;
+import Stdlib.Data.Bool open;
+
+divisibleBy {A} {{Eq A}} {{FromNatural A}} {{DivMod A}} (num div : A) : Bool :=
+  mod num div == 0;
+
+even {A} {{Eq A}} {{FromNatural A}} {{DivMod A}} (a : A) : Bool :=
+  divisibleBy a 2;
+
+odd {A} {{Eq A}} {{FromNatural A}} {{DivMod A}} (a : A) : Bool := not (even 2);
+
+terminating
+pow {A} {{Natural A}} (b : A) (exp : Nat) : A :=
+  case exp of
+    | zero := 0
+    | (suc zero) := b
+    | m@suc@{} :=
+      let
+        half := div m 2;
+      in if
+        | even m := pow b half * pow b half
+        | else := pow b (1 + half) * pow b half;
