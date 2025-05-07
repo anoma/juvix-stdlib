@@ -18,7 +18,7 @@ terminating
 pow {A} {{Natural A}} (b : A) (exp : Nat) : A :=
   case exp of
     | zero := 0
-    | (suc zero) := b
+    | suc zero := b
     | m@suc@{} :=
       let
         half := div m 2;
