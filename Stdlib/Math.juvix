@@ -14,14 +14,16 @@ even {A} {{Eq A}} {{FromNatural A}} {{DivMod A}} (a : A) : Bool :=
 
 odd {A} {{Eq A}} {{FromNatural A}} {{DivMod A}} (a : A) : Bool := not (even 2);
 
-terminating
-pow {A} {{Natural A}} (b : A) (exp : Nat) : A :=
-  case exp of
-    | zero := 0
-    | suc zero := b
-    | m@suc@{} :=
-      let
-        half := div m 2;
-      in if
-        | even m := pow b half * pow b half
-        | else := pow b (1 + half) * pow b half;
+pow {A} {{Natural A}} : (b : A) -> (exp : Nat) -> A :=
+  let
+    terminating
+    go (acc b : A) (exp : Nat) : A :=
+      case exp of
+        | zero := acc
+        | m@suc@{} :=
+          let
+            half := div m 2;
+          in if
+            | even m := go acc (b * b) half
+            | else := go (acc * b) (b * b) half;
+  in go 1;
