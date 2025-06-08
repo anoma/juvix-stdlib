@@ -32,7 +32,8 @@ type Set (A : Type) :=
       right : Set A;
     };
 
-open Set;
+open Set using {empty} public;
+open Set using {node};
 
 module Internal;
   --- 𝒪(1) Retrieves the height of a ;Set;. The height is the distance from
