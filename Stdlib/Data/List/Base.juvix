@@ -165,6 +165,11 @@ head {A} (defaultValue : A) (list : List A) : A :=
     | x :: _ := x
     | nil := defaultValue;
 
+--- 𝒪(1). Grabs the first element of a ;List;
+headMaybe {A} : List A -> Maybe A
+  | (x :: _) := just x
+  | nil := nothing;
+
 syntax iterator any {init := 0; range := 1};
 
 --- 𝒪(𝓃). Returns ;true; if at least one element of the ;List; satisfies the predicate.
